@@ -53,6 +53,9 @@
     <ClCompile Include="GeneratedFiles\qrc_handysearch.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Html.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -60,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_handysearch.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Html.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

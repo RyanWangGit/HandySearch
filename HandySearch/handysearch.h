@@ -8,9 +8,14 @@ class HandySearch : public QMainWindow
 {
 	Q_OBJECT
 
+		public slots:
+	void onCloseButtonClick();
+
 public:
 	HandySearch(QWidget *parent = 0);
 	~HandySearch();
+	//Override paintEvent
+	void paintEvent(QPaintEvent *event);
 
 private:
 	Ui::HandySearchClass ui;
