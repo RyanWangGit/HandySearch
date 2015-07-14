@@ -19,5 +19,5 @@ The version of QT is `5.4.1 with OpenGL for MSVC`.
 The IDE is `Visual Studio 2013 Community`
      
 //TODO
-###Screenshots<br>
+###Screenshots
 //TODO
