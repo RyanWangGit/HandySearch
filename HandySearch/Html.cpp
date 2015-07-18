@@ -130,3 +130,9 @@ bool Html::loadFrom(QString &filePath)
 	this->file.setFileName(filePath);
 	return this->load();
 }
+
+/* Html objects compare */
+bool Html::operator ==(Html &other)
+{
+	return (this->file.fileName() == other.file.fileName());
+}

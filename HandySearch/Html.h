@@ -20,5 +20,6 @@ public:
 	QString& getText();
 	QString& getTitle();
 	bool loadFrom(QString& filePath);
+	bool operator ==(Html &other);
 };
 
