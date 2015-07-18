@@ -11,7 +11,7 @@ Using Visual Studio 2013 + QT5.4.1 with OpenGL.
 
 * Load directly from html files and automatically analyzes them.
 
-//TODO
+* //TODO
 
 ###For Developers
 * This projects includes pure-English notes to every single cornor to make it clear to understand.
@@ -20,6 +20,7 @@ Using Visual Studio 2013 + QT5.4.1 with OpenGL.
 
 * The IDE is `Visual Studio 2013 Community`
      
-//TODO
+* //TODO
+
 ###Screenshots
-//TODO
+* //TODO
