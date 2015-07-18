@@ -10,7 +10,11 @@ int main(int argc, char *argv[])
 	w.setWindowFlags(Qt::FramelessWindowHint);
 	w.setAttribute(Qt::WA_TranslucentBackground);
 	
-	Html* html = new Html("D:\\Converted\\17.html");
+	//Class tests
+	Html html = Html("D:\\Converted\\17.html");
+	
+	List<Html> list;
+	//End of class tests
 	
 	w.show();
 	return a.exec();

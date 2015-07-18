@@ -2,9 +2,21 @@
 
 class QNullPointerException : private QException
 {
+private :
+	QString errorMsg;
 public:
-	const QString what()
+	QNullPointerException()
 	{
-		return "Null Pointer was called.";
+		this->errorMsg = "QNullPointerException";
+	}
+
+	QNullPointerException(const QString &errorMsg)
+	{
+		this->errorMsg = errorMsg;
+	}
+
+	const QString getErrorMsg()
+	{
+		return errorMsg;
 	} 
 };

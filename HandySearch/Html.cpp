@@ -20,11 +20,6 @@ Html::Html(const Html &c)
 	this->title = c.title;
 }
 
-Html::Html()
-{
-
-}
-
 QString& Html::getText()
 {
 	return this->textContent;
