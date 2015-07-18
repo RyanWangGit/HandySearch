@@ -1,38 +1,28 @@
 #include "stdafx.h"
 #include "Html.h"
 
-
-Html::Html(QString filePath)
+Html::Html()
 {
-	QString fileContent;
-
-	this->file = new QFile(filePath);
-
-	if (file->exists())
-		this->file->open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text);
-
-	if (this->isOpen() && this->file->isReadable())
-	{
-		//File reading stream
-		QTextStream in(this->file);
-		in.setCodec("utf-8");
-		fileContent = in.readAll();
-
-		extractTitle(fileContent);
-		extractText(fileContent);	
-	}
+	
 }
 
-
-Html::~Html()
+Html::Html(const QString &filePath)
 {
-	this->file->close();
-	delete this->file;
+	QFile::QFile(filePath);
+	this->load();
 }
 
-bool Html::isOpen()
+Html::Html(const Html &c)
 {
-	return (this->file->isOpen() && this->file->isReadable());
+	this->file.close();
+	this->file.setFileName(c.file.fileName());
+	this->textContent = c.textContent;
+	this->title = c.title;
+}
+
+Html::Html()
+{
+
 }
 
 QString& Html::getText()
@@ -44,15 +34,14 @@ QString& Html::getTitle()
 	return this->title;
 }
 
-//Extract pure text from html file 
-//and store it into Html::textContent
-void Html::extractText(QString& fileContent)
+/*Extract pure text from html file and store it into Html::textContent */
+void Html::extractText(const QString &fileContent)
 {
 	//If has processed
 	if (!this->textContent.isEmpty())
 		return;
 
-	if (this->file->isOpen())
+	if (this->file.isOpen())
 	{
 		//Copy
 		this->textContent = fileContent;
@@ -100,13 +89,44 @@ void Html::extractText(QString& fileContent)
 	}
 }
 
-//Extract title tag from html file 
-//and store it into Html::title
-void Html::extractTitle(QString& fileContent)
+/* Extract title tag from html file and store it into Html::title */
+void Html::extractTitle(const QString &fileContent)
 {
 	this->title = fileContent;
 	QRegExp rx("<title>(.*)</title>");
 	this->title.indexOf(rx);
 	
 	this->title = rx.cap(1);
+}
+
+/* Load the html file only if the path is set */
+bool Html::load()
+{
+	QString fileContent;
+
+	//Open the file
+	if (this->file.exists())
+		if (!this->file.open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text))
+			return false;
+
+	if (this->file.isOpen() && this->file.isReadable())
+	{
+		//File reading stream
+		QTextStream in(&this->file);
+		in.setCodec("utf-8");
+		fileContent = in.readAll();
+		extractTitle(fileContent);
+		extractText(fileContent);
+		return true;
+	}
+	else
+		return false;
+}
+
+/* Reload from file */
+bool Html::loadFrom(QString &filePath)
+{
+	this->file.close();
+	this->file.setFileName(filePath);
+	return this->load();
 }
