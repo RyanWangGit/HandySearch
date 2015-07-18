@@ -8,7 +8,9 @@ Using Visual Studio 2013 + QT5.4.1 with OpenGL.
 
 ###Features
 * Beautiful GUI design. (Thanks to QT)
-* Load directly from html files and automatically analyzes them.<br>
+
+* Load directly from html files and automatically analyzes them.
+
 //TODO
 
 ###For Developers
