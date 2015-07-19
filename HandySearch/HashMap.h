@@ -3,7 +3,7 @@ template < typename K, typename V >
 class HashMap
 {
 public:
-	static int hashCode(const void * key, int len, const unsigned int seed);
+	static int hashCode(const void * key, int len, const unsigned int seed = 0xEE6B27EB);
 };
 
 /* We use Murmur 2.0 hash function here */
