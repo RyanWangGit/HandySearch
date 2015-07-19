@@ -50,7 +50,7 @@ public:
 	/* Get the i(th) node of the list (Starting from 0) */
 	T& get(int i);
 	/* Append a node to the tail */
-	void append(const T& data);
+	void append(const T data);
 	/* Append a new list to the tail */
 	void append(const List<T>& list);
 	/* Clear the list */
@@ -130,7 +130,7 @@ bool List<T>::clear()
 }
 
 template<typename T>
-void List<T>::append(const T& data)
+void List<T>::append(const T data)
 {
 	ListNode<T>* p = this->tail;
 	p->next = new ListNode<T>(data);
