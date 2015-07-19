@@ -3,18 +3,17 @@ template < typename K, typename V >
 class HashMap
 {
 public:
-	static int hashCode(const void * key, int len);
+	static int hashCode(const void * key, int len, const unsigned int seed);
 };
 
 /* We use Murmur 2.0 hash function here */
 /* and use 0xEE6B27EB as the seed */
 template < typename K, typename V >
-int HashMap<K, V>::hashCode(const void * key, int len)
+int HashMap<K, V>::hashCode(const void * key, int len, const unsigned int seed = 0xEE6B27EB)
 {
 	// 'm' and 'r' are mixing constants generated offline.
 	// They're not really 'magic', they just happen to work well.
 
-	const unsigned int seed = 0xEE6B27EB;
 	const unsigned int m = 0x5bd1e995;
 	const int r = 24;
 
