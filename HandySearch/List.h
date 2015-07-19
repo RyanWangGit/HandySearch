@@ -65,7 +65,7 @@ public:
 	/* Replace i(th) node with the given value */
 	bool replace(int i, T& value);
 	/* Returns the size of the list */
-	bool size();
+	long size();
 	/* Returns whether the list contains the value */
 	bool contains(const T& value);
 	/* Insert the value after the i(th) node */
@@ -253,4 +253,10 @@ bool List<T>::replace(int i, T& value)
 	this->remove(i);
 	this->insertAfter(i - 1, value);
 	return true;
+}
+
+template<typename T>
+long List<T>::size()
+{
+	return this->length;
 }
