@@ -8,13 +8,12 @@ Html::Html()
 
 Html::Html(const QString &filePath)
 {
-	QFile::QFile(filePath);
+	this->file.setFileName(filePath);
 	this->load();
 }
 
 Html::Html(const Html &c)
 {
-	this->file.close();
 	this->file.setFileName(c.file.fileName());
 	this->textContent = c.textContent;
 	this->title = c.title;
@@ -29,12 +28,12 @@ QString& Html::getTitle()
 	return this->title;
 }
 
-/*Extract pure text from html file and store it into Html::textContent */
+/* Extract pure text from html file and store it into Html::textContent */
 void Html::extractText(const QString &fileContent)
 {
 	//If has processed
 	if (!this->textContent.isEmpty())
-		return;
+		this->textContent.clear();
 
 	if (this->file.isOpen())
 	{
@@ -127,9 +126,21 @@ bool Html::loadFrom(QString &filePath)
 }
 
 /* Html objects compare */
-bool Html::operator ==(Html &other)
+bool Html::operator== (Html &other)
 {
 	return (this->file.fileName() == other.file.fileName());
+}
+
+Html& Html::operator= (const Html &other)
+{
+	if (this == &other)
+		return *this;
+
+	Html *temp = new Html();
+	temp->file.setFileName(other.file.fileName());
+	temp->textContent = other.textContent;
+	temp->title = other.title;
+	return *temp;
 }
 
 int Html::hashCode()
