@@ -131,3 +131,8 @@ bool Html::operator ==(Html &other)
 {
 	return (this->file.fileName() == other.file.fileName());
 }
+
+int Html::hashCode()
+{
+	return HashMap<int, int>::hashCode((void *) &this->title, this->title.size());
+}

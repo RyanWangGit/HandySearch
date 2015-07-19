@@ -21,5 +21,6 @@ public:
 	QString& getTitle();
 	bool loadFrom(QString& filePath);
 	bool operator ==(Html &other);
+	int hashCode();
 };
 
