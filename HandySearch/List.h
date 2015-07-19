@@ -87,6 +87,7 @@ template<typename T>
 List<T>::~List()
 {
 	this->clear();
+	delete this->head;
 }
 
 template<typename T>
@@ -99,14 +100,16 @@ template<typename T>
 T& List<T>::get(int i) 
 {
 	ListNode<T>* p = this->head->next;
-	for (int n = 0; n < i; n++)
+	for (int n = 0; n <= i; n++)
 	{
 		if (!p)
 			throw QNullPointerException();
+		else if (n == i)
+			return p->data;
 		else
 			p = p->next;
 	}
-	return p->data;
+	
 }
 
 template<typename T>
@@ -134,6 +137,7 @@ void List<T>::append(const T& data)
 {
 	ListNode<T>* p = this->tail;
 	p->next = new ListNode<T>(data);
+	
 	p->next->prior = p;
 	this->tail = p->next;
 	this->length++;
@@ -167,13 +171,15 @@ bool List<T>::remove(int i)
 {
 	ListNode<T>* p = this->head->next;
 	if ()
-	for (int n = 0; n < i; n++)
+	for (int n = 0; n <= i; n++)
 	{
-		if (p)
+		if (!p)
 			throw QNullPointerException();
-		p = p->next;
+		else if (n == i)
+			return this->remove(p);
+		else
+			p = p->next;
 	}	
-	this->remove(p);
 }
 
 template<typename T>
@@ -183,7 +189,7 @@ bool List<T>::remove(T &value)
 	bool hasRemove = false;
 	for (int i = 0; i < this->size(); i++)
 	{
-		if (p)
+		if (!p)
 			throw QNullPointerException("in remove(T &value) function.");
 		if (p->data == value)
 		{
@@ -202,7 +208,7 @@ int List<T>::indexOf(T &value)
 	int i;
 	for (i = 0; i < this->size(); i++)
 	{
-		if (p)
+		if (!p)
 			throw QNullPointerException("in indexOf(T &value) function");
 		if (p->data == value)
 			break;
@@ -217,7 +223,7 @@ bool List<T>::contains(const T &value)
 	ListNode<T> *p = this->head->next;
 	for (int i = 0; i < this->size(); i++)
 	{
-		if (p)
+		if (!p)
 			throw QNullPointerException("in contains(const T &value) function");
 
 		if (this->get(i) == value)
@@ -233,13 +239,15 @@ bool List<T>::insertAfter(int i, const T& value)
 {
 	ListNode<T> *p = this->head->next;
 	ListNode<T> *temp = nullptr;
-	for (int n = 0; n < i; n++)
+	for (int n = 0; n <= i; n++)
 	{
-		if (p)
+		if (!p)
 			throw QNullPointerException("in contains(const T &value) function");
-		p = p->next;
+		if (n == i)
+			temp = p->next;
+		else
+			p = p->next;
 	}
-	temp = p->next;
 	p->next = new ListNode<T>(value); 
 	p->next->prior = p;
 	p->next->next = temp;
