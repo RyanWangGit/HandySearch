@@ -2,7 +2,7 @@
 
 /* This class first tries to open the file the path indicates, 
 and uses some methods to return different kinds of data */
-class Html
+class Html 
 {
 private:
 	/* The html file */

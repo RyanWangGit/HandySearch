@@ -136,11 +136,10 @@ Html& Html::operator= (const Html &other)
 	if (this == &other)
 		return *this;
 
-	Html *temp = new Html();
-	temp->file.setFileName(other.file.fileName());
-	temp->textContent = other.textContent;
-	temp->title = other.title;
-	return *temp;
+	this->file.setFileName(other.file.fileName());
+	this->textContent = other.textContent;
+	this->title = other.title;
+	return *this;
 }
 
 int Html::hashCode()
