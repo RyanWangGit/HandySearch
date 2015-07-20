@@ -6,7 +6,14 @@ using namespace std;
 HandySearch::HandySearch(QWidget *parent)
 	: QMainWindow(parent)
 {
+	qRegisterMetaType<Html>("Html");
 	ui.setupUi(this);
+	//Initialization of application
+	//Test of classes
+	Load *initialLoadThread = new Load(this->htmlList);
+	connect(initialLoadThread, &Load::finished, this, &HandySearch::loadFinished);
+	connect(initialLoadThread, &Load::finished, initialLoadThread, &Load::deleteLater);
+	initialLoadThread->start();
 }
 
 HandySearch::~HandySearch()
@@ -49,6 +56,11 @@ void HandySearch::paintEvent(QPaintEvent *event)
 	}
 }
 
+/* ------Slot functions--------- */
+void HandySearch::loadFinished()
+{
+	qDebug() << "Load finished " << this->htmlList.size();
+}
 //This is a test method
 void HandySearch::onCloseButtonClick()
 {

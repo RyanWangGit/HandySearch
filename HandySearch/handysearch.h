@@ -7,10 +7,11 @@
 class HandySearch : public QMainWindow
 {
 	Q_OBJECT
-
-		public slots:
+private:
+	List<Html> htmlList;
+public slots:
 	void onCloseButtonClick();
-
+	void loadFinished();
 public:
 	HandySearch(QWidget *parent = 0);
 	~HandySearch();

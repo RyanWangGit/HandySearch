@@ -27,6 +27,19 @@
      <string>This is Main Windoow</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>140</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
@@ -34,7 +47,24 @@
  <resources>
   <include location="handysearch.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>label</sender>
+   <signal>linkActivated(QString)</signal>
+   <receiver>HandySearchClass</receiver>
+   <slot>onCloseButtonClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>262</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>251</x>
+     <y>159</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>onCloseButtonClick()</slot>
  </slots>
