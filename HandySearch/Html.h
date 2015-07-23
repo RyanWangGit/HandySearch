@@ -5,6 +5,8 @@ and uses some methods to return different kinds of data */
 class Html 
 {
 private:
+	static unsigned int totalNum;
+	unsigned int htmlID;
 	/* The html file */
 	QFile file;
 	/* Pure text content extracted from file content */
@@ -15,9 +17,10 @@ private:
 	void extractTitle(const QString &fileContent);
 	bool load();
 public:
-	Html::Html();
+	Html();
 	Html(const QString &filePath);
 	Html(const Html &c);
+	unsigned int getID();
 	QString &getText();
 	QString &getTitle();
 	bool loadFrom(QString &filePath);

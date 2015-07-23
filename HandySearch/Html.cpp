@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "Html.h"
 
-Html::Html()
-{
-	
-}
+/* Initialization of static members */
+unsigned int Html::totalNum = 0;
+
+Html::Html() { void; }
 
 Html::Html(const QString &filePath)
 {
@@ -17,6 +17,11 @@ Html::Html(const Html &c)
 	this->file.setFileName(c.file.fileName());
 	this->textContent = c.textContent;
 	this->title = c.title;
+}
+
+unsigned int Html::getID()
+{
+	return this->htmlID;
 }
 
 QString& Html::getText()
@@ -47,7 +52,7 @@ void Html::extractText(const QString &fileContent)
 
 		//Remove header
 		this->textContent.replace(QRegExp("<head>.*</head>"), "");
-
+		
 		//Remove scripts
 		this->textContent.replace(QRegExp("<( )*script([^>])*>"), "<script>");
 		this->textContent.replace(QRegExp("<script>.*</script>"), "");
@@ -55,7 +60,7 @@ void Html::extractText(const QString &fileContent)
 		//Remove all styles
 		this->textContent.replace(QRegExp("<( )*style([^>])*>"), "<style>");
 		this->textContent.replace(QRegExp("<style>.*</style>"), "");
-
+		
 		//Remove td tags
 		this->textContent.replace(QRegExp("<( )*td([^>])*>"), "");
 
@@ -69,7 +74,7 @@ void Html::extractText(const QString &fileContent)
 
 		//Remove anything that's enclosed inside < >
 		this->textContent.replace(QRegExp("<[^>]*>"), "");
-
+		
 		//Replace special characters
 		this->textContent.replace(QRegExp("&amp;"), "&");
 		this->textContent.replace(QRegExp("&nbsp;"), " ");
@@ -79,7 +84,6 @@ void Html::extractText(const QString &fileContent)
 
 		//Remove extra line breaks
 		this->textContent.replace(QRegExp(" ( )+"), "");
-
 	}
 }
 
@@ -88,6 +92,7 @@ void Html::extractTitle(const QString &fileContent)
 {
 	this->title = fileContent;
 	QRegExp rx("<title>(.*)</title>");
+	rx.setMinimal(true);
 	this->title.indexOf(rx);
 	
 	this->title = rx.cap(1);
@@ -105,12 +110,11 @@ bool Html::load()
 
 	if (this->file.isOpen() && this->file.isReadable())
 	{
-		//File reading stream
-		QTextStream in(&this->file);
-		in.setCodec("utf-8");
-		fileContent = in.readAll();
+		fileContent = this->file.readAll();
 		extractTitle(fileContent);
 		extractText(fileContent);
+		
+		this->file.close();
 		return true;
 	}
 	else
@@ -144,5 +148,6 @@ Html& Html::operator= (const Html &other)
 
 int Html::hashCode()
 {
-	return HashMap<int, int>::hashCode((void *) &this->title, this->title.size());
+	QByteArray str = this->title.toLocal8Bit();
+	return HashMap<int, int>::hashCode(str.data(), str.size());
 }
