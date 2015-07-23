@@ -1,7 +1,6 @@
 #ifndef HANDYSEARCH_H
 #define HANDYSEARCH_H
 
-#include <QtWidgets/QMainWindow>
 #include "ui_handysearch.h"
 
 class HandySearch : public QMainWindow
@@ -9,9 +8,12 @@ class HandySearch : public QMainWindow
 	Q_OBJECT
 private:
 	List<Html> htmlList;
+	BloomFilter dictionary;
+	QTime clock;
 public slots:
 	void onCloseButtonClick();
 	void loadFinished();
+	void processHtml(unsigned int threadID, Html html, QString path);
 public:
 	HandySearch(QWidget *parent = 0);
 	~HandySearch();
