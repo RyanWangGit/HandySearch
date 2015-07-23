@@ -1,43 +1,72 @@
 #pragma once
 
-class LoadHtml : public QThread
+class LoadHtml : public QObject
 {
 	Q_OBJECT
-private :
+private:
+	int id;
 	QStringList pathList;
 public:
+	static unsigned int threadNum;
 	LoadHtml(const QStringList &pathList)
 	{
+		threadNum++;
+		this->id = threadNum; 
 		this->pathList = pathList;
 	}
-	void run() Q_DECL_OVERRIDE
-	{
-		qDebug() << "[Html Loading Thread]" << "Thread Received " << pathList.size() << "Files";
-		for (int i = 0; i < pathList.size(); i++)
-			emit processHtml(Html(pathList[i]), pathList.at(i));
-	}
+
 signals:
-	void processHtml(Html,QString);
+	void processHtml(unsigned int, Html, QString);
+	void finished();
+
+public slots:
+	void load()
+	{
+		qDebug() << "[Html Loading Thread #" << this->id << "]" << "Thread Received " << pathList.size() << "Files";
+		for (int i = 0; i < pathList.size(); i++)
+			emit processHtml(this->id, Html(pathList[i]), pathList.at(i));
+
+		emit finished();
+	}
 };
 
-class Load : public QThread
+ 
+
+
+class Load : public QObject
 {
 	Q_OBJECT
 private:
 	List<Html> *pHtmlList;
-	int threadNum;
+	QString htmlFolder;
+	QString dictFolder;
+
+signals:
+	void finished();
+	void loadedHtml(unsigned int, Html, QString);
+
 public:
-	Load(List<Html> &htmlList)
+	Load(List<Html> &htmlList, const QString &htmlFolder, const QString &dictFolder)
 	{
-		this->threadNum = 0;
 		this->pHtmlList = &htmlList;
+		this->htmlFolder = htmlFolder;
+		this->dictFolder = dictFolder;
 	}
 
-	void run() Q_DECL_OVERRIDE
+public slots:
+//TODO::
+//This should be different slots and connected by signals 
+//when a task finished it sends out signal 
+//triggering the next task to start
+//The last task sends out loadFinished signal
+	void run()
 	{
-		QTime time;
-		time.start();
-		QDirIterator iter("D:/Html Library", QDirIterator::Subdirectories);
+		/* -----Load dictionary----- */
+		//TODO:: load dictionary
+		/* ---------- */
+
+		/* -----Load htmls----- */
+		QDirIterator iter(htmlFolder, QDirIterator::Subdirectories);
 
 		QStringList pathList;
 		int i = 0;
@@ -48,14 +77,18 @@ public:
 				continue;
 			pathList.append(path);
 			i++;
-			if (i == 1000)
+			if (i == 500)
 			{
-				threadNum++;
-				LoadHtml *loadHtmlThread = new LoadHtml(pathList);
-				connect(loadHtmlThread, &LoadHtml::finished, this, &Load::threadFinished);
-				connect(loadHtmlThread, &QThread::finished, loadHtmlThread, &QObject::deleteLater);
+				QThread *loadHtmlThread = new QThread();
+				LoadHtml *loadHtml = new LoadHtml(pathList);
+				loadHtml->moveToThread(loadHtmlThread);
+				connect(loadHtmlThread, &QThread::started, loadHtml, &LoadHtml::load);
+				connect(loadHtml, &LoadHtml::finished, this, &Load::threadFinished);
+				connect(loadHtml, &LoadHtml::finished, loadHtml, &QObject::deleteLater);
+				connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QThread::quit);
+				connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QObject::deleteLater);
+				connect(loadHtml, &LoadHtml::processHtml, this, &Load::processHtml);
 
-				connect(loadHtmlThread, &LoadHtml::processHtml, this, &Load::processHtml);
 				loadHtmlThread->start();
 				pathList.clear();
 				i = 0;
@@ -64,34 +97,36 @@ public:
 		//The remaining
 		if (pathList.size() != 0)
 		{
-			threadNum++;
-			LoadHtml *loadHtmlThread = new LoadHtml(pathList);
-			connect(loadHtmlThread, &LoadHtml::finished, this, &Load::threadFinished);
-			connect(loadHtmlThread, &QThread::finished, loadHtmlThread, &QObject::deleteLater);
+			QThread *loadHtmlThread = new QThread();
+			LoadHtml *loadHtml = new LoadHtml(pathList);
+			loadHtml->moveToThread(loadHtmlThread);
+			connect(loadHtmlThread, &QThread::started, loadHtml, &LoadHtml::load);
+			connect(loadHtml, &LoadHtml::finished, this, &Load::threadFinished);
+			connect(loadHtml, &LoadHtml::finished, loadHtml, &QObject::deleteLater);
+			connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QThread::quit);
+			connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QObject::deleteLater);
+			connect(loadHtml, &LoadHtml::processHtml, this, &Load::processHtml);
 
-			connect(loadHtmlThread, &LoadHtml::processHtml, this, &Load::processHtml);
 			loadHtmlThread->start();
-			pathList.clear();
 			i = 0;
-		}
-		while (this->threadNum != 0)
-		{
-			this->msleep(100);
-		}
-		qDebug() << "[Html Loading Thread]" << "Time elapsed : " << time.elapsed();
-		qDebug() << "[Html Loading Thread]" << "List size:" << this->pHtmlList->size();
+		}	
+		/* ---------- */
 	}
-public slots:
-	void processHtml(Html html,QString path)
+
+	void processHtml(unsigned int threadID,Html html,QString path)
 	{
 		this->pHtmlList->append(html);
-		qDebug() << "[Html Loading Thread]" << "Compelet #" << pHtmlList->size() << path << (pHtmlList->get(pHtmlList->size() - 1).getTitle());
+		qDebug() << "[Html Loading Thread # " << threadID << "]" << "Compelete #" << pHtmlList->size() << path << html.getTitle();
+		//Transmit the signal to UI thread
+		emit loadedHtml(threadID, html, path);
 	}
 
 	void threadFinished()
 	{
-		this->threadNum--;
-		qDebug() << "[Html Loading Thread]" << this->threadNum << "Thread(s) Remaining...";
+		LoadHtml::threadNum--;
+		qDebug() << "[Html Loading Thread]" <<LoadHtml::threadNum << "Thread(s) Remaining...";
+		if (LoadHtml::threadNum == 0)
+			emit this->finished();
 	}
 };
 
