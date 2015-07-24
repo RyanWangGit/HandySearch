@@ -86,7 +86,7 @@ public slots:
 				connect(loadHtml, &LoadHtml::finished, this, &Load::threadFinished);
 				connect(loadHtml, &LoadHtml::finished, loadHtml, &QObject::deleteLater);
 				connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QThread::quit);
-				connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QObject::deleteLater);
+				connect(loadHtmlThread, &QThread::finished, loadHtmlThread, &QObject::deleteLater);
 				connect(loadHtml, &LoadHtml::processHtml, this, &Load::processHtml);
 
 				loadHtmlThread->start();
@@ -104,7 +104,7 @@ public slots:
 			connect(loadHtml, &LoadHtml::finished, this, &Load::threadFinished);
 			connect(loadHtml, &LoadHtml::finished, loadHtml, &QObject::deleteLater);
 			connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QThread::quit);
-			connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QObject::deleteLater);
+			connect(loadHtmlThread, &QThread::finished, loadHtmlThread, &QObject::deleteLater);
 			connect(loadHtml, &LoadHtml::processHtml, this, &Load::processHtml);
 
 			loadHtmlThread->start();
