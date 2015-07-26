@@ -43,6 +43,9 @@ private:
 	long length;
 	ListNode<T>* head;
 	ListNode<T>* tail;
+	/* Store the last queried pointer to reduce search time when iterating */
+	ListNode<T>* last;
+	int lastIndex;
 	bool remove(ListNode<T>* p);
 public:
 	List();
@@ -81,6 +84,8 @@ List<T>::List()
 	this->head = new ListNode<T>();
 	this->tail = head;
 	this->length = 0;
+	this->last = head;
+	this->lastIndex = 0;
 }
 
 template<typename T>
@@ -99,13 +104,21 @@ T& List<T>::operator[](int i)
 template<typename T>
 T& List<T>::get(int i) 
 {
+	//TODO: Use of last pointer to optimize when iterating
+	//by finding the shortest path to the index queried
 	ListNode<T>* p = this->head->next;
+	//if (i > (i - this->lastIndex) ? ((i - this->lastIndex) > ))
 	for (int n = 0; n <= i; n++)
 	{
 		if (!p)
 			throw QNullPointerException();
 		else if (n == i)
+		{
+			this->last = p;
+			this->lastIndex = n;
 			return p->data;
+		}
+			
 		else
 			p = p->next;
 	}

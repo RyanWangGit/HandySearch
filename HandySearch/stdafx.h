@@ -4,7 +4,7 @@
 #include <QObject>
 #include "Html.h"
 #include "List.h"
+#include "BloomFilter.h"
 #include "Exceptions.h"
 #include "HashMap.h"
 #include "Threads.h"
-#include "BloomFilter.h"

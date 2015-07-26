@@ -38,16 +38,24 @@ class Load : public QObject
 	Q_OBJECT
 private:
 	List<Html> *pHtmlList;
+	BloomFilter *pDict;
 	QString htmlFolder;
 	QString dictFolder;
 
 signals:
 	void finished();
-	void loadedHtml(unsigned int, Html, QString);
-
+	//Html Thread Signals
+	void htmlLoaded(unsigned int, Html, QString);
+	void htmlLoadStarted();
+	void htmlLoadFinished();
+	//Dictionary Thread Signals
+	void dictLoaded(int num);
+	void dictLoadStarted();
+	void dictLoadFinished();
 public:
-	Load(List<Html> &htmlList, const QString &htmlFolder, const QString &dictFolder)
+	Load(List<Html> &htmlList, const QString &htmlFolder,BloomFilter &dict, const QString &dictFolder)
 	{
+		this->pDict = &dict;
 		this->pHtmlList = &htmlList;
 		this->htmlFolder = htmlFolder;
 		this->dictFolder = dictFolder;
@@ -61,18 +69,45 @@ public slots:
 //The last task sends out loadFinished signal
 	void run()
 	{
+		
 		/* -----Load dictionary----- */
 		//TODO:: load dictionary
+		emit dictLoadStarted();
+		QDirIterator dictIter(dictFolder, QDirIterator::Subdirectories);
+		QFile file;
+		QString path;
+		QString temp;
+		int index = 0;
+		while (dictIter.hasNext())
+		{
+			path = dictIter.next();
+			file.setFileName(path);
+			if (!file.open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text))
+				continue;
+			while (!file.atEnd())
+			{
+				index++;
+				temp = file.readLine();
+				temp.chop(2);
+				pDict->addItem(temp);
+				qDebug() << temp;
+				if (index % 1000 == 0)
+					emit dictLoaded(1000);
+			}
+			file.close();
+		}
+		emit dictLoadFinished();
 		/* ---------- */
-
+		
 		/* -----Load htmls----- */
-		QDirIterator iter(htmlFolder, QDirIterator::Subdirectories);
+		emit htmlLoadStarted();
+		QDirIterator htmlIter(htmlFolder, QDirIterator::Subdirectories);
 
 		QStringList pathList;
 		int i = 0;
-		while (iter.hasNext())
+		while (htmlIter.hasNext())
 		{
-			QString path = iter.next();
+			QString path = htmlIter.next();
 			if (path.endsWith("."))
 				continue;
 			pathList.append(path);
@@ -83,7 +118,7 @@ public slots:
 				LoadHtml *loadHtml = new LoadHtml(pathList);
 				loadHtml->moveToThread(loadHtmlThread);
 				connect(loadHtmlThread, &QThread::started, loadHtml, &LoadHtml::load);
-				connect(loadHtml, &LoadHtml::finished, this, &Load::threadFinished);
+				connect(loadHtml, &LoadHtml::finished, this, &Load::htmlThreadFinished);
 				connect(loadHtml, &LoadHtml::finished, loadHtml, &QObject::deleteLater);
 				connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QThread::quit);
 				connect(loadHtmlThread, &QThread::finished, loadHtmlThread, &QObject::deleteLater);
@@ -101,7 +136,7 @@ public slots:
 			LoadHtml *loadHtml = new LoadHtml(pathList);
 			loadHtml->moveToThread(loadHtmlThread);
 			connect(loadHtmlThread, &QThread::started, loadHtml, &LoadHtml::load);
-			connect(loadHtml, &LoadHtml::finished, this, &Load::threadFinished);
+			connect(loadHtml, &LoadHtml::finished, this, &Load::htmlThreadFinished);
 			connect(loadHtml, &LoadHtml::finished, loadHtml, &QObject::deleteLater);
 			connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QThread::quit);
 			connect(loadHtmlThread, &QThread::finished, loadHtmlThread, &QObject::deleteLater);
@@ -118,15 +153,15 @@ public slots:
 		this->pHtmlList->append(html);
 		qDebug() << "[Html Loading Thread # " << threadID << "]" << "Compelete #" << pHtmlList->size() << path << html.getTitle();
 		//Transmit the signal to UI thread
-		emit loadedHtml(threadID, html, path);
+		emit htmlLoaded(threadID, html, path);
 	}
 
-	void threadFinished()
+	void htmlThreadFinished()
 	{
 		LoadHtml::threadNum--;
 		qDebug() << "[Html Loading Thread]" <<LoadHtml::threadNum << "Thread(s) Remaining...";
 		if (LoadHtml::threadNum == 0)
-			emit this->finished();
+			emit this->htmlLoadFinished();
 	}
 };
 
