@@ -8,6 +8,8 @@ Html::Html() { void; }
 
 Html::Html(const QString &filePath)
 {
+	this->htmlID = this->totalNum;
+	this->totalNum++;
 	this->file.setFileName(filePath);
 	this->load();
 }
