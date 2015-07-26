@@ -25,6 +25,8 @@ private:
 	/* End of hash functions */
 public:
 	BloomFilter();
-	bool hasItem(void *key);
-	bool addItem(void *key);
+	bool hasItem(void *key, int len);
+	bool addItem(void *key, int len);
+	bool hasItem(const QString &key);
+	bool addItem(const QString &key);
 };

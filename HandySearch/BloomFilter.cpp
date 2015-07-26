@@ -6,17 +6,71 @@ BloomFilter::BloomFilter()
 }
 
 
-bool BloomFilter::hasItem(void *key)
+bool BloomFilter::hasItem(void *key, int len)
 {
-	//TODO
-	return true;
+	return
+		(
+		this->bitArray.testBit(RSHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(JSHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(PJWHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(ELFHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(BKDRHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(SDBMHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(DJBHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(DEKHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(BPHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(FNVHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(APHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(HFLPHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(HFHash((char *)key, len) % MAXSIZE)
+		&& this->bitArray.testBit(StrHash((char *)key, len) % MAXSIZE)
+		);
 }
 
 
-bool BloomFilter::addItem(void *key)
+bool BloomFilter::addItem(void *key, int len)
 {
-	//TODO
+	try
+	{
+		this->bitArray.setBit(RSHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(JSHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(PJWHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(ELFHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(BKDRHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(SDBMHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(DJBHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(DEKHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(BPHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(FNVHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(APHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(HFLPHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(HFHash((char *)key, len) % MAXSIZE);
+		this->bitArray.setBit(StrHash((char *)key, len) % MAXSIZE);
+	}
+	catch (...)
+	{
+		return false;
+	}
 	return true;
+}
+
+bool BloomFilter::hasItem(const QString &key)
+{
+	if (key == "")
+		return false;
+	QByteArray ba = key.toLocal8Bit();
+	char * str = ba.data();
+	return this->hasItem(str, ba.size());
+}
+
+
+bool BloomFilter::addItem(const QString &key)
+{
+	if (key == "")
+		return false;
+	QByteArray ba = key.toLocal8Bit();
+	char * str= ba.data();
+	return this->addItem(str, ba.size());
 }
 
 
