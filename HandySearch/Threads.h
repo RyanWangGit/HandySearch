@@ -43,7 +43,7 @@ private:
 	QString dictFolder;
 
 signals:
-	void finished();
+	void loadFinished();
 	//Html Thread Signals
 	void htmlLoaded(unsigned int, Html, QString);
 	void htmlLoadStarted();
@@ -69,9 +69,7 @@ public slots:
 //The last task sends out loadFinished signal
 	void run()
 	{
-		
 		/* -----Load dictionary----- */
-		//TODO:: load dictionary
 		emit dictLoadStarted();
 		QDirIterator dictIter(dictFolder, QDirIterator::Subdirectories);
 		QFile file;
@@ -88,7 +86,7 @@ public slots:
 			{
 				index++;
 				temp = file.readLine();
-				temp.chop(2);
+				temp.chop(1);
 				pDict->addItem(temp);
 				qDebug() << temp;
 				if (index % 1000 == 0)
@@ -161,7 +159,11 @@ public slots:
 		LoadHtml::threadNum--;
 		qDebug() << "[Html Loading Thread]" <<LoadHtml::threadNum << "Thread(s) Remaining...";
 		if (LoadHtml::threadNum == 0)
+		{
 			emit this->htmlLoadFinished();
+			emit this->loadFinished();
+		}
+			
 	}
 };
 

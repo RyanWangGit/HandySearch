@@ -69,7 +69,7 @@ bool BloomFilter::addItem(const QString &key)
 	if (key == "")
 		return false;
 	QByteArray ba = key.toLocal8Bit();
-	char * str= ba.data();
+	char * str = ba.data();
 	return this->addItem(str, ba.size());
 }
 

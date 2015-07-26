@@ -28,9 +28,9 @@ HandySearch::HandySearch(QWidget *parent)
 	Load *initialLoad = new Load(this->htmlList, htmlFolder,this->dictionary, dictFolder);
 	initialLoad->moveToThread(initialLoadThread);
 	connect(initialLoadThread, &QThread::started, initialLoad, &Load::run);
-	connect(initialLoad, &Load::finished, this, &HandySearch::loadFinished);
-	connect(initialLoad, &Load::finished, initialLoad, &QObject::deleteLater);
-	connect(initialLoad, &Load::finished, initialLoadThread, &QThread::quit);
+	connect(initialLoad, &Load::loadFinished, this, &HandySearch::loadFinished);
+	connect(initialLoad, &Load::loadFinished, initialLoad, &QObject::deleteLater);
+	connect(initialLoad, &Load::loadFinished, initialLoadThread, &QThread::quit);
 	connect(initialLoadThread, &QThread::finished, initialLoadThread, &QObject::deleteLater);
 
 	//Connect the thread signals to the UI slots
