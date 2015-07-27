@@ -35,6 +35,11 @@ QString& Html::getTitle()
 	return this->title;
 }
 
+QString &Html::getFilePath()
+{
+	return this->file.fileName();
+}
+
 /* Extract pure text from html file and store it into Html::textContent */
 void Html::extractText(const QString &fileContent)
 {

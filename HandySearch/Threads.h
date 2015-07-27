@@ -148,7 +148,9 @@ public slots:
 
 	void processHtml(unsigned int threadID,Html html,QString path)
 	{
+		//Process Html and set up index
 		this->pHtmlList->append(html);
+
 		qDebug() << "[Html Loading Thread # " << threadID << "]" << "Compelete #" << pHtmlList->size() << path << html.getTitle();
 		//Transmit the signal to UI thread
 		emit htmlLoaded(threadID, html, path);

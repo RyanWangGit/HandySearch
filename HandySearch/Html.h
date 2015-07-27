@@ -23,6 +23,7 @@ public:
 	unsigned int getID();
 	QString &getText();
 	QString &getTitle();
+	QString &getFilePath();
 	bool loadFrom(QString &filePath);
 	bool operator== (Html &other);
 	Html& operator= (const Html &other);
