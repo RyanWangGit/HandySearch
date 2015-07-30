@@ -63,6 +63,7 @@ public:
 	bool insertAfter(int i, const T& value);
 	/* Operator[] to get i(th) node's data */
 	T& operator[](int i);
+	List<T>& operator=(const List<T>& other);
 	
 };
 
@@ -87,6 +88,16 @@ template<typename T>
 T& List<T>::operator[](int i)
 {
 	return this->get(i);
+}
+
+template<typename T>
+List<T>& List<T>::operator=(const List<T>& other)
+{
+	if (this == &other)
+		return *this;
+	this->clear();
+	this->append(other);
+	return *this;
 }
 
 template<typename T>
