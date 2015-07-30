@@ -1,16 +1,50 @@
 #pragma once
 template < typename K, typename V >
+class Entry
+{
+public:
+	K key;
+	V value;
+	//Empty constructor for list heads
+	Entry(){	void;	}
+	//Constructor
+	Entry(K key, V value)
+	{
+		this->key = key;
+		this->value = value;
+	}
+	//Copy constructor
+	Entry(const Entry<K, V> &c)
+	{
+		this->key = c.key;
+		this->value = c.value;
+	}
+	//Operator =
+	Entry<K, V> &operator=(const Entry<K, V> &other)
+	{
+		if (this == &other)
+			return *this;
+		this->key = other.key;
+		this->value = other.value;
+		return *this;
+	}
+};
+
+
+template < typename K, typename V >
 class HashMap
 {
 #define INDEX_SIZE 1048576 //2^20
 private:
-	List<V> *index;
+	List<Entry<K,V>> **index;
 	float loadFactor;
 public:
 	HashMap();
 	~HashMap();
-	bool put(const K &key,const V &value);
-	V& get(const K &key);
+	bool put(const K &key, unsigned int len, V &value);
+	bool put(const QString &key, List<Index> &value);
+	V& get(const K &key, unsigned int len);
+	V& get(const QString &key);
 	bool resize(int newSize);
 
 	/* Static methods */
@@ -20,17 +54,88 @@ public:
 template < typename K, typename V >
 HashMap<K, V>::HashMap()
 {
-	this->index = new List<V>[INDEX_SIZE];
-	//TODO
+	//Allocate a pointer array
+	this->index = new List<Entry<K,V>> *[INDEX_SIZE];
+	//Set all pointer to null
+	for (int i = 0; i < INDEX_SIZE; i++)
+		this->index[i] = nullptr;
 }
 
 template < typename K, typename V >
-bool HashMap<K, V>::put(const K &key, const V &value)
+HashMap<K, V>::~HashMap()
 {
-	unsigned int index = HashMap::hashCode((void *)&key,)
-		//TODO
+	for (int i = 0; i < INDEX_SIZE; i++)
+		delete this->index[i];
+	delete[] this->index;
 }
 
+template < typename K, typename V >
+bool HashMap<K, V>::put(const K &key, unsigned int len, V &value)
+{
+	try
+	{
+		unsigned int i = HashMap::hashCode((void *)&key, len) % INDEX_SIZE;
+		if (this->index[i] == nullptr)
+			this->index[i] = new List<Entry<K, V>>();
+		for (int k = 0; k < this->index[i]->size(); k++)
+		{
+			Entry<K, V> *temp = &this->index[i]->get(k);
+			if (temp->key == key)
+				temp->value = value;
+		}
+	}
+	catch (...)
+	{
+		return false;
+	}
+	return true;
+}
+
+template < typename K, typename V >
+bool HashMap<K, V>::put(const QString &key, List<Index> &value)
+{
+	QByteArray ba = key.toLocal8Bit();
+	return this->put(ba.data(), ba.size(), value);
+}
+
+
+template < typename K, typename V >
+V& HashMap<K, V>::get(const K &key,unsigned int len)
+{
+	try
+	{
+		unsigned int i = HashMap::hashCode((void *)&key, len) % INDEX_SIZE;
+		for (int j = 0; j < this->index[i]->size(); j++)
+		{
+			if (this->index[i] == nullptr)
+				return 0;
+			for (int k = 0; k < this->index[i]->size(); k++)
+			{
+				Entry<K, V> *temp = &this->index[i]->get(k);
+				if (temp->key == key)
+					return temp->value;
+			}
+		}
+	}
+	catch (...)
+	{
+		return 0;
+	}
+	return 0;
+}
+
+template < typename K, typename V >
+V& HashMap<K, V>::get(const QString &key)
+{
+	QByteArray ba = key.toLocal8Bit();
+	this->get(ba.data(), ba.size());
+}
+
+template < typename K, typename V >
+bool HashMap<K, V>::resize(int newSize)
+{
+	return true;
+}
 
 /* We use Murmur 2.0 hash function here */
 /* and use 0xEE6B27EB as the seed */

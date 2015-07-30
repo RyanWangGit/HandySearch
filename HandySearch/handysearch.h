@@ -10,6 +10,7 @@ private:
 	bool isLoading;
 	List<Html> htmlList;
 	BloomFilter dictionary;
+	HashMap<QString, List<Index>> index;
 	QString htmlFolder;
 	QString dictFolder;
 	QTime clock;

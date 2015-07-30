@@ -11,6 +11,10 @@ HandySearch::HandySearch(QWidget *parent)
 	qRegisterMetaType<Html>("Html");
 	ui.setupUi(this);
 
+	List<Index> list;
+	QString t = QString("Fuck");
+	this->index.put(t, list);
+
 	//Start the application clock
 	clock.start();
 
@@ -97,6 +101,7 @@ void HandySearch::dictLoadFinished()
 {
 	this->ui.progressBar->setVisible(false);
 	this->ui.statusBar->showMessage("   Dictionary Load Finished.");
+	qDebug() << this->dictionary.hasItem("我是日狗") << this->dictionary.hasItem("地址");
 }
 
 
@@ -111,7 +116,7 @@ void HandySearch::paintEvent(QPaintEvent *event)
 		this->width() - shadowWidth * 2,
 		this->height() - shadowWidth * 2
 		);
-
+	
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing, true);
 	painter.fillPath(path, QBrush(Qt::white));
