@@ -10,31 +10,19 @@ class ListNode
 	ListNode<T>* prior;
 public:
 	friend class List<T>;
-	ListNode(const T& data);
-	ListNode();
-	~ListNode();
+	ListNode(const T& data)
+	{
+		this->data = data;
+		this->next = nullptr;
+		this->prior = nullptr;
+	}
+	ListNode()
+	{
+		this->next = nullptr;
+		this->prior = nullptr;
+	}
 };
 
-template<typename T>
-ListNode<T>::ListNode(const T& data)
-{
-	this->data = data;
-	this->next = nullptr;
-	this->prior = nullptr;
-}
-
-template<typename T>
-ListNode<T>::ListNode()
-{
-	this->next = nullptr;
-	this->prior = nullptr;
-}
-
-template<typename T>
-ListNode<T>::~ListNode()
-{
-
-}
 
 template<typename T>
 class List
