@@ -35,7 +35,7 @@ QString& Html::getTitle()
 	return this->title;
 }
 
-QString &Html::getFilePath()
+QString Html::getFilePath()
 {
 	return this->file.fileName();
 }

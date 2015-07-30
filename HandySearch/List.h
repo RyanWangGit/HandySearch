@@ -10,14 +10,14 @@ class ListNode
 	ListNode<T>* prior;
 public:
 	friend class List<T>;
-	ListNode(const T& data)
+	ListNode()
 	{
-		this->data = data;
 		this->next = nullptr;
 		this->prior = nullptr;
 	}
-	ListNode()
+	ListNode(T& data)
 	{
+		this->data = data;
 		this->next = nullptr;
 		this->prior = nullptr;
 	}
@@ -41,9 +41,9 @@ public:
 	/* Get the i(th) node of the list (Starting from 0) */
 	T& get(int i);
 	/* Append a node to the tail */
-	void append(const T& data);
+	void append(T& data);
 	/* Append a new list to the tail */
-	void append(const List<T>& list);
+	void append(List<T>& list);
 	/* Clear the list */
 	bool clear();
 	/* Returns whether this list is empty or not */
@@ -63,7 +63,7 @@ public:
 	bool insertAfter(int i, const T& value);
 	/* Operator[] to get i(th) node's data */
 	T& operator[](int i);
-	List<T>& operator=(const List<T>& other);
+	List<T>& operator=(List<T>& other);
 	
 };
 
@@ -91,8 +91,9 @@ T& List<T>::operator[](int i)
 }
 
 template<typename T>
-List<T>& List<T>::operator=(const List<T>& other)
+List<T>& List<T>::operator=(List<T>& other)
 {
+	
 	if (this == &other)
 		return *this;
 	this->clear();
@@ -145,7 +146,7 @@ bool List<T>::clear()
 }
 
 template<typename T>
-void List<T>::append(const T& data)
+void List<T>::append(T& data)
 {
 	ListNode<T>* p = this->tail;
 	p->next = new ListNode<T>(data);
@@ -156,7 +157,7 @@ void List<T>::append(const T& data)
 }
 
 template<typename T>
-void List<T>::append(const List<T>& list)
+void List<T>::append(List<T>& list)
 {
 	for (int i = 0; i < list.size(); i++)
 		this->append(list.get(i));
