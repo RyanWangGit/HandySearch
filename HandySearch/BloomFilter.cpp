@@ -3,6 +3,7 @@
 BloomFilter::BloomFilter()
 {
 	this->bitArray.resize(MAXSIZE);
+	this->maxLength = 0;
 }
 
 
@@ -30,6 +31,10 @@ bool BloomFilter::hasItem(void *key, int len)
 
 bool BloomFilter::addItem(void *key, int len)
 {
+	//Update maxWordLength
+	if (len / 2 > this->maxLength)
+		this->maxLength = len / 2;
+
 	try
 	{
 		this->bitArray.setBit(RSHash((char *)key, len) % MAXSIZE);
@@ -54,6 +59,11 @@ bool BloomFilter::addItem(void *key, int len)
 	return true;
 }
 
+unsigned int BloomFilter::getMaxLength()
+{
+	return this->maxLength;
+}
+
 bool BloomFilter::hasItem(const QString &key)
 {
 	if (key == "")
@@ -70,6 +80,7 @@ bool BloomFilter::addItem(const QString &key)
 		return false;
 	QByteArray ba = key.toLocal8Bit();
 	char * str = ba.data();
+
 	return this->addItem(str, ba.size());
 }
 
