@@ -26,6 +26,8 @@ public slots:
 	void dictLoaded(int num);
 	void dictLoadStarted();
 	void dictLoadFinished();
+	//UI slots
+	void test();
 public:
 	HandySearch(QWidget *parent = 0);
 	//Override paintEvent

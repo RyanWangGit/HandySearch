@@ -24,7 +24,7 @@ public slots:
 	{
 		qDebug() << "[Html Loading Thread #" << this->id << "]" << "Thread Received " << pathList.size() << "Files";
 		for (int i = 0; i < pathList.size(); i++)
-			emit processHtml(this->id, Html(pathList[i]), pathList.at(i));
+				emit processHtml(this->id, Html(pathList[i]), pathList.at(i));
 
 		emit finished();
 	}
@@ -88,7 +88,6 @@ public slots:
 				temp = file.readLine();
 				temp.chop(1);
 				pDict->addItem(temp);
-				qDebug() << temp;
 				if (index % 1000 == 0)
 					emit dictLoaded(1000);
 			}
@@ -110,7 +109,7 @@ public slots:
 				continue;
 			pathList.append(path);
 			i++;
-			if (i == 500)
+			if (i == 250)
 			{
 				QThread *loadHtmlThread = new QThread();
 				LoadHtml *loadHtml = new LoadHtml(pathList);
@@ -165,7 +164,6 @@ public slots:
 			emit this->htmlLoadFinished();
 			emit this->loadFinished();
 		}
-			
 	}
 };
 

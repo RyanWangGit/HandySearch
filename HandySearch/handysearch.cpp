@@ -11,10 +11,6 @@ HandySearch::HandySearch(QWidget *parent)
 	qRegisterMetaType<Html>("Html");
 	ui.setupUi(this);
 
-	List<Index> list;
-	QString t = QString("Fuck");
-	this->index.put(t, list);
-
 	//Start the application clock
 	clock.start();
 
@@ -34,7 +30,7 @@ HandySearch::HandySearch(QWidget *parent)
 	connect(initialLoadThread, &QThread::started, initialLoad, &Load::run);
 	connect(initialLoad, &Load::loadFinished, this, &HandySearch::loadFinished);
 	connect(initialLoad, &Load::loadFinished, initialLoad, &QObject::deleteLater);
-	connect(initialLoad, &Load::loadFinished, initialLoadThread, &QThread::quit);
+	connect(initialLoad, &Load::loadFinished, initialLoad, &QObject::deleteLater);
 	connect(initialLoadThread, &QThread::finished, initialLoadThread, &QObject::deleteLater);
 
 	//Connect the thread signals to the UI slots
@@ -81,6 +77,7 @@ void HandySearch::htmlLoadFinished()
 
 void HandySearch::dictLoadStarted()
 {
+	this->ui.progressBar->setValue(0);
 	this->ui.progressBar->setVisible(false);
 	this->ui.progressBar->setRange(0, INT_MAX);
 	this->ui.statusBar->showMessage("   Started Loading Html Library");
@@ -101,9 +98,20 @@ void HandySearch::dictLoadFinished()
 {
 	this->ui.progressBar->setVisible(false);
 	this->ui.statusBar->showMessage("   Dictionary Load Finished.");
-	qDebug() << this->dictionary.hasItem("我是日狗") << this->dictionary.hasItem("地址");
 }
 
+
+void HandySearch::test()
+{
+	//qDebug() << this->ui.textEdit->toPlainText();
+	WordSegmenter ws(this->ui.textEdit->toPlainText(), this->dictionary);
+	QString result;
+	QStringList qsl;
+	qsl = ws.getResult();
+	for (QString word : qsl)
+		result.append(word + "/");
+	this->ui.textEdit->setPlainText(result);
+}
 
 void HandySearch::paintEvent(QPaintEvent *event)
 {

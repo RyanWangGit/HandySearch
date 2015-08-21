@@ -183,11 +183,10 @@ template<typename T>
 bool List<T>::remove(int i)
 {
 	ListNode<T>* p = this->head->next;
-	if ()
 	for (int n = 0; n <= i; n++)
 	{
 		if (!p)
-			throw QNullPointerException();
+			throw QNullPointerException("In remove method");
 		else if (n == i)
 			return this->remove(p);
 		else
