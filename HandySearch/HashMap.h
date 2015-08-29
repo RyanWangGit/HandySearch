@@ -66,7 +66,7 @@ HashMap<K, V>::~HashMap()
 {
 	for (int i = 0; i < INDEX_SIZE; i++)
 		delete this->index[i];
-	delete[] this->index;
+	delete this->index;
 }
 
 template < typename K, typename V >

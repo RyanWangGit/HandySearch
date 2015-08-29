@@ -97,7 +97,7 @@ public slots:
 		/* ---------- */
 		
 		/* -----Load htmls----- */
-		emit htmlLoadStarted();
+	/*	emit htmlLoadStarted();
 		QDirIterator htmlIter(htmlFolder, QDirIterator::Subdirectories);
 
 		QStringList pathList;
@@ -141,7 +141,7 @@ public slots:
 
 			loadHtmlThread->start();
 			i = 0;
-		}	
+		}	*/
 		/* ---------- */
 	}
 

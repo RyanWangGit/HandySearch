@@ -3,9 +3,9 @@
 
 Chunk::Chunk(QString fWord,QString sWord,QString tWord)
 {
-	this->words[0] = fWord;
-	this->words[1] = sWord;
-	this->words[2] = tWord;
+	this->words.append(fWord);
+	this->words.append(sWord);
+	this->words.append(tWord);
 	this->wordCount = -1;
 	this->totalLen = -1;
 	this->avgLen = -1;
@@ -84,8 +84,7 @@ QStringList & Chunk::getWords()
 
 Chunk & Chunk::operator=(const Chunk &other)
 {
-	for (int i = 0; i < 3; i++)
-		this->words[i] = other.words[i];
+	this->words = other.words;
 
 	this->avgLen = other.avgLen;
 	this->totalLen = other.totalLen;
@@ -99,11 +98,11 @@ void WordSegmenter::mmFilter(List<Chunk> &chunks)
 	//Filter with segmentation length
 	int maxLength = 0;
 	for (int i = 0; i < chunks.size(); i++)
-		if (chunks[i].getLength() > maxLength)
-			maxLength = chunks[i].getLength();
+		if (chunks.get(i).getLength() > maxLength)
+			maxLength = chunks.get(i).getLength();
 	//Remove those don't fit 
 	for (int i = 0; i < chunks.size(); i++)
-		if (chunks[i].getLength() < maxLength)
+		if (chunks.get(i).getLength() < maxLength)
 			chunks.remove(i);
 }
 
@@ -112,8 +111,8 @@ void WordSegmenter::lawlFilter(List<Chunk> &chunks)
 	//Filter with average word length
 	int maxLength = 0;
 	for (int i = 0; i < chunks.size(); i++)
-		if (chunks[i].getAvgLen() > maxLength)
-			maxLength = chunks[i].getAvgLen();
+		if (chunks.get(i).getAvgLen() > maxLength)
+			maxLength = chunks.get(i).getAvgLen();
 	//Remove those don't fit 
 	for (int i = 0; i < chunks.size(); i++)
 		if (chunks.get(i).getAvgLen() < maxLength)
@@ -125,11 +124,11 @@ void WordSegmenter::svmlFilter(List<Chunk> &chunks)
 	//Fiter with variance of word length
 	double minVariance = 10000.0;
 	for (int i = 0; i < chunks.size(); i++)
-		if (chunks[i].getVariance() < minVariance)
-			minVariance = chunks[i].getVariance();
+		if (chunks.get(i).getVariance() < minVariance)
+			minVariance = chunks.get(i).getVariance();
 	//Remove those don't fit 
 	for (int i = 0; i < chunks.size(); i++)
-		if (chunks[i].getVariance() < minVariance)
+		if (chunks.get(i).getVariance() < minVariance)
 			chunks.remove(i);
 }
 
@@ -166,7 +165,7 @@ QStringList WordSegmenter::getMaxMatchingWord()
 		this->pos++;
 		
 		QString word = this->content.mid(originalPos, this->pos - originalPos);
-		if (dict->hasItem(word))
+		if (dict->hasItem(word) || word.size() == 1)
 			words.append(word);
 	}
 	this->pos = originalPos;
@@ -191,8 +190,10 @@ QStringList WordSegmenter::getChineseWords()
 	
 	//There should be only one chunk remaining
 	//after the four filters
-	this->pos += chunks[0].getLength();
-	return chunks[0].getWords();
+	if (chunks.size() == 0)
+		return QStringList();
+	this->pos += chunks.get(0).getLength();
+	return chunks.get(0).getWords();
 }
 
 QString WordSegmenter::getASCIIWords()
@@ -249,7 +250,7 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 						if (word3.size() == 0)
 							chunks.append(Chunk(word1, word2, QString()));
 						else
-							chunks.append(Chunk(word1, word2, word3));
+							chunks.append(Chunk(word1, word2, word3));		
 					}
 				}
 				else if (this->pos == this->content.size())
@@ -281,9 +282,15 @@ QStringList & WordSegmenter::getResult()
 	{
 		//If it is a chinese charactor
 		if (this->isChineseChar(this->getNextChar()))
-			result.append(this->getChineseWords());
+		{
+ 			QStringList word = this->getChineseWords();
+			result.append(word);
+		}
 		else
-			result.append(this->getASCIIWords());
+		{
+			QString word = this->getASCIIWords();
+			result.append(word);
+		}
 	}
 	return this->result;
 }
