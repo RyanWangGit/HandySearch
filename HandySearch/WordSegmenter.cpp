@@ -103,7 +103,10 @@ void WordSegmenter::mmFilter(List<Chunk> &chunks)
 	//Remove those don't fit 
 	for (int i = 0; i < chunks.size(); i++)
 		if (chunks.get(i).getLength() < maxLength)
+		{
 			chunks.remove(i);
+			i--;
+		}
 }
 
 void WordSegmenter::lawlFilter(List<Chunk> &chunks)
@@ -116,7 +119,10 @@ void WordSegmenter::lawlFilter(List<Chunk> &chunks)
 	//Remove those don't fit 
 	for (int i = 0; i < chunks.size(); i++)
 		if (chunks.get(i).getAvgLen() < maxLength)
+		{
 			chunks.remove(i);
+			i--;
+		}
 }
 
 void WordSegmenter::svmlFilter(List<Chunk> &chunks)
@@ -129,7 +135,10 @@ void WordSegmenter::svmlFilter(List<Chunk> &chunks)
 	//Remove those don't fit 
 	for (int i = 0; i < chunks.size(); i++)
 		if (chunks.get(i).getVariance() < minVariance)
+		{
 			chunks.remove(i);
+			i--;
+		}
 }
 
 void WordSegmenter::logFreqFilter(List<Chunk> &chunks)

@@ -173,7 +173,11 @@ template<typename T>
 bool List<T>::remove(ListNode<T> *p)
 {
 	p->prior->next = p->next;
-	p->next->prior = p->prior;
+	if (p->next == nullptr)
+		this->tail = p->prior;
+	else
+		p->next->prior = p->prior;
+		
 	delete p;
 	this->length--;
 	return true;
@@ -198,7 +202,7 @@ template<typename T>
 bool List<T>::remove(T &value)
 {
 	ListNode<T>* p = this->head;
-	bool hasRemove = false;
+	bool hasRemoved = false;
 	for (int i = 0; i < this->size(); i++)
 	{
 		if (!p)
@@ -206,11 +210,11 @@ bool List<T>::remove(T &value)
 		if (p->data == value)
 		{
 			this->remove(p);
-			hasRemove = true;
+			hasRemoved = true;
 		}
 		p = p->next;
 	}
-	return hasRemove;
+	return hasRemoved;
 }
 
 template<typename T>
