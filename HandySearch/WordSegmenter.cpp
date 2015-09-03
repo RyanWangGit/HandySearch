@@ -53,7 +53,7 @@ int Chunk::getLength()
 	return this->totalLen;
 }
 
-int Chunk::getAvgLen()
+double Chunk::getAvgLen()
 {
 	if (this->avgLen < 0)
 		this->avgLen = (double)this->getLength() / this->getCount();
@@ -114,7 +114,7 @@ void WordSegmenter::mmFilter(List<Chunk> &chunks)
 void WordSegmenter::lawlFilter(List<Chunk> &chunks)
 {
 	//Filter with average word length
-	int maxLength = 0;
+	double maxLength = 0;
 	for (int i = 0; i < chunks.size(); i++)
 		if (chunks.get(i).getAvgLen() > maxLength)
 			maxLength = chunks.get(i).getAvgLen();
@@ -227,7 +227,7 @@ QString WordSegmenter::getASCIIWords()
 		while (this->pos < this->content.size())
 		{
 			QChar ch = this->getNextChar();
-			if (!(ch.isPunct() || ch.isSpace()))
+			if (this->isChineseChar(ch) || ch.isLetterOrNumber())
 				break;
 			else
 				this->pos++;
@@ -249,7 +249,7 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 		{
 			QStringList words2 = this->getMaxMatchingWord();
 
-			//If there's no words found
+			//If there are no words found
 			if (words2.isEmpty())
 				chunks.append(Chunk(word1, QString(), QString()));
 
@@ -260,7 +260,7 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 				{
 					QStringList words3 = this->getMaxMatchingWord();
 
-					//If there's no words found
+					//If there are no words found
 					if (words3.isEmpty())
 						chunks.append(Chunk(word1, word2, QString()));
 
@@ -292,7 +292,6 @@ QStringList & WordSegmenter::getResult()
 {
 	if (!this->result.isEmpty())
 		return this->result;
-	qDebug() << this->content;
 
 	while (this->pos < this->content.size())
 	{

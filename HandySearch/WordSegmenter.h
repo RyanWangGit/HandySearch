@@ -5,7 +5,7 @@ private:
 	QStringList words;
 	int wordCount;
 	int totalLen;
-	int avgLen;
+	double avgLen;
 	double variance;
 public:
 	Chunk();
@@ -13,7 +13,7 @@ public:
 	Chunk(QString fWord, QString sWord, QString tWord);
 	int getCount();
 	int getLength();
-	int getAvgLen();
+	double getAvgLen();
 	double getVariance();
 	QStringList &getWords();
 	Chunk &operator=(const Chunk &other);
