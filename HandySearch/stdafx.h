@@ -4,12 +4,14 @@
 #include <QObject>
 #include <QtWinExtras/QWinTaskbarButton>
 #include <QtWinExtras/QWinTaskbarProgress>
+
 #include "Exceptions.h"
 #include "List.h"
-#include "Index.h"
-#include "Html.h"
 #include "BloomFilter.h"
-#include "WordSegmenter.h"
+#include "Html.h"
+#include "Index.h"
 #include "HashMap.h"
+#include "handysearch.h"
+#include "WordSegmenter.h"
 #include "Threads.h"
 

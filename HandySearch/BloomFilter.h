@@ -2,7 +2,7 @@
 
 class BloomFilter
 {
-#define MAXSIZE 16777216 // 2^24
+#define MAXSIZE 67108864 // 2^26
 private:
 	QBitArray bitArray;
 	unsigned int maxLength;

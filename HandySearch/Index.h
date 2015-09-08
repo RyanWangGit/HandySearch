@@ -3,15 +3,14 @@
 class Index
 {
 private:
-	unsigned int htmlID;
-	unsigned int frequency;
 	List<unsigned int> position;
+	Html* html;
 public:
-	unsigned int getHtmlID();
+	Html* getHtml();
 	unsigned int getFrequency();
 	List<unsigned int> &getPosition();
 	Index();
-	Index(unsigned int htmlID,unsigned int frequency,unsigned int firstPos);  
+	Index(Html* html, unsigned int firstPos);  
 	Index &operator= (Index &other);
 };
 

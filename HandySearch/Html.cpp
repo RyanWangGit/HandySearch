@@ -1,15 +1,13 @@
 #include "stdafx.h"
 #include "Html.h"
 
-/* Initialization of static members */
+/* Initialize the static member */
 unsigned int Html::totalNum = 0;
 
 Html::Html() { void; }
 
 Html::Html(const QString &filePath)
 {
-	this->htmlID = this->totalNum;
-	this->totalNum++;
 	this->file.setFileName(filePath);
 	this->load();
 }
@@ -19,11 +17,6 @@ Html::Html(const Html &c)
 	this->file.setFileName(c.file.fileName());
 	this->textContent = c.textContent;
 	this->title = c.title;
-}
-
-unsigned int Html::getID()
-{
-	return this->htmlID;
 }
 
 QString& Html::getText()
@@ -53,9 +46,7 @@ void Html::extractText(const QString &fileContent)
 		this->textContent = fileContent;
 
 		//Remove line breaks and tabs
-		this->textContent.replace("\r", "");
-		this->textContent.replace("\n", "");
-		this->textContent.replace("\t", "");
+		this->textContent.replace(QRegExp("[\r|\n|\t]"), "");
 
 		//Remove header
 		this->textContent.replace(QRegExp("<head>.*</head>"), "");
@@ -105,6 +96,50 @@ void Html::extractTitle(const QString &fileContent)
 	this->title = rx.cap(1);
 }
 
+void Html::analyze()
+{
+	unsigned int pos = 0;
+	WordSegmenter ws(this->textContent, HandySearch::dictionary);
+	QStringList result = ws.getResult();
+	for (QString word : result) 
+	{
+		pos += word.size();
+		//If the first character isn't chinese
+		QChar ch = word.at(0);	
+		if (!(ch.unicode() >= 0x4e00 && ch.unicode() <= 0x9FA5))
+			continue;
+		
+		//Find if there's a list existed
+		List<Index>* indexList = nullptr;
+		List<Index>** pIndexList = HandySearch::index.get(word);
+		if (pIndexList == nullptr)
+		{
+			indexList = new List<Index>();
+			HandySearch::index.put(word, indexList);
+		}
+		else
+			indexList = *pIndexList;
+
+		bool hasFound = false;
+		for (int i = 0; i < indexList->size(); i++)
+		{
+			Index* index = &indexList->get(i);
+			//If the word belongs to an existed index
+			if (index->getHtml() == this)
+			{
+				index->getPosition().append(pos);
+				hasFound = true;
+				break;
+			}
+		}
+		if (!hasFound)
+		{
+			Html* temp = this;
+			indexList->append(Index(temp, pos));
+		}
+	}
+}
+
 /* Load the html file only if the path is set */
 bool Html::load()
 {
@@ -120,8 +155,9 @@ bool Html::load()
 		fileContent = this->file.readAll();
 		extractTitle(fileContent);
 		extractText(fileContent);
-		
+		this->fileName = file.fileName();
 		this->file.close();
+		//this->analyze();
 		return true;
 	}
 	else
@@ -156,5 +192,5 @@ Html& Html::operator= (const Html &other)
 int Html::hashCode()
 {
 	QByteArray str = this->title.toLocal8Bit();
-	return HashMap<int, int>::hashCode(str.data(), str.size());
+	return HashMap<int>::hashCode(str.data(), str.size());
 }

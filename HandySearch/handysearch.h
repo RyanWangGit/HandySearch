@@ -8,18 +8,18 @@ class HandySearch : public QMainWindow
 	Q_OBJECT
 private:
 	bool isLoading;
-	List<Html> htmlList;
-	BloomFilter dictionary;
-	HashMap<QString, List<Index>> index;
 	QString htmlFolder;
 	QString dictFolder;
 	QTime clock;
+public:
+	static BloomFilter dictionary;
+	static HashMap<List<Index>*> index;
 public slots:
 	void onCloseButtonClick();
 	/* Load slots */
 	void loadFinished();
 	//Html load slots
-	void htmlLoaded(unsigned int threadID, Html html, QString path);
+	void htmlLoaded(unsigned int threadID, QString path);
 	void htmlLoadStarted();
 	void htmlLoadFinished();
 	//Dictionary load slots
@@ -28,6 +28,7 @@ public slots:
 	void dictLoadFinished();
 	//UI slots
 	void test();
+	void search();
 public:
 	HandySearch(QWidget *parent = 0);
 	//Override paintEvent

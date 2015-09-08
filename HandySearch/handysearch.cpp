@@ -3,7 +3,10 @@
 
 using namespace std;
 
+/* Initialize the static member */
 unsigned int LoadHtml::threadNum = 0;
+BloomFilter HandySearch::dictionary;
+HashMap<List<Index>*> HandySearch::index;
 
 HandySearch::HandySearch(QWidget *parent)
 	: QMainWindow(parent)
@@ -25,7 +28,7 @@ HandySearch::HandySearch(QWidget *parent)
 
 	//Initialization of application
 	QThread *initialLoadThread = new QThread();
-	Load *initialLoad = new Load(this->htmlList, htmlFolder,this->dictionary, dictFolder);
+	Load *initialLoad = new Load(htmlFolder, dictFolder);
 	initialLoad->moveToThread(initialLoadThread);
 	connect(initialLoadThread, &QThread::started, initialLoad, &Load::run);
 	connect(initialLoad, &Load::loadFinished, this, &HandySearch::loadFinished);
@@ -56,7 +59,7 @@ void HandySearch::htmlLoadStarted()
 	
 }
 
-void HandySearch::htmlLoaded(unsigned int threadID, Html html, QString path)
+void HandySearch::htmlLoaded(unsigned int threadID, QString path)
 {
 	this->ui.progressBar->setValue(this->ui.progressBar->value() + 1);
 	int currentProgress = this->ui.progressBar->value();
@@ -106,10 +109,29 @@ void HandySearch::test()
 	//qDebug() << this->ui.textEdit->toPlainText();
 	WordSegmenter ws(this->ui.textEdit->toPlainText(), this->dictionary);
 	QString result;
-	QStringList qsl;
-	qsl = ws.getResult();
+	QStringList qsl = ws.getResult();
 	for (QString word : qsl)
 		result.append(word + "/");
+	this->ui.textEdit->setPlainText(result);
+}
+
+void HandySearch::search()
+{
+	WordSegmenter ws(this->ui.textEdit->toPlainText(), this->dictionary);
+	QString result;
+	QStringList qsl = ws.getResult();
+	for (QString word : qsl)
+	{
+		List<Index>* indexList = nullptr;
+		List<Index>** pIndexList = HandySearch::index.get(word);
+		if (pIndexList == nullptr)
+			continue;
+		else
+			indexList = *pIndexList;
+
+		for (int i = 0; i < indexList->size(); i++)
+			result.append(indexList->get(i).getHtml()->getTitle() + "\n");
+	}
 	this->ui.textEdit->setPlainText(result);
 }
 
@@ -152,8 +174,7 @@ void HandySearch::paintEvent(QPaintEvent *event)
 void HandySearch::loadFinished()
 {
 	this->isLoading = false;
-	qDebug() << "Load finished " << this->htmlList.size();
-	qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << this->htmlList.size();
+	qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::totalNum;
 }
 //This is a test method
 void HandySearch::onCloseButtonClick()

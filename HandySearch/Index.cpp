@@ -4,14 +4,11 @@ Index::Index()
 {
 	//To make data invalid
 	//This empty constructor is for the head node
-	this->htmlID = -1;
-	this->frequency = -1;
 }
 
-Index::Index(unsigned int htmlID, unsigned int frequency, unsigned int firstPos)
+Index::Index(Html* html, unsigned int firstPos)
 {
-	this->htmlID = htmlID;
-	this->frequency = frequency;
+	this->html = html;
 	this->position.append(firstPos);
 }
 
@@ -19,20 +16,19 @@ Index & Index::operator= (Index &other)
 {
 	if (this == &other)
 		return *this;
-	this->frequency = other.frequency;
-	this->htmlID = other.htmlID;
+	this->html = other.html;
 	this->position = other.position;
 	return *this;
 }
 
-unsigned int  Index::getHtmlID()
+Html* Index::getHtml()
 {
-	return this->htmlID;
+	return this->html;
 }
 
 unsigned int Index::getFrequency()
 {
-	return this->frequency;
+	return this->position.size();
 }
 
 List<unsigned int> &Index::getPosition()
