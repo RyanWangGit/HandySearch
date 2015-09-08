@@ -136,7 +136,7 @@ void WordSegmenter::svmlFilter(List<Chunk> &chunks)
 			minVariance = chunks.get(i).getVariance();
 	//Remove those don't fit 
 	for (int i = 0; i < chunks.size(); i++)
-		if (chunks.get(i).getVariance() < minVariance)
+		if (chunks.get(i).getVariance() > minVariance)
 		{
 			chunks.remove(i);
 			i--;

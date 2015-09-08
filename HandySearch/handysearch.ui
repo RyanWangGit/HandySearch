@@ -76,6 +76,19 @@
      <string>seg</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>300</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Search</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="enabled">
@@ -135,9 +148,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>HandySearchClass</receiver>
+   <slot>search()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>634</x>
+     <y>312</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>495</x>
+     <y>384</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onCloseButtonClick()</slot>
   <slot>test()</slot>
+  <slot>search()</slot>
  </slots>
 </ui>
