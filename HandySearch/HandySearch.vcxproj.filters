@@ -71,6 +71,15 @@
     <ClCompile Include="Index.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Loading.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_Loading.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_Loading.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -100,6 +109,9 @@
     <ClInclude Include="Index.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_loading.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="handysearch.h">
@@ -112,6 +124,12 @@
       <Filter>Resource Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Threads.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="loading.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Loading.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

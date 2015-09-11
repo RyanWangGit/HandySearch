@@ -33,8 +33,6 @@ public slots:
 	}
 };
 
- 
-
 
 class Load : public QObject
 {
@@ -44,6 +42,7 @@ private:
 	QString dictFolder;
 
 signals:
+	void loadStarted();
 	void loadFinished();
 	//Html Thread Signals
 	void htmlLoaded(unsigned int, QString);
@@ -68,6 +67,7 @@ public slots:
 //The last task sends out loadFinished signal
 	void run()
 	{
+		emit loadStarted();
 		/* -----Load dictionary----- */
 		emit dictLoadStarted();
 		QDirIterator dictIter(dictFolder, QDirIterator::Subdirectories);

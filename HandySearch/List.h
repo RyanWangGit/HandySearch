@@ -107,7 +107,36 @@ T& List<T>::get(int i)
 	//TODO: Use of last pointer to optimize when iterating
 	//by finding the shortest path to the index queried
 	ListNode<T>* p = this->head->next;
-	//if (i > (i - this->lastIndex) ? ((i - this->lastIndex) > ))
+
+	//The distance between target and last queried pointer
+/*	unsigned int length = this->size();
+	if (i > length / 2)
+	{
+		if (abs(i - this->lastIndex) <= (length - i))
+		{
+			p = this->last;
+			length = abs(i - this->lastIndex);
+		}
+		else
+		{
+			p = this->tail;
+			length = length - i;
+		}
+	}
+	else
+	{
+		if (abs(i - this->lastIndex) <= i)
+		{
+			p = this->last;
+			length = abs(i - this->lastIndex);
+		}
+		else
+		{
+			p = this->head->next;
+			length = i;
+		}
+	}
+	*/
 	for (int n = 0; n <= i; n++)
 	{
 		if (!p)
@@ -118,7 +147,6 @@ T& List<T>::get(int i)
 			this->lastIndex = n;
 			return p->data;
 		}
-			
 		else
 			p = p->next;
 	}
