@@ -1,5 +1,6 @@
 #pragma once
 //#define SKIPLOAD
+//#define DEBUG
 
 class LoadHtml : public QObject
 {
@@ -23,7 +24,9 @@ signals:
 public slots:
 	void load()
 	{
+#ifdef DEBUG
 		qDebug() << "[Html Loading Thread #" << this->id << "]" << "Thread Received " << pathList.size() << "Files";
+#endif 
 		for (int i = 0; i < pathList.size(); i++)
 		{
 #ifndef SKIPLOAD 
@@ -156,7 +159,9 @@ public slots:
 		sentence.replace(QRegExp("[,\.;\:\'\"¡££¬~£¡£¡@#$%^&*£¨£©()!] "), "");
 		sentence.chop(10);
 		HandySearch::sentences.append(sentence);
+#ifdef DEBUG
 		qDebug() << "[Html Loading Thread # " << threadID << "]" << "Compelete #" << Html::totalNum << path << html->getTitle();
+#endif
 		//Transmit the signal to UI thread
 		emit htmlLoaded(threadID, path);
 	}
@@ -164,7 +169,9 @@ public slots:
 	void htmlThreadFinished()
 	{
 		LoadHtml::threadNum--;
+#ifdef DEBUG
 		qDebug() << "[Html Loading Thread]" <<LoadHtml::threadNum << "Thread(s) Remaining...";
+#endif
 		if (LoadHtml::threadNum == 0)
 		{
 			emit this->htmlLoadFinished();

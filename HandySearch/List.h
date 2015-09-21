@@ -73,8 +73,8 @@ List<T>::List()
 	this->head = new ListNode<T>();
 	this->tail = head;
 	this->length = 0;
-	this->last = head;
-	this->lastIndex = -1;
+	this->last = nullptr;
+	this->lastIndex = -MAXINT;
 }
 
 template<typename T>
@@ -120,7 +120,8 @@ T& List<T>::get(int i)
 			minNum = i;
 		}
 	}
-	switch (i)
+
+	switch (minNum)
 	{
 	case 0:
 	{
@@ -132,7 +133,7 @@ T& List<T>::get(int i)
 			else if (n == i)
 			{
 				this->last = p;
-				this->lastIndex = n;
+				this->lastIndex = i;
 				return p->data;
 			}
 			else
@@ -143,14 +144,14 @@ T& List<T>::get(int i)
 	case 1:
 	{
 		ListNode<T>* p = this->last;
-		for (int n = 0; n < abs(this->lastIndex - i); n++)
+		for (int n = 0; n <= abs(this->lastIndex - i); n++)
 		{
 			if (!p)
 				throw QNullPointerException();
-			else if (n == abs(this->lastIndex - i) - 1)
+			else if (n == abs(this->lastIndex - i))
 			{
 				this->last = p;
-				this->lastIndex = n;
+				this->lastIndex = i;
 				return p->data;
 			}
 			else
@@ -166,14 +167,14 @@ T& List<T>::get(int i)
 	case 2:
 	{
 		ListNode<T>* p = this->tail;
-		for (int n = 0; n < this->size() - i; n++)
+		for (int n = 0; n <= this->size() - i; n++)
 		{
 			if (!p)
 				throw QNullPointerException();
-			else if (n == this->size() - i - 1)
+			else if (n == this->size() - i)
 			{
 				this->last = p;
-				this->lastIndex = n;
+				this->lastIndex = i;
 				return p->data;
 			}
 			else
@@ -262,6 +263,9 @@ bool List<T>::isEmpty()
 template<typename T>
 bool List<T>::remove(ListNode<T> *p)
 {
+	if (p == this->last)
+		this->last = p->next;
+
 	p->prior->next = p->next;
 	if (p->next == nullptr)
 		this->tail = p->prior;
