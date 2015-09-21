@@ -74,7 +74,7 @@ List<T>::List()
 	this->tail = head;
 	this->length = 0;
 	this->last = head;
-	this->lastIndex = 0;
+	this->lastIndex = -1;
 }
 
 template<typename T>
@@ -106,9 +106,83 @@ T& List<T>::get(int i)
 {
 	//TODO: Use of last pointer to optimize when iterating
 	//by finding the shortest path to the index queried
-	ListNode<T>* p = this->head->next;
+	
 
 	//The distance between target and last queried pointer
+	int distances[3] = { i, abs(this->lastIndex - i), this->size() - i };
+	int minDist = MAXINT;
+	int minNum;
+	for (int i = 0; i < 3; i++)
+	{
+		if (minDist > distances[i])
+		{
+			minDist = distances[i];
+			minNum = i;
+		}
+	}
+	switch (i)
+	{
+	case 0:
+	{
+		ListNode<T>* p = this->head->next;
+		for (int n = 0; n <= i; n++)
+		{
+			if (!p)
+				throw QNullPointerException();
+			else if (n == i)
+			{
+				this->last = p;
+				this->lastIndex = n;
+				return p->data;
+			}
+			else
+				p = p->next;
+		}
+		break;
+	}
+	case 1:
+	{
+		ListNode<T>* p = this->last;
+		for (int n = 0; n < abs(this->lastIndex - i); n++)
+		{
+			if (!p)
+				throw QNullPointerException();
+			else if (n == abs(this->lastIndex - i) - 1)
+			{
+				this->last = p;
+				this->lastIndex = n;
+				return p->data;
+			}
+			else
+			{
+				if (this->lastIndex - i < 0)
+					p = p->next;
+				else
+					p = p->prior;
+			}	
+		}	
+		break;
+	}
+	case 2:
+	{
+		ListNode<T>* p = this->tail;
+		for (int n = 0; n < this->size() - i; n++)
+		{
+			if (!p)
+				throw QNullPointerException();
+			else if (n == this->size() - i - 1)
+			{
+				this->last = p;
+				this->lastIndex = n;
+				return p->data;
+			}
+			else
+				p = p->prior;
+		}
+		break;
+	}
+	}
+	
 /*	unsigned int length = this->size();
 	if (i > length / 2)
 	{
@@ -137,19 +211,7 @@ T& List<T>::get(int i)
 		}
 	}
 	*/
-	for (int n = 0; n <= i; n++)
-	{
-		if (!p)
-			throw QNullPointerException();
-		else if (n == i)
-		{
-			this->last = p;
-			this->lastIndex = n;
-			return p->data;
-		}
-		else
-			p = p->next;
-	}
+	
 	
 }
 

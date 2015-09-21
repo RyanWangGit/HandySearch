@@ -30,7 +30,6 @@ public slots:
 	void dictLoaded(int num);
 	void dictLoadFinished();
 	//Override event handler
-	void paintEvent(QPaintEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent * event);

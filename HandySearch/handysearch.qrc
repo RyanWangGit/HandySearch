@@ -7,5 +7,10 @@
         <file>Buttons/MinimizeOver.png</file>
         <file>Buttons/MinimizePressed.png</file>
         <file>Loading/Loading.png</file>
+        <file>HandySearch.ico</file>
+        <file>Logo.png</file>
+        <file>Buttons/SearchNormal.png</file>
+        <file>Buttons/SearchOver.png</file>
+        <file>Buttons/SearchPressed.png</file>
     </qresource>
 </RCC>

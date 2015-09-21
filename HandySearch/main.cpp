@@ -4,6 +4,7 @@
 unsigned int LoadHtml::threadNum = 0;
 BloomFilter HandySearch::dictionary;
 HashMap<List<Index>*> HandySearch::index;
+QStringList HandySearch::sentences;
 
 int main(int argc, char *argv[])
 {
@@ -13,7 +14,7 @@ int main(int argc, char *argv[])
 
 	Loading l;
 	HandySearch w;
-	QObject::connect(&l, &Loading::finished, &w, &HandySearch::show);
+	QObject::connect(&l, &Loading::finished, &w, &HandySearch::loadFinished);
 	
 	return a.exec();
 }

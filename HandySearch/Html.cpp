@@ -99,7 +99,10 @@ void Html::extractTitle(const QString &fileContent)
 void Html::analyze()
 {
 	unsigned int pos = 0;
-	WordSegmenter ws(this->textContent, HandySearch::dictionary);
+	QString content = this->textContent;
+	content.prepend(this->title + " ");
+	WordSegmenter ws(content, HandySearch::dictionary);
+
 	QStringList result = ws.getResult();
 	for (QString word : result) 
 	{

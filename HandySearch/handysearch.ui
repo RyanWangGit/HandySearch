@@ -7,88 +7,203 @@
     <x>0</x>
     <y>0</y>
     <width>700</width>
-    <height>468</height>
+    <height>542</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑 Light</family>
+    <pointsize>18</pointsize>
+   </font>
+  </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
   </property>
   <property name="windowTitle">
    <string>HandySearch</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {background : rgb(255,255,255);}</string>
+  </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLabel" name="label">
+   <widget class="QPushButton" name="search">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>250</y>
-      <width>131</width>
-      <height>16</height>
+      <x>540</x>
+      <y>240</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI Light</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{border-image: url(:/Resources/Buttons/SearchNormal.png);}
+QPushButton:hover{border-image: url(:/Resources/Buttons/SearchOver.png);}
+QPushButton:pressed{border-image: url(:/Resources/Buttons/SearchPressed.png);}
+QPushButton{color:rgb(255,255,255);}
+</string>
+    </property>
+    <property name="text">
+     <string>Search！</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logo">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>130</y>
+      <width>351</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="text">
-     <string>This is Main Windoow</string>
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="handysearch.qrc">:/Resources/Logo.png</pixmap>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="clear">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>0</y>
-      <width>75</width>
-      <height>23</height>
+      <x>500</x>
+      <y>240</y>
+      <width>41</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑 Light</family>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{border:transparent;}
+QPushButton{color:rgb(173, 173, 173);}
+QPushButton:hover{color:rgb(58, 58, 58);}
+
+
+</string>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>×</string>
     </property>
    </widget>
-   <widget class="QProgressBar" name="progressBar">
+   <widget class="QLineEdit" name="searchEdit">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>280</y>
-      <width>531</width>
-      <height>23</height>
+      <x>70</x>
+      <y>240</y>
+      <width>471</width>
+      <height>41</height>
      </rect>
     </property>
-    <property name="value">
-     <number>24</number>
+    <property name="font">
+     <font>
+      <family>微软雅黑 Light</family>
+      <pointsize>14</pointsize>
+     </font>
     </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>40</y>
-      <width>621</width>
-      <height>201</height>
-     </rect>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit:hover{border:1px solid #3385ff}
+</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QLabel" name="segment">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>260</y>
-      <width>75</width>
-      <height>23</height>
+      <x>0</x>
+      <y>70</y>
+      <width>691</width>
+      <height>21</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑 Light</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(250,250,250);
+color:rgb(153,153,153)</string>
     </property>
     <property name="text">
-     <string>seg</string>
+     <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QTextBrowser" name="resultEdit">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>300</y>
-      <width>75</width>
-      <height>23</height>
+      <x>40</x>
+      <y>340</y>
+      <width>104</width>
+      <height>71</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Search</string>
+    <property name="font">
+     <font>
+      <family>微软雅黑 Light</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+border: 0px </string>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="openLinks">
+     <bool>false</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="copyright">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>350</y>
+      <width>251</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe UI Light</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Designed and Powered By:
+Ryan Wang @ HUST
+Email:   wangyuxin@hust.edu.cn</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <zorder>searchEdit</zorder>
+   <zorder>search</zorder>
+   <zorder>logo</zorder>
+   <zorder>clear</zorder>
+   <zorder>segment</zorder>
+   <zorder>resultEdit</zorder>
+   <zorder>copyright</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="enabled">
@@ -117,50 +232,66 @@
  </resources>
  <connections>
   <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>HandySearchClass</receiver>
-   <slot>onCloseButtonClick()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>496</x>
-     <y>221</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>359</x>
-     <y>210</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_2</sender>
-   <signal>clicked()</signal>
-   <receiver>HandySearchClass</receiver>
-   <slot>test()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>99</x>
-     <y>26</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>97</x>
-     <y>136</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_3</sender>
+   <sender>search</sender>
    <signal>clicked()</signal>
    <receiver>HandySearchClass</receiver>
    <slot>search()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>634</x>
-     <y>312</y>
+     <x>464</x>
+     <y>422</y>
     </hint>
     <hint type="destinationlabel">
      <x>495</x>
      <y>384</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clear</sender>
+   <signal>clicked()</signal>
+   <receiver>searchEdit</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>535</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>354</x>
+     <y>275</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>searchEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>HandySearchClass</receiver>
+   <slot>textChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>170</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>340</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>searchEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>search</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>277</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>620</x>
+     <y>268</y>
     </hint>
    </hints>
   </connection>
@@ -169,5 +300,6 @@
   <slot>onCloseButtonClick()</slot>
   <slot>test()</slot>
   <slot>search()</slot>
+  <slot>textChanged()</slot>
  </slots>
 </ui>

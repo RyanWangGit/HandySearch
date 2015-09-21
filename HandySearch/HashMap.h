@@ -45,10 +45,17 @@ public:
 	bool put(const QString &key, V &value);
 	V* get(const QString &key);
 	bool resize(int newSize);
+	void statistic();
 
 	/* Static methods */
 	static unsigned int hashCode(char *key, int len);// , const unsigned int seed = 0xEE6B27EB);
 };
+
+template <typename V >
+void HashMap<V>::statistic()
+{
+
+}
 
 template < typename V >
 HashMap<V>::HashMap()

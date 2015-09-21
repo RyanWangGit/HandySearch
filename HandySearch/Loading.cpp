@@ -21,7 +21,7 @@ Loading::Loading()
 	this->dictFolder = "C:/Dictionary Library";
 
 	this->isPressed = false;
-
+	
 	//Initialization of application
 	QThread *initialLoadThread = new QThread();
 	Load *initialLoad = new Load(htmlFolder, dictFolder);
@@ -157,43 +157,9 @@ void Loading::loadFinished()
 {
 	qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::totalNum;
 	emit finished();
-	this->destroy();
+	this->close();
 }
 
-void Loading::paintEvent(QPaintEvent *event)
-{/*
-	int shadowWidth = 5;
-	QPainterPath path;
-	path.setFillRule(Qt::WindingFill);
-	path.addRect(
-		shadowWidth,
-		shadowWidth,
-		this->width() - shadowWidth * 2,
-		this->height() - shadowWidth * 2
-		);
-
-	QPainter painter(this);
-	painter.setRenderHint(QPainter::Antialiasing, true);
-	painter.fillPath(path, QBrush(Qt::white));
-
-	QColor color(0, 0, 0, 50);
-	for (int i = 0; i < shadowWidth * 2; i++)
-	{
-		QPainterPath path;
-		path.setFillRule(Qt::WindingFill);
-
-		path.addRect(
-			shadowWidth - i,
-			shadowWidth - i,
-			this->width() - (shadowWidth - i) * 2,
-			this->height() - (shadowWidth - i) * 2
-			);
-
-		color.setAlpha(150 - qSqrt(i) * 50);
-		painter.setPen(color);
-		painter.drawPath(path);
-	}*/
-}
 
 void Loading::mousePressEvent(QMouseEvent *event)
 {
@@ -205,7 +171,6 @@ void Loading::mouseMoveEvent(QMouseEvent *event)
 {
 	if (this->isPressed)
 		this->move(event->globalX() - this->origin.x(), event->globalY() - this->origin.y());
-	qDebug() << event->x() << event->y();
 	if (this->ui.close->rect().contains(event->pos()))
 		this->ui.close->setPixmap(QPixmap(QString::fromUtf8(":/Resources/Buttons/CloseOver.png")));
 }

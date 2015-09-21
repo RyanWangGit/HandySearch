@@ -1,4 +1,5 @@
 #pragma once
+//#define SKIPLOAD
 
 class LoadHtml : public QObject
 {
@@ -25,10 +26,11 @@ public slots:
 		qDebug() << "[Html Loading Thread #" << this->id << "]" << "Thread Received " << pathList.size() << "Files";
 		for (int i = 0; i < pathList.size(); i++)
 		{
+#ifndef SKIPLOAD 
 			Html *pHtml = new Html(pathList[i]);
 			emit processHtml(this->id, pHtml, pathList.at(i));
-		}
-				
+#endif
+		}		
 		emit finished();
 	}
 };
@@ -86,7 +88,9 @@ public slots:
 				index++;
 				temp = file.readLine();
 				temp.chop(1);
+#ifndef SKIPLOAD
 				HandySearch::dictionary.addItem(temp);
+#endif
 				if (index % 1000 == 0)
 					emit dictLoaded(1000);
 			}
@@ -148,6 +152,10 @@ public slots:
 	{
 		html->analyze();
 		Html::totalNum++;
+		QString sentence = html->getTitle();
+		sentence.replace(QRegExp("[,\.;\:\'\"¡££¬~£¡£¡@#$%^&*£¨£©()!] "), "");
+		sentence.chop(10);
+		HandySearch::sentences.append(sentence);
 		qDebug() << "[Html Loading Thread # " << threadID << "]" << "Compelete #" << Html::totalNum << path << html->getTitle();
 		//Transmit the signal to UI thread
 		emit htmlLoaded(threadID, path);
