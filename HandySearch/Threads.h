@@ -156,7 +156,7 @@ public slots:
 		html->analyze();
 		Html::totalNum++;
 		QString sentence = html->getTitle();
-		sentence.replace(QRegExp("[,\.;\:\'\"¡££¬~£¡£¡@#$%^&*£¨£©()!] "), "");
+		sentence.replace(QRegExp("[\s | _|,|\|.|;|\|:|\|'|\"|¡£|£¬|~|£¡|£¡|@|#|$|%|^|&|*|£¨|£©|(|)|!]*"), "");
 		sentence.chop(10);
 		HandySearch::sentences.append(sentence);
 #ifdef DEBUG

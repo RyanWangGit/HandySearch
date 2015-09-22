@@ -4,12 +4,15 @@ Index::Index()
 {
 	//To make data invalid
 	//This empty constructor is for the head node
+	this->html = nullptr;
+	this->weight = 0;
 }
 
 Index::Index(Html* html, unsigned int firstPos)
 {
 	this->html = html;
 	this->position.append(firstPos);
+	this->weight = 0;
 }
 
 Index & Index::operator= (Index &other)
@@ -20,6 +23,12 @@ Index & Index::operator= (Index &other)
 	this->position = other.position;
 	return *this;
 }
+
+int& Index::getRefWeight()
+{
+	return this->weight;
+}
+
 
 Html* Index::getHtml()
 {

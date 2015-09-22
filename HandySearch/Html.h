@@ -13,6 +13,7 @@ private:
 	QString textContent;
 	/* Title extracted from file content*/
 	QString title;
+	bool hasAnalyzed;
 	void extractText(const QString &fileContent);
 	void extractTitle(const QString &fileContent);
 	bool load();

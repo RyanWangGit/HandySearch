@@ -17,7 +17,7 @@ public slots:
 	void loadFinished();
 	void onCloseButtonClick();
 	//UI slots
-	void test();
+	void segment();
 	void search();
 	void textChanged();
 	void anchorClicked(const QUrl& url);
@@ -30,6 +30,8 @@ public:
 private:
 	QTime clock;
 	bool isResultShown;
+	void putInContentList(Index* index, List<Index *>& list);
+	void putInTitleList(Index* index, List<Index *>& list);
 	void setDefaultUILayout();
 	void setShownUILayout();
 	void showResult(List<Index*> &resultList, QStringList &wordList);

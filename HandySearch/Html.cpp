@@ -8,12 +8,14 @@ Html::Html() { void; }
 
 Html::Html(const QString &filePath)
 {
+	this->hasAnalyzed = false;
 	this->file.setFileName(filePath);
 	this->load();
 }
 
 Html::Html(const Html &c)
 {
+	this->hasAnalyzed = c.hasAnalyzed;
 	this->file.setFileName(c.file.fileName());
 	this->textContent = c.textContent;
 	this->title = c.title;
@@ -98,9 +100,14 @@ void Html::extractTitle(const QString &fileContent)
 
 void Html::analyze()
 {
+	if (this->hasAnalyzed)
+		return;
+	else
+		this->hasAnalyzed = true;
+
 	unsigned int pos = 0;
 	QString content = this->textContent;
-	content.prepend(this->title + " ");
+	content.append(" " + this->title);
 	WordSegmenter ws(content, HandySearch::dictionary);
 
 	QStringList result = ws.getResult();

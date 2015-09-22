@@ -18,9 +18,8 @@ HandySearch::HandySearch(QWidget *parent)
 }
 
 
-void HandySearch::test()
+void HandySearch::segment()
 {
-	//qDebug() << this->ui.textEdit->toPlainText();
 	WordSegmenter ws(this->ui.searchEdit->text(), this->dictionary);
 	QString result;
 	QStringList qsl = ws.getResult();
@@ -37,7 +36,9 @@ void HandySearch::search()
 		this->setDefaultUILayout();
 		return;
 	}
-	List<Index*> resultList;
+	//Two lists each containing results that include and exclude title
+	List<Index*> titleList;
+	List<Index*> contentList;
 	QString searchContent = this->ui.searchEdit->text();
 	WordSegmenter ws(this->ui.searchEdit->text(), this->dictionary);
 	QStringList qsl = ws.getResult();
@@ -57,19 +58,80 @@ void HandySearch::search()
 		{
 			Index* index = &indexList->get(i);
 			Html *html = index->getHtml();
-			bool hasFound = false;
-			for (int j = 0; j < resultList.size(); j++)
-				if (resultList.get(j)->getHtml()->getTitle() == html->getTitle())
+
+			bool isInTitle = false;
+			for (QString word : qsl)
+			{
+				if (html->getTitle().contains(word))
 				{
-					hasFound = true;
-				}
-			if (!hasFound)
-				resultList.append(index);
+					isInTitle = true;
+					index->getRefWeight()++;
+				}		
+			}
+
+			//Collect those have keywords in title
+			if (isInTitle)
+				this->putInTitleList(index, titleList);
+			//Collect those don't
+			else
+				this->putInContentList(index, contentList);
 		}
 	}
-	this->ui.resultEdit->clear();
-	this->showResult(resultList, qsl);
+	this->ui.resultEdit->clear(); 
+	this->showResult(titleList.append(contentList), qsl);
 }
+
+//Auto sort when putting index into list by weight
+void HandySearch::putInTitleList(Index* index, List<Index *>& list)
+{
+	bool hasFound = false;
+	for (int i = 0; i < list.size(); i++)
+	{
+		if (list.get(i)->getRefWeight() >= index->getRefWeight())
+			continue;
+		else
+		{
+			hasFound = true;
+			list.insertAfter(i - 1, index);
+			break;
+		}
+	}
+	if (!hasFound)
+		list.append(index);
+}
+
+//Auto sort when putting index into list by weight
+void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
+{
+	Html *html = newIndex->getHtml();
+	bool hasFound = false;
+	for (int i = 0; i < list.size(); i++)
+	{
+		Index* index = list.get(i);
+		if (index->getHtml()->getTitle() == html->getTitle())
+		{
+			index->getRefWeight() += newIndex->getFrequency();
+			for (int j = i; j >= 0; j--)
+			{
+				if (list.get(j)->getRefWeight() > index->getRefWeight())
+				{
+					list.insertAfter(j, index);
+					list.remove(i + 1);
+					break;
+				}
+			}
+			hasFound = true;
+			break;
+		}
+	}
+		
+	if (!hasFound)
+	{
+		newIndex->getRefWeight() = newIndex->getFrequency();
+		list.append(newIndex);
+	}
+}
+
 
 void HandySearch::textChanged()
 {
@@ -108,6 +170,7 @@ void HandySearch::mouseMoveEvent(QMouseEvent *event)
 		this->setCursor(Qt::ArrowCursor);
 
 }
+
 
 void HandySearch::setDefaultUILayout()
 {

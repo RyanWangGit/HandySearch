@@ -42,9 +42,9 @@ public:
 	/* Get the i(th) node of the list (Starting from 0) */
 	T& get(int i);
 	/* Append a node to the tail */
-	void append(T& data);
+	List<T>& append(T& data);
 	/* Append a new list to the tail */
-	void append(List<T>& list);
+	List<T>& append(List<T>& list);
 	/* Clear the list */
 	bool clear();
 	/* Returns whether this list is empty or not */
@@ -61,7 +61,7 @@ public:
 	/* Returns whether the list contains the value */
 	bool contains(const T& value);
 	/* Insert the value after the i(th) node */
-	bool insertAfter(int i, const T& value);
+	bool insertAfter(int i, T& value);
 	/* Operator[] to get i(th) node's data */
 	T& operator[](int i);
 	List<T>& operator=(List<T>& other);
@@ -212,7 +212,7 @@ bool List<T>::clear()
 }
 
 template<typename T>
-void List<T>::append(T& data)
+List<T>& List<T>::append(T& data)
 {
 	ListNode<T>* p = this->tail;
 	p->next = new ListNode<T>(data);
@@ -220,13 +220,17 @@ void List<T>::append(T& data)
 	p->next->prior = p;
 	this->tail = p->next;
 	this->length++;
+
+	return *this;
 }
 
 template<typename T>
-void List<T>::append(List<T>& list)
+List<T>&  List<T>::append(List<T>& list)
 {
 	for (int i = 0; i < list.size(); i++)
 		this->append(list.get(i));
+
+	return *this;
 }
 
 template<typename T>
@@ -320,16 +324,18 @@ bool List<T>::contains(const T &value)
 }
 
 template<typename T>
-bool List<T>::insertAfter(int i, const T& value)
+bool List<T>::insertAfter(int i, T& value)
 {
-	ListNode<T> *p = this->head->next;
+	ListNode<T> *p = nullptr;
 	ListNode<T> *temp = nullptr;
-	temp = this->getNode(i);
+	p = this->getNode(i);
+	temp = p->next;
 	p->next = new ListNode<T>(value); 
 	p->next->prior = p;
 	p->next->next = temp;
 	temp->prior = p->next;
 	this->length++;
+	return true;
 }
 
 template<typename T>
