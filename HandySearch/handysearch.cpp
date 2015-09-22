@@ -60,7 +60,9 @@ void HandySearch::search()
 			bool hasFound = false;
 			for (int j = 0; j < resultList.size(); j++)
 				if (resultList.get(j)->getHtml()->getTitle() == html->getTitle())
+				{
 					hasFound = true;
+				}
 			if (!hasFound)
 				resultList.append(index);
 		}

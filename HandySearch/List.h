@@ -35,6 +35,7 @@ private:
 	ListNode<T>* last;
 	int lastIndex;
 	bool remove(ListNode<T>* p);
+	ListNode<T>* List<T>::getNode(int i);
 public:
 	List();
 	~List();
@@ -102,11 +103,10 @@ List<T>& List<T>::operator=(List<T>& other)
 }
 
 template<typename T>
-T& List<T>::get(int i) 
+ListNode<T>* List<T>::getNode(int i)
 {
-	//TODO: Use of last pointer to optimize when iterating
+	//Use of last pointer to optimize when iterating
 	//by finding the shortest path to the index queried
-	
 
 	//The distance between target and last queried pointer
 	int distances[3] = { i, abs(this->lastIndex - i), this->size() - i };
@@ -134,7 +134,7 @@ T& List<T>::get(int i)
 			{
 				this->last = p;
 				this->lastIndex = i;
-				return p->data;
+				return p;
 			}
 			else
 				p = p->next;
@@ -152,7 +152,7 @@ T& List<T>::get(int i)
 			{
 				this->last = p;
 				this->lastIndex = i;
-				return p->data;
+				return p;
 			}
 			else
 			{
@@ -160,8 +160,8 @@ T& List<T>::get(int i)
 					p = p->next;
 				else
 					p = p->prior;
-			}	
-		}	
+			}
+		}
 		break;
 	}
 	case 2:
@@ -175,7 +175,7 @@ T& List<T>::get(int i)
 			{
 				this->last = p;
 				this->lastIndex = i;
-				return p->data;
+				return p;
 			}
 			else
 				p = p->prior;
@@ -183,37 +183,12 @@ T& List<T>::get(int i)
 		break;
 	}
 	}
-	
-/*	unsigned int length = this->size();
-	if (i > length / 2)
-	{
-		if (abs(i - this->lastIndex) <= (length - i))
-		{
-			p = this->last;
-			length = abs(i - this->lastIndex);
-		}
-		else
-		{
-			p = this->tail;
-			length = length - i;
-		}
-	}
-	else
-	{
-		if (abs(i - this->lastIndex) <= i)
-		{
-			p = this->last;
-			length = abs(i - this->lastIndex);
-		}
-		else
-		{
-			p = this->head->next;
-			length = i;
-		}
-	}
-	*/
-	
-	
+}
+
+template<typename T>
+T& List<T>::get(int i) 
+{
+	return this->getNode(i)->data;
 }
 
 template<typename T>
@@ -349,15 +324,7 @@ bool List<T>::insertAfter(int i, const T& value)
 {
 	ListNode<T> *p = this->head->next;
 	ListNode<T> *temp = nullptr;
-	for (int n = 0; n <= i; n++)
-	{
-		if (!p)
-			throw QNullPointerException("in contains(const T &value) function");
-		if (n == i)
-			temp = p->next;
-		else
-			p = p->next;
-	}
+	temp = this->getNode(i);
 	p->next = new ListNode<T>(value); 
 	p->next->prior = p;
 	p->next->next = temp;
