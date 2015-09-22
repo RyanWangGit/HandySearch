@@ -153,7 +153,7 @@ color:rgb(153,153,153)</string>
     <property name="font">
      <font>
       <family>微软雅黑 Light</family>
-      <pointsize>12</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="acceptDrops">
@@ -174,7 +174,7 @@ border: 0px </string>
     <property name="geometry">
      <rect>
       <x>210</x>
-      <y>350</y>
+      <y>330</y>
       <width>251</width>
       <height>81</height>
      </rect>
@@ -190,12 +190,69 @@ border: 0px </string>
     </property>
     <property name="text">
      <string>Designed and Powered By:
-Ryan Wang @ HUST
-Email:   wangyuxin@hust.edu.cn</string>
+Ryan Wang @ HUST</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
+   </widget>
+   <widget class="QWidget" name="about" native="true">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>500</y>
+      <width>171</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="copyright_">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>171</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI Light</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:rgb(173, 173, 173);</string>
+     </property>
+     <property name="text">
+      <string>© 2015 All Rights Reseverd</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="about_">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>0</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI Light</family>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{border:transparent;}
+QPushButton{color:rgb(173, 173, 173);}
+QPushButton:hover{color:rgb(58, 58, 58);}
+
+</string>
+     </property>
+     <property name="text">
+      <string>About</string>
+     </property>
+    </widget>
    </widget>
    <zorder>searchEdit</zorder>
    <zorder>search</zorder>
@@ -204,26 +261,7 @@ Email:   wangyuxin@hust.edu.cn</string>
    <zorder>segment</zorder>
    <zorder>resultEdit</zorder>
    <zorder>copyright</zorder>
-  </widget>
-  <widget class="QStatusBar" name="statusBar">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-     <horstretch>6</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="font">
-    <font>
-     <family>微软雅黑</family>
-     <pointsize>12</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
+   <zorder>about</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -295,11 +333,27 @@ Email:   wangyuxin@hust.edu.cn</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>about_</sender>
+   <signal>clicked()</signal>
+   <receiver>HandySearchClass</receiver>
+   <slot>about()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>350</x>
+     <y>526</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>333</x>
+     <y>467</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>onCloseButtonClick()</slot>
   <slot>test()</slot>
   <slot>search()</slot>
   <slot>textChanged()</slot>
+  <slot>about()</slot>
  </slots>
 </ui>

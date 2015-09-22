@@ -1,4 +1,5 @@
 #include "stdafx.h"
+//#define DEBUG
 
 Loading::Loading()
 {
@@ -155,7 +156,10 @@ void Loading::loadStarted()
 
 void Loading::loadFinished()
 {
+#ifdef DEBUG
+	QMessageBox::information(nullptr, "time", "Time elapsed: " + QString::number(clock.elapsed()));
 	qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::totalNum;
+#endif
 	emit finished();
 	this->close();
 }

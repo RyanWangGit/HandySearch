@@ -21,14 +21,14 @@ public slots:
 	void search();
 	void textChanged();
 	void anchorClicked(const QUrl& url);
+	void about();
 public:
 	HandySearch(QWidget *parent = 0);
-	//Override paintEvent
-	void paintEvent(QPaintEvent *event);
 	void resizeEvent(QResizeEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 
 private:
+	QTime clock;
 	bool isResultShown;
 	void setDefaultUILayout();
 	void setShownUILayout();

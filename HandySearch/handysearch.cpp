@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "handysearch.h"
+#define DEBUG
 
 HandySearch::HandySearch(QWidget *parent)
 	: QMainWindow(parent)
@@ -13,28 +14,7 @@ HandySearch::HandySearch(QWidget *parent)
 
 	connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, this, &HandySearch::anchorClicked);
 
-//	this->setWindowFlags(Qt::FramelessWindowHint);
 
-	//Custom UI Design
-/*	int width = this->width();
-	QToolButton* minButton = new QToolButton(this);
-	QToolButton* closeButton = new QToolButton(this);
-	QLabel* icon = new QLabel(this);
-
-	icon->setGeometry(0, 0, 25, 25);
-	minButton->setGeometry(width - 46, 0, 23, 23);
-	closeButton->setGeometry(width - 23, 0, 23, 23);
-
-	QPixmap minPix = style()->standardPixmap(QStyle::SP_TitleBarMinButton);
-	QPixmap closePix = style()->standardPixmap(QStyle::SP_TitleBarCloseButton);
-	QPixmap iconPix = QPixmap(QString::fromUtf8(":/Resources/HandySearch.ico")).scaled(icon->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
-	icon->setPixmap(iconPix);
-	minButton->setIcon(minPix);
-	closeButton->setIcon(closePix);
-
-	minButton->setStyleSheet("background-color:transparent;");
-	closeButton->setStyleSheet("background-color:transparent;");*/
 }
 
 
@@ -51,6 +31,7 @@ void HandySearch::test()
 
 void HandySearch::search()
 {
+	this->clock.start();
 	if (this->ui.searchEdit->text() == "")
 	{
 		this->setDefaultUILayout();
@@ -101,40 +82,11 @@ void HandySearch::anchorClicked(const QUrl& url)
 	ShellExecuteA(NULL, "open", url.toString().toStdString().c_str(), "", "", SW_SHOW);
 }
 
-void HandySearch::paintEvent(QPaintEvent *event)
+
+void HandySearch::about()
 {
-/*	QPainterPath path;
-	path.setFillRule(Qt::WindingFill);
-	path.addRect(
-		SHADOWWIDTH,
-		SHADOWWIDTH,
-		this->width() - SHADOWWIDTH * 2,
-		this->height() - SHADOWWIDTH * 2
-		);
 	
-	QPainter painter(this);
-	painter.setRenderHint(QPainter::Antialiasing, true);
-	painter.fillPath(path, QBrush(Qt::white));
-
-	QColor color(0, 0, 0, 50);
-	for (int i = 0; i < SHADOWWIDTH * 2; i++)
-	{
-		QPainterPath path;
-		path.setFillRule(Qt::WindingFill);
-
-		path.addRect(
-			SHADOWWIDTH - i,
-			SHADOWWIDTH - i,
-			this->width() - (SHADOWWIDTH - i) * 2,
-			this->height() - (SHADOWWIDTH - i) * 2
-			);
-
-		color.setAlpha(80 - qSqrt(i) * 50);
-		painter.setPen(color);
-		painter.drawPath(path);
-	}*/
 }
-
 
 void HandySearch::resizeEvent(QResizeEvent *event)
 {
@@ -157,10 +109,11 @@ void HandySearch::mouseMoveEvent(QMouseEvent *event)
 
 void HandySearch::setDefaultUILayout()
 {
+	this->ui.about->show();
 	this->ui.segment->hide();
 	this->ui.resultEdit->hide();
 	this->isResultShown = false;
-	this->ui.copyright->setText("Designed and Powered By:\nRyan Wang @ HUST\nEmail:   wangyuxin@hust.edu.cn");
+	this->ui.copyright->setText("Designed and Powered By:\nRyan Wang @ HUST");
 	this->ui.copyright->setFont(QFont(QStringLiteral("Segoe UI Light"), 14));
 	this->ui.logo->setGeometry(
 		this->width() / 2 - 356 / 2,
@@ -181,15 +134,22 @@ void HandySearch::setDefaultUILayout()
 		this->ui.search->x() - this->ui.clear->width(),
 		this->ui.search->y())
 		);
-	this->ui.copyright->move(QPoint(
+	this->ui.copyright->setGeometry(
 		this->width() / 2 - this->ui.copyright->width() / 2,
-		this->height() / 2 + 100
+		this->height() / 2 + 100,
+		251,
+		81
+		);
+	this->ui.about->move(QPoint(
+		this->width() / 2 - this->ui.about->width() / 2,
+		this->height() - this->ui.about->height()
 		));
 }
 
 void HandySearch::setShownUILayout()
 {
 	this->isResultShown = true;
+	this->ui.about->hide();
 	this->ui.segment->show();
 	this->ui.resultEdit->show();
 	this->ui.copyright->setText("Designed and Powered by : Ryan Wang @ HUST");
@@ -221,33 +181,35 @@ void HandySearch::setShownUILayout()
 		this->ui.segment->x() + 15,
 		this->ui.segment->y() + 30,
 		this->width() - 30,
-		this->height()
+		this->height() - this->ui.segment->y() - 45
 		);
-	this->ui.copyright->move(QPoint(
-		this->width() - this->ui.copyright->width() - 15,
-		this->height() - this->ui.copyright->height()
-		));
+	this->ui.copyright->setGeometry(
+		this->width() - 221 - 15,
+		this->height() - 16,
+		221,
+		16
+		);
 }
 
 void HandySearch::showResult(List<Index*> &resultList, QStringList &wordList)
 {
 	this->setShownUILayout();
+	QString resultContent(this->ui.resultEdit->toHtml());
 	for (int i = 0; i < resultList.size(); i++)
 	{
 		Index* index = resultList.get(i);
 		QString brief = index->getHtml()->getText().mid(index->getPosition().get(0) - HandySearch::dictionary.getMaxLength(), 200);
 		brief.replace(QRegExp("[\n || \t ]"), "");
-		this->ui.resultEdit->insertHtml("<a href=\"" + index->getHtml()->getFilePath() + "\"><font size = \"+12\">"  + index->getHtml()->getTitle() + "</font></a>");
-		this->ui.resultEdit->insertHtml("<br>&emsp;<font size = \"+8\">" + brief + "......" + "</font><br><br>");
+		resultContent.append("<a href=\"" + index->getHtml()->getFilePath() + "\"><font size = \"5\">" + index->getHtml()->getTitle() + "</font></a>");
+		resultContent.append("<br>&emsp;......" + brief + "......" + "<br><br>");
 	}
-	QString content = this->ui.resultEdit->toHtml();
-	for (QString word : wordList)
-		content.replace(word, "<font color=\"#cc0000\">" + word + "</font>");
 
-	content.prepend("<font face = \"Î¢ÈíÑÅºÚ\">");
-	content.append("</font>");
-	this->ui.resultEdit->setHtml(content);
-	this->ui.segment->setText("   HandySearch has provided " + QString::number(resultList.size()) + " result(s) for you");
+	for (QString word : wordList)
+		resultContent.replace(word, "<font color=\"#cc0000\">" + word + "</font>");
+
+	this->ui.resultEdit->setHtml(resultContent);
+	this->ui.segment->setText("   HandySearch has provided " + QString::number(resultList.size()) + " result(s) for you in " + QString::number((double)this->clock.elapsed() / 1000) + " second(s)");
+	this->clock.restart();
 }
 
 void HandySearch::loadFinished()

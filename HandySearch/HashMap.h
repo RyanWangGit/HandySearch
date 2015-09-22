@@ -34,7 +34,7 @@ public:
 template <typename V >
 class HashMap
 {
-#define INDEX_SIZE 102400 //2^20
+#define INDEX_SIZE 1024000 //2^20
 private:
 	List<Entry<V>> *index[INDEX_SIZE];
 	float loadFactor;
