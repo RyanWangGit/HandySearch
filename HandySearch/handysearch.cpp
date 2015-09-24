@@ -40,7 +40,8 @@ void HandySearch::search()
 	List<Index*> titleList;
 	List<Index*> contentList;
 	QString searchContent = this->ui.searchEdit->text();
-	WordSegmenter ws(this->ui.searchEdit->text(), this->dictionary);
+	searchContent.mid(0, 20);
+	WordSegmenter ws(searchContent, this->dictionary);
 	QStringList qsl = ws.getResult();
 	qsl.removeDuplicates();
 	qsl.removeAll(" ");

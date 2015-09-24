@@ -105,6 +105,9 @@ List<T>& List<T>::operator=(List<T>& other)
 template<typename T>
 ListNode<T>* List<T>::getNode(int i)
 {
+	//Return the head node if index is -1
+	if (i == -1)
+		return this->head;
 	//Use of last pointer to optimize when iterating
 	//by finding the shortest path to the index queried
 
@@ -329,11 +332,13 @@ bool List<T>::insertAfter(int i, T& value)
 	ListNode<T> *p = nullptr;
 	ListNode<T> *temp = nullptr;
 	p = this->getNode(i);
+	Q_ASSERT(p != nullptr);
 	temp = p->next;
 	p->next = new ListNode<T>(value); 
 	p->next->prior = p;
 	p->next->next = temp;
-	temp->prior = p->next;
+	if (!temp)
+		temp->prior = p->next;
 	this->length++;
 	return true;
 }
