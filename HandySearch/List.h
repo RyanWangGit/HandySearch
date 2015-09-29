@@ -36,6 +36,7 @@ private:
 	int lastIndex;
 	bool remove(ListNode<T>* p);
 	ListNode<T>* List<T>::getNode(int i);
+	bool List<T>::removeNode(ListNode<T>* node);
 public:
 	List();
 	~List();
@@ -51,7 +52,6 @@ public:
 	bool isEmpty();
 	/* Remove node in the list */
 	bool remove(int i);
-	bool remove(T& value);
 	/* Return the index of the value */
 	int indexOf(T& value);
 	/* Replace i(th) node with the given value */
@@ -206,6 +206,8 @@ bool List<T>::clear()
 			this->tail = this->tail->prior;
 			delete temp;
 		}
+		this->last = nullptr;
+		this->lastIndex = -MAXINT;
 	}
 	catch (...)
 	{
@@ -243,10 +245,18 @@ bool List<T>::isEmpty()
 }
 
 template<typename T>
-bool List<T>::remove(ListNode<T> *p)
+bool List<T>::removeNode(ListNode<T> *p)
 {
 	if (p == this->last)
-		this->last = p->next;
+	{
+		if (p == this->tail)
+		{
+			this->last = p->prior;
+			this->lastIndex--;
+		}
+		else
+			this->last = p->next;
+	}
 
 	p->prior->next = p->next;
 	if (p->next == nullptr)
@@ -256,42 +266,16 @@ bool List<T>::remove(ListNode<T> *p)
 		
 	delete p;
 	this->length--;
+
 	return true;
 }
 
 template<typename T>
 bool List<T>::remove(int i)
 {
-	ListNode<T>* p = this->head->next;
-	for (int n = 0; n <= i; n++)
-	{
-		if (!p)
-			throw QNullPointerException("In remove method");
-		else if (n == i)
-			return this->remove(p);
-		else
-			p = p->next;
-	}	
+	return this->removeNode(this->getNode(i));
 }
 
-template<typename T>
-bool List<T>::remove(T &value)
-{
-	ListNode<T>* p = this->head;
-	bool hasRemoved = false;
-	for (int i = 0; i < this->size(); i++)
-	{
-		if (!p)
-			throw QNullPointerException("in remove(T &value) function.");
-		if (p->data == value)
-		{
-			this->remove(p);
-			hasRemoved = true;
-		}
-		p = p->next;
-	}
-	return hasRemoved;
-}
 
 template<typename T>
 int List<T>::indexOf(T &value)
@@ -312,16 +296,13 @@ int List<T>::indexOf(T &value)
 template<typename T>
 bool List<T>::contains(const T &value)
 { 
-	ListNode<T> *p = this->head->next;
+	ListNode<T> *p = nullptr;
 	for (int i = 0; i < this->size(); i++)
 	{
-		if (!p)
-			throw QNullPointerException("in contains(const T &value) function");
-
-		if (this->get(i) == value)
+		p = this->getNode(i);
+		
+		if (p->data == value)
 			return true;
-
-		p = p->next;
 	}
 	return false;
 }
@@ -331,14 +312,17 @@ bool List<T>::insertAfter(int i, T& value)
 {
 	ListNode<T> *p = nullptr;
 	ListNode<T> *temp = nullptr;
+
 	p = this->getNode(i);
 	Q_ASSERT(p != nullptr);
+
 	temp = p->next;
 	p->next = new ListNode<T>(value); 
 	p->next->prior = p;
 	p->next->next = temp;
 	if (!temp)
 		temp->prior = p->next;
+
 	this->length++;
 	return true;
 }

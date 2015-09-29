@@ -112,7 +112,7 @@ void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
 		if (index->getHtml()->getTitle() == html->getTitle())
 		{
 			index->getRefWeight() += newIndex->getFrequency();
-			for (int j = i; j >= 0; j--)
+			for (int j = i - 1; j >= 0; j--)
 			{
 				if (list.get(j)->getRefWeight() > index->getRefWeight())
 				{
