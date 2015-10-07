@@ -56,12 +56,6 @@
     <ClCompile Include="Html.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_Threads.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_Threads.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="BloomFilter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -71,13 +65,22 @@
     <ClCompile Include="Index.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Loading.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_Loading.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_LoadUI.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_Loading.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_LoadUI.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_LoadThread.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_LoadThread.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
@@ -123,13 +126,13 @@
     <CustomBuild Include="handysearch.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Threads.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="loading.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Loading.h">
+    <CustomBuild Include="LoadUI.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LoadThread.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 //#define DEBUG
 
-Loading::Loading()
+LoadUI::LoadUI()
 {
 	ui.setupUi(this);
 	this->ui.close->installEventFilter(this);
@@ -29,24 +29,24 @@ Loading::Loading()
 	initialLoad->moveToThread(initialLoadThread);
 	connect(initialLoadThread, &QThread::started, initialLoad, &Load::run);
 	connect(initialLoad, &Load::loadFinished, initialLoad, &QObject::deleteLater);
-	connect(initialLoad, &Load::loadFinished, initialLoad, &QObject::deleteLater);
+	connect(initialLoad, &Load::loadFinished, initialLoadThread, &QThread::quit);
 	connect(initialLoadThread, &QThread::finished, initialLoadThread, &QObject::deleteLater);
 
 	//Connect the thread signals to the UI slots
 	/* Loading procedure */
-	connect(initialLoad, &Load::loadStarted, this, &Loading::loadStarted);
-	connect(initialLoad, &Load::loadFinished, this, &Loading::loadFinished);
-	connect(initialLoad, &Load::htmlLoaded, this, &Loading::htmlLoaded);
-	connect(initialLoad, &Load::htmlLoadStarted, this, &Loading::htmlLoadStarted);
-	connect(initialLoad, &Load::htmlLoadFinished, this, &Loading::htmlLoadFinished);
-	connect(initialLoad, &Load::dictLoaded, this, &Loading::dictLoaded);
-	connect(initialLoad, &Load::dictLoadStarted, this, &Loading::dictLoadStarted);
-	connect(initialLoad, &Load::dictLoadFinished, this, &Loading::dictLoadFinished);
+	connect(initialLoad, &Load::loadStarted, this, &LoadUI::loadStarted);
+	connect(initialLoad, &Load::loadFinished, this, &LoadUI::loadFinished);
+	connect(initialLoad, &Load::htmlLoaded, this, &LoadUI::htmlLoaded);
+	connect(initialLoad, &Load::htmlLoadStarted, this, &LoadUI::htmlLoadStarted);
+	connect(initialLoad, &Load::htmlLoadFinished, this, &LoadUI::htmlLoadFinished);
+	connect(initialLoad, &Load::dictLoaded, this, &LoadUI::dictLoaded);
+	connect(initialLoad, &Load::dictLoadStarted, this, &LoadUI::dictLoadStarted);
+	connect(initialLoad, &Load::dictLoadFinished, this, &LoadUI::dictLoadFinished);
 	initialLoadThread->start();
 }
 
 /* ------Slot functions--------- */
-void Loading::loadingDots()
+void LoadUI::loadingDots()
 {
 	static int time1 = 0;
 	static int time2 = -2;
@@ -93,7 +93,7 @@ void Loading::loadingDots()
 }
 
 
-void Loading::htmlLoadStarted()
+void LoadUI::htmlLoadStarted()
 {
 	QDir dir(this->htmlFolder);
 	this->currentProgress = 0;
@@ -101,7 +101,7 @@ void Loading::htmlLoadStarted()
 	this->ui.statusBar->setText("Started Loading Html Library");
 }
 
-void Loading::htmlLoaded(unsigned int threadID, QString path)
+void LoadUI::htmlLoaded(unsigned int threadID, QString path)
 {
 	this->currentProgress++;
 	QString msg ;
@@ -111,19 +111,19 @@ void Loading::htmlLoaded(unsigned int threadID, QString path)
 	this->ui.statusBar->setText(msg);
 }
 
-void Loading::htmlLoadFinished()
+void LoadUI::htmlLoadFinished()
 {
 	this->ui.statusBar->setText("Ready");
 }
 
-void Loading::dictLoadStarted()
+void LoadUI::dictLoadStarted()
 {
 	//Started Loading Dictionary Library
 	this->currentProgress = 0;
 	this->maximumProgress = 0;
 }
 
-void Loading::dictLoaded(int num)
+void LoadUI::dictLoaded(int num)
 {
 	this->currentProgress += num;
 	QString msg;
@@ -132,15 +132,15 @@ void Loading::dictLoaded(int num)
 	this->ui.statusBar->setText(msg);
 }
 
-void Loading::dictLoadFinished()
+void LoadUI::dictLoadFinished()
 {
 	//Dictionary Load Finished
 }
 
 
-void Loading::loadStarted()
+void LoadUI::loadStarted()
 {
-	connect(&timer, &QTimer::timeout, this, &Loading::loadingDots);
+	connect(&timer, &QTimer::timeout, this, &LoadUI::loadingDots);
 	timer.start(20);
 
 	QPropertyAnimation *geometry = new QPropertyAnimation(this->ui.statusBar, "geometry");
@@ -154,7 +154,7 @@ void Loading::loadStarted()
 	geometry->start();
 }
 
-void Loading::loadFinished()
+void LoadUI::loadFinished()
 {
 #ifdef DEBUG
 	QMessageBox::information(nullptr, "time", "Time elapsed: " + QString::number(clock.elapsed()));
@@ -165,13 +165,13 @@ void Loading::loadFinished()
 }
 
 
-void Loading::mousePressEvent(QMouseEvent *event)
+void LoadUI::mousePressEvent(QMouseEvent *event)
 {
 	this->isPressed = true;
 	this->origin = event->pos();
 }
 
-void Loading::mouseMoveEvent(QMouseEvent *event)
+void LoadUI::mouseMoveEvent(QMouseEvent *event)
 {
 	if (this->isPressed)
 		this->move(event->globalX() - this->origin.x(), event->globalY() - this->origin.y());
@@ -180,12 +180,12 @@ void Loading::mouseMoveEvent(QMouseEvent *event)
 }
 
 
-void Loading::mouseReleaseEvent(QMouseEvent * event)
+void LoadUI::mouseReleaseEvent(QMouseEvent * event)
 {
 	this->isPressed = false;
 }
 
-bool Loading::eventFilter(QObject *obj, QEvent *event)
+bool LoadUI::eventFilter(QObject *obj, QEvent *event)
 {
 	if (obj == this->ui.close)
 	{
@@ -208,6 +208,6 @@ bool Loading::eventFilter(QObject *obj, QEvent *event)
 	return QWidget::eventFilter(obj, event);
 }
 
-Loading::~Loading()
+LoadUI::~LoadUI()
 {
 }

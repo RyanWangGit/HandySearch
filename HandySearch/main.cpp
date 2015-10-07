@@ -12,9 +12,9 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
-	Loading l;
+	LoadUI l;
 	HandySearch w;
-	QObject::connect(&l, &Loading::finished, &w, &HandySearch::loadFinished);
+	QObject::connect(&l, &LoadUI::finished, &w, &HandySearch::loadFinished);
 	
 	return a.exec();
 }

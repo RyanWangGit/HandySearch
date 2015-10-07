@@ -1,6 +1,6 @@
 #pragma once
 #include "ui_loading.h"
-class Loading : public QDialog
+class LoadUI : public QDialog
 {
 	Q_OBJECT
 private:
@@ -13,8 +13,8 @@ private:
 	unsigned long currentProgress;
 	unsigned long maximumProgress;
 public:
-	Loading();
-	~Loading();
+	LoadUI();
+	~LoadUI();
 public slots:
 	/* UI slots */
 	void loadingDots();

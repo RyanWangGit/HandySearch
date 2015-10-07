@@ -11,8 +11,8 @@
 #include "Html.h"
 #include "Index.h"
 #include "HashMap.h"
-#include "Loading.h"
+#include "LoadUI.h"
 #include "handysearch.h"
 #include "WordSegmenter.h"
-#include "Threads.h"
+#include "LoadThread.h"
 
