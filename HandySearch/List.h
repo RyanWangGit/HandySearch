@@ -1,4 +1,5 @@
 #pragma once
+//#define DEBUG
 template<typename T>
 class List;
 
@@ -75,7 +76,7 @@ List<T>::List()
 	this->tail = head;
 	this->length = 0;
 	this->last = nullptr;
-	this->lastIndex = -MAXINT;
+	this->lastIndex = -MAXSHORT;
 }
 
 template<typename T>
@@ -94,7 +95,6 @@ T& List<T>::operator[](int i)
 template<typename T>
 List<T>& List<T>::operator=(List<T>& other)
 {
-	
 	if (this == &other)
 		return *this;
 	this->clear();
@@ -107,20 +107,27 @@ ListNode<T>* List<T>::getNode(int i)
 {
 	//Return the head node if index is -1
 	if (i == -1)
+	{
+		this->last = nullptr;
+		this->lastIndex = -MAXSHORT;
 		return this->head;
+	}
+	if (i >= this->size())
+		throw new QOutOfBoundaryException();
+
 	//Use of last pointer to optimize when iterating
 	//by finding the shortest path to the index queried
 
 	//The distance between target and last queried pointer
-	int distances[3] = { i, abs(this->lastIndex - i), this->size() - i };
+	int distances[3] = { i, abs(this->lastIndex - i), this->size() - 1 - i };
 	int minDist = MAXINT;
 	int minNum;
-	for (int i = 0; i < 3; i++)
+	for (int j = 0; j < 3; j++)
 	{
-		if (minDist > distances[i])
+		if (minDist > distances[j])
 		{
-			minDist = distances[i];
-			minNum = i;
+			minDist = distances[j];
+			minNum = j;
 		}
 	}
 
@@ -131,7 +138,7 @@ ListNode<T>* List<T>::getNode(int i)
 		ListNode<T>* p = this->head->next;
 		for (int n = 0; n <= i; n++)
 		{
-			if (!p)
+			if (p == nullptr)
 				throw QNullPointerException();
 			else if (n == i)
 			{
@@ -149,7 +156,7 @@ ListNode<T>* List<T>::getNode(int i)
 		ListNode<T>* p = this->last;
 		for (int n = 0; n <= abs(this->lastIndex - i); n++)
 		{
-			if (!p)
+			if (p == nullptr)
 				throw QNullPointerException();
 			else if (n == abs(this->lastIndex - i))
 			{
@@ -170,11 +177,11 @@ ListNode<T>* List<T>::getNode(int i)
 	case 2:
 	{
 		ListNode<T>* p = this->tail;
-		for (int n = 0; n <= this->size() - i; n++)
+		for (int n = 0; n <= this->size() - 1 - i; n++)
 		{
-			if (!p)
+			if (p == nullptr)
 				throw QNullPointerException();
-			else if (n == this->size() - i)
+			else if (n == this->size() - 1 - i)
 			{
 				this->last = p;
 				this->lastIndex = i;
@@ -198,21 +205,15 @@ template<typename T>
 bool List<T>::clear()
 {
 	ListNode<T>* temp = nullptr;
-	try
+	while (this->tail != this->head)
 	{
-		while (this->tail != this->head)
-		{
-			temp = this->tail;
-			this->tail = this->tail->prior;
-			delete temp;
-		}
-		this->last = nullptr;
-		this->lastIndex = -MAXINT;
+		temp = this->tail;
+		this->tail = this->tail->prior;
+		delete temp;
 	}
-	catch (...)
-	{
-		return false;
-	}
+	this->last = nullptr;
+	this->lastIndex = -MAXSHORT;
+
 	return true;
 }
 
@@ -247,15 +248,21 @@ bool List<T>::isEmpty()
 template<typename T>
 bool List<T>::removeNode(ListNode<T> *p)
 {
+	if (p == nullptr)
+		throw QNullPointerException();
+
 	if (p == this->last)
 	{
-		if (p == this->tail)
+		if (p->prior == this->head)
+		{
+			this->last = nullptr;
+			this->lastIndex = -MAXSHORT;
+		}
+		else
 		{
 			this->last = p->prior;
 			this->lastIndex--;
 		}
-		else
-			this->last = p->next;
 	}
 
 	p->prior->next = p->next;
@@ -284,8 +291,9 @@ int List<T>::indexOf(T &value)
 	int i;
 	for (i = 0; i < this->size(); i++)
 	{
-		if (!p)
+		if (p == nullptr)
 			throw QNullPointerException("in indexOf(T &value) function");
+
 		if (p->data == value)
 			break;
 		p = p->next;
@@ -314,16 +322,16 @@ bool List<T>::insertAfter(int i, T& value)
 	ListNode<T> *temp = nullptr;
 
 	p = this->getNode(i);
-	Q_ASSERT(p != nullptr);
 
 	temp = p->next;
 	p->next = new ListNode<T>(value); 
 	p->next->prior = p;
 	p->next->next = temp;
-	if (!temp)
+	if (temp != nullptr)
 		temp->prior = p->next;
 
 	this->length++;
+
 	return true;
 }
 
