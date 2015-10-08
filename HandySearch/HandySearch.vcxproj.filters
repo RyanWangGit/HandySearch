@@ -112,7 +112,7 @@
     <ClInclude Include="Index.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_loading.h">
+    <ClInclude Include="GeneratedFiles\ui_loadui.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -126,14 +126,14 @@
     <CustomBuild Include="handysearch.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="loading.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="LoadUI.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="LoadThread.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="loadui.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

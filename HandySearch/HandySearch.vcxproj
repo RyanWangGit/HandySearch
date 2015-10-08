@@ -125,7 +125,7 @@
     <ClInclude Include="BloomFilter.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="GeneratedFiles\ui_handysearch.h" />
-    <ClInclude Include="GeneratedFiles\ui_loading.h" />
+    <ClInclude Include="GeneratedFiles\ui_loadui.h" />
     <ClInclude Include="Index.h" />
     <CustomBuild Include="LoadUI.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -192,7 +192,7 @@
     <ResourceCompile Include="HandySearch.rc" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="loading.ui">
+    <CustomBuild Include="loadui.ui">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Uic%27ing %(Identity)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>

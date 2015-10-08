@@ -6,7 +6,6 @@ HandySearch::HandySearch(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-	this->ui.clear->hide();
 	this->isResultShown = false;
 	this->setMinimumHeight(MINHEIGHT);
 	this->setMinimumWidth(MINWIDTH);
@@ -133,15 +132,6 @@ void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
 	}
 }
 
-
-void HandySearch::textChanged()
-{
-	if (this->ui.searchEdit->text() == "")
-		this->ui.clear->hide();
-	else
-		this->ui.clear->show();
-}
-
 void HandySearch::anchorClicked(const QUrl& url)
 {
 	ShellExecuteA(NULL, "open", url.toString().toStdString().c_str(), "", "", SW_SHOW);
@@ -161,16 +151,6 @@ void HandySearch::resizeEvent(QResizeEvent *event)
 		this->setShownUILayout();
 }
 
-void HandySearch::mouseMoveEvent(QMouseEvent *event)
-{
-	if (this->ui.clear->rect().contains(event->pos())
-		|| this->ui.search->rect().contains(event->pos())
-		)
-		this->setCursor(Qt::PointingHandCursor);
-	else
-		this->setCursor(Qt::ArrowCursor);
-
-}
 
 
 void HandySearch::setDefaultUILayout()
@@ -195,10 +175,6 @@ void HandySearch::setDefaultUILayout()
 	this->ui.search->move(QPoint(
 		this->ui.searchEdit->x() + this->ui.searchEdit->width(),
 		this->ui.searchEdit->y())
-		);
-	this->ui.clear->move(QPoint(
-		this->ui.search->x() - this->ui.clear->width(),
-		this->ui.search->y())
 		);
 	this->ui.copyright->setGeometry(
 		this->width() / 2 - this->ui.copyright->width() / 2,
@@ -232,10 +208,6 @@ void HandySearch::setShownUILayout()
 	this->ui.search->move(QPoint(
 		this->ui.searchEdit->x() + this->ui.searchEdit->width(),
 		this->ui.searchEdit->y())
-		);
-	this->ui.clear->move(QPoint(
-		this->ui.search->x() - this->ui.clear->width(),
-		this->ui.search->y())
 		);
 	this->ui.segment->setGeometry(
 		0,

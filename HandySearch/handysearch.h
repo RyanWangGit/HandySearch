@@ -19,13 +19,11 @@ public slots:
 	//UI slots
 	void segment();
 	void search();
-	void textChanged();
 	void anchorClicked(const QUrl& url);
 	void about();
 public:
 	HandySearch(QWidget *parent = 0);
 	void resizeEvent(QResizeEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);
 
 private:
 	QTime clock;

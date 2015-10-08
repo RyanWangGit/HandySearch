@@ -2,8 +2,6 @@
 #include <QtWidgets>
 #include <QDebug>
 #include <QObject>
-#include <QtWinExtras/QWinTaskbarButton>
-#include <QtWinExtras/QWinTaskbarProgress>
 
 #include "Exceptions.h"
 #include "List.h"

@@ -32,6 +32,7 @@ LoadUI::LoadUI()
 				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
 				{
 					this->close();
+					QApplication::exit(0);
 					return;
 				}
 			}
@@ -45,6 +46,7 @@ LoadUI::LoadUI()
 				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
 				{
 					this->close();
+					QApplication::exit(0);
 					return;
 				}
 			}

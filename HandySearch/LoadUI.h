@@ -1,5 +1,5 @@
 #pragma once
-#include "ui_loading.h"
+#include "ui_loadui.h"
 class LoadUI : public QDialog
 {
 	Q_OBJECT
