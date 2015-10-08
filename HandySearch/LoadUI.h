@@ -4,8 +4,8 @@ class LoadUI : public QDialog
 {
 	Q_OBJECT
 private:
-	QString htmlFolder;
-	QString dictFolder;
+	QDir htmlFolder;
+	QDir dictFolder;
 	QTime clock;
 	QTimer timer;
 	QPoint origin;

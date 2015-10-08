@@ -14,12 +14,43 @@ LoadUI::LoadUI()
 
 	//Start the application clock
 	clock.start();
-
+	QString currentPath = QApplication::applicationDirPath();
 	//The default html library path
-	this->htmlFolder = "C:/Html Library";
+	this->htmlFolder = currentPath + "/Html Library";
 
 	//The default dictionary library path
-	this->dictFolder = "C:/Dictionary Library";
+	this->dictFolder = currentPath + "/Dictionary Library";
+
+	if (!this->htmlFolder.exists() || !this->dictFolder.exists())
+	{
+		while (!this->dictFolder.exists())
+		{
+			this->dictFolder = QFileDialog::getExistingDirectory(this, "Choose Dictionary Library", "");
+			if (!this->dictFolder.exists())
+			{
+				QApplication::beep();
+				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
+				{
+					this->close();
+					return;
+				}
+			}
+		}
+		while (!this->htmlFolder.exists())
+		{
+			this->htmlFolder = QFileDialog::getExistingDirectory(this, "Choose Html Library", "");
+			if (!this->htmlFolder.exists())
+			{
+				QApplication::beep();
+				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
+				{
+					this->close();
+					return;
+				}
+			}
+		}
+		
+	}
 
 	this->isPressed = false;
 	

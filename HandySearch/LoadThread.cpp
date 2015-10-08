@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-Load::Load(const QString &htmlFolder, const QString &dictFolder)
+Load::Load(const QDir &htmlFolder, const QDir &dictFolder)
 {
 	this->htmlFolder = htmlFolder;
 	this->dictFolder = dictFolder;
