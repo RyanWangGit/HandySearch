@@ -11,7 +11,13 @@ Using Visual Studio 2013 + QT5.4.1 with OpenGL.
 
 * Load directly from html files and automatically analyzes them. (in multi-thread)
 
-* //TODO
+* Multi-Thread optimizations make it load faster and process better.
+
+* Briefs are shown.
+
+* Hightlights the key-words.
+
+* Auto-completer supported.
 
 ###For Developers
 * This projects includes pure-English notes to every single cornor to make it clear to understand.
@@ -20,7 +26,16 @@ Using Visual Studio 2013 + QT5.4.1 with OpenGL.
 
 * The IDE is `Visual Studio 2013 Community`
      
-* //TODO
+* UI and process threads are completely separeted in order not to cause mess.
+
+* Most of the UI Design copies from Baidu and Google.(lol)
+
+* Release version provides around 400 sample webpages randomly collected by a python script , in total , i collected 7000 webpages and filtered them down to around 4000.
 
 ###Screenshots
-* //TODO
+![#1](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/1.png)
+
+![#2](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/2.png)
+
+![#3](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/3.png)
+
