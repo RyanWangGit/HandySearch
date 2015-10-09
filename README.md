@@ -39,3 +39,4 @@ Using Visual Studio 2013 + QT5.4.1 with OpenGL.
 
 ![#3](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/3.png)
 
+![#4](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/4.png)
