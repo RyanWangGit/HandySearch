@@ -9,12 +9,10 @@ QStringList HandySearch::sentences;
 int main(int argc, char *argv[])
 {
 	qRegisterMetaType<Html>("Html");
-	QApplication a(argc, argv);
 	QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
+	QApplication a(argc, argv);
 
-	LoadUI l;
 	HandySearch w;
-	QObject::connect(&l, &LoadUI::finished, &w, &HandySearch::loadFinished);
-	
+
 	return a.exec();
 }

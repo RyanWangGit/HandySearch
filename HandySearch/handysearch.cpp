@@ -12,8 +12,18 @@ HandySearch::HandySearch(QWidget *parent)
 	this->setWindowIconText("HandySearch");
 
 	connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, this, &HandySearch::anchorClicked);
-
-
+	
+	//LoadUI initializations
+	QThread* loadUIThread = new QThread();
+	LoadUI* loadUI = new LoadUI();
+	loadUI->moveToThread(loadUIThread);
+	connect(loadUIThread, &QThread::started, loadUI, &LoadUI::loadData);
+	connect(loadUI, &LoadUI::canceled, this, &HandySearch::loadCanceled);
+	connect(loadUI, &LoadUI::loadFinished, loadUI, &QObject::deleteLater);
+	connect(loadUI, &LoadUI::loadFinished, loadUIThread, &QThread::quit);
+	connect(loadUI, &LoadUI::loadFinished, loadUIThread, &QObject::deleteLater);
+	connect(loadUI, &LoadUI::finished, this, &HandySearch::loadFinished);
+	loadUIThread->start();
 }
 
 
@@ -140,7 +150,7 @@ void HandySearch::anchorClicked(const QUrl& url)
 
 void HandySearch::about()
 {
-	
+	this->segment();
 }
 
 void HandySearch::resizeEvent(QResizeEvent *event)
@@ -148,7 +158,7 @@ void HandySearch::resizeEvent(QResizeEvent *event)
 	if (!isResultShown)
 		this->setDefaultUILayout();
 	else
-		this->setShownUILayout();
+		this->setResultUILayout();
 }
 
 
@@ -188,7 +198,7 @@ void HandySearch::setDefaultUILayout()
 		));
 }
 
-void HandySearch::setShownUILayout()
+void HandySearch::setResultUILayout()
 {
 	this->isResultShown = true;
 	this->ui.about->hide();
@@ -231,7 +241,7 @@ void HandySearch::setShownUILayout()
 
 void HandySearch::showResult(List<Index*> &resultList, QStringList &wordList)
 {
-	this->setShownUILayout();
+	this->setResultUILayout();
 	QString resultContent(this->ui.resultEdit->toHtml());
 	for (int i = 0; i < resultList.size(); i++)
 	{
@@ -250,6 +260,11 @@ void HandySearch::showResult(List<Index*> &resultList, QStringList &wordList)
 	this->clock.restart();
 }
 
+void HandySearch::loadCanceled()
+{
+	QApplication::quit();
+}
+
 void HandySearch::loadFinished()
 {
 	this->show();
@@ -258,6 +273,7 @@ void HandySearch::loadFinished()
 	this->completer = new QCompleter(HandySearch::sentences, this);
 	this->ui.searchEdit->setCompleter(completer);
 }
+
 
 //This is a test method
 void HandySearch::onCloseButtonClick()

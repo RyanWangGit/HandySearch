@@ -7,11 +7,15 @@ LoadUI::LoadUI()
 	this->ui.close->installEventFilter(this);
 	this->setWindowIconText("Handy Search");
 	this->setWindowFlags(Qt::FramelessWindowHint);
-	this->show();
-
+	this->isPressed = false;
 	this->currentProgress = 0;
 	this->maximumProgress = 0;
 
+	this->show();
+}
+
+void LoadUI::loadData()
+{
 	//Start the application clock
 	clock.start();
 	QString currentPath = QApplication::applicationDirPath();
@@ -31,8 +35,7 @@ LoadUI::LoadUI()
 				QApplication::beep();
 				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
 				{
-					this->close();
-					QApplication::exit(0);
+					emit this->canceled();
 					return;
 				}
 			}
@@ -45,17 +48,14 @@ LoadUI::LoadUI()
 				QApplication::beep();
 				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
 				{
-					this->close();
-					QApplication::exit(0);
+					emit this->canceled();
 					return;
 				}
 			}
 		}
-		
+
 	}
 
-	this->isPressed = false;
-	
 	//Initialization of application
 	QThread *initialLoadThread = new QThread();
 	Load *initialLoad = new Load(htmlFolder, dictFolder);
@@ -76,6 +76,8 @@ LoadUI::LoadUI()
 	connect(initialLoad, &Load::dictLoadStarted, this, &LoadUI::dictLoadStarted);
 	connect(initialLoad, &Load::dictLoadFinished, this, &LoadUI::dictLoadFinished);
 	initialLoadThread->start();
+
+	return;
 }
 
 /* ------Slot functions--------- */
@@ -231,7 +233,7 @@ bool LoadUI::eventFilter(QObject *obj, QEvent *event)
 			this->ui.close->setPixmap(QPixmap(QString::fromUtf8(":/Resources/Buttons/CloseNormalW.png")));
 			break;
 		case QEvent::MouseButtonPress:
-			this->close();
+			emit this->canceled();
 			break;
 		default:
 			break;

@@ -14,6 +14,7 @@ public:
 	static BloomFilter dictionary;
 	static HashMap<List<Index>*> index;
 public slots:
+	void loadCanceled();
 	void loadFinished();
 	void onCloseButtonClick();
 	//UI slots
@@ -31,7 +32,7 @@ private:
 	void putInContentList(Index* index, List<Index *>& list);
 	void putInTitleList(Index* index, List<Index *>& list);
 	void setDefaultUILayout();
-	void setShownUILayout();
+	void setResultUILayout();
 	void showResult(List<Index*> &resultList, QStringList &wordList);
 	QCompleter* completer;
 	Ui::HandySearchClass ui;

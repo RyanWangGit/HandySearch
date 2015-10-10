@@ -16,6 +16,7 @@ public:
 	LoadUI();
 	~LoadUI();
 public slots:
+	void loadData();
 	/* UI slots */
 	void loadingDots();
 	/* Load slots */
@@ -36,6 +37,7 @@ public slots:
 	bool eventFilter(QObject *obj, QEvent *event);
 	
 signals:
+	void canceled();
 	void finished();
 private:
 	Ui::Loading ui;
