@@ -144,7 +144,7 @@ void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
 
 void HandySearch::anchorClicked(const QUrl& url)
 {
-	ShellExecuteA(NULL, "open", url.toString().toStdString().c_str(), "", "", SW_SHOW);
+	QDesktopServices::openUrl(QUrl("file:///" + url.toString()));
 }
 
 
