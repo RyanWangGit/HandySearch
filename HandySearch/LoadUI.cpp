@@ -192,7 +192,7 @@ void LoadUI::loadStarted()
 void LoadUI::loadFinished()
 {
 #ifdef DEBUG
-	QMessageBox::information(nullptr, "time", "Time elapsed: " + QString::number(clock.elapsed()));
+	QMessageBox::information(nullptr, "Time", "Time elapsed: " + QString::number(clock.elapsed()));
 	qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::totalNum;
 #endif
 	emit finished();
