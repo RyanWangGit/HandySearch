@@ -94,7 +94,8 @@ void Load::processHtml(unsigned int threadID, Html* html, QString path)
 	html->analyze();
 	Html::totalNum++;
 	QString sentence = html->getTitle();
-	sentence.replace(QRegExp("[\s | _|,|\|.|;|\|:|\|'|\"|¡£|£¬|~|£¡|£¡|@|#|$|%|^|&|*|£¨|£©|(|)|!]*"), "");
+	//Remove all pucntuations , both English and Chinese ones
+	sentence.replace(QRegExp("[\\s|_|,|\\|.|;|\||:|\|'|\"|¡£|£¿|£¬|~|£¡|£¡|+|@|#|$|%|^|&|*|£¨|£©|(|)|!|-|¡ª|]"), "");
 	sentence.chop(10);
 	HandySearch::sentences.append(sentence);
 #ifdef DEBUG
