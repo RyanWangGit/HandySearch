@@ -1,16 +1,7 @@
 <RCC>
     <qresource prefix="/Resources">
-        <file>Buttons/CloseNormalW.png</file>
-        <file>Buttons/CloseOver.png</file>
-        <file>Buttons/ClosePressed.png</file>
-        <file>Buttons/MinimizeNormal.png</file>
-        <file>Buttons/MinimizeOver.png</file>
-        <file>Buttons/MinimizePressed.png</file>
         <file>Loading/Loading.png</file>
         <file>HandySearch.ico</file>
         <file>Logo.png</file>
-        <file>Buttons/SearchNormal.png</file>
-        <file>Buttons/SearchOver.png</file>
-        <file>Buttons/SearchPressed.png</file>
     </qresource>
 </RCC>

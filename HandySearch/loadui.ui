@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Loading</class>
- <widget class="QDialog" name="Loading">
+ <class>LoadUI</class>
+ <widget class="QDialog" name="LoadUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -219,7 +219,7 @@
 color: rgb(255, 255, 255, 150);</string>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>Loading...</string>
    </property>
   </widget>
   <widget class="QLabel" name="dot1">
@@ -337,7 +337,7 @@ background: transparent;</string>
     <string>·</string>
    </property>
   </widget>
-  <widget class="QLabel" name="close">
+  <widget class="QPushButton" name="close">
    <property name="geometry">
     <rect>
      <x>365</x>
@@ -346,14 +346,23 @@ background: transparent;</string>
      <height>27</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>等线 Light</family>
+     <pointsize>20</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
    <property name="styleSheet">
-    <string notr="true">background: transparent;</string>
+    <string notr="true">QPushButton{color:rgb(255,255,255);}
+QPushButton:hover{color:rgb(204,204,204);}
+QPushButton:pressed{color:rgb(204,204,204);}
+QPushButton{border:none;background:transparent;}
+</string>
    </property>
    <property name="text">
-    <string/>
-   </property>
-   <property name="pixmap">
-    <pixmap resource="handysearch.qrc">:/Resources/Buttons/CloseNormalW.png</pixmap>
+    <string>×</string>
    </property>
   </widget>
  </widget>

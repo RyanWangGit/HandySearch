@@ -42,9 +42,9 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QPushButton{border-image: url(:/Resources/Buttons/SearchNormal.png);}
-QPushButton:hover{border-image: url(:/Resources/Buttons/SearchOver.png);}
-QPushButton:pressed{border-image: url(:/Resources/Buttons/SearchPressed.png);}
+     <string notr="true">QPushButton{background-color:rgb(51,133,255);border:none}
+QPushButton:hover{background-color:rgb(49,126,243);border:none}
+QPushButton:pressed{background-color:rgb(48,117,220);border:none}
 QPushButton{color:rgb(255,255,255);}
 </string>
     </property>

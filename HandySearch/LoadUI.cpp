@@ -4,7 +4,8 @@
 LoadUI::LoadUI()
 {
 	ui.setupUi(this);
-	this->ui.close->installEventFilter(this);
+	connect(this->ui.close, &QPushButton::clicked, this, &LoadUI::canceled);
+
 	this->setWindowIconText("Handy Search");
 	this->setWindowFlags(Qt::FramelessWindowHint);
 	this->isPressed = false;
@@ -210,8 +211,6 @@ void LoadUI::mouseMoveEvent(QMouseEvent *event)
 {
 	if (this->isPressed)
 		this->move(event->globalX() - this->origin.x(), event->globalY() - this->origin.y());
-	if (this->ui.close->rect().contains(event->pos()))
-		this->ui.close->setPixmap(QPixmap(QString::fromUtf8(":/Resources/Buttons/CloseOver.png")));
 }
 
 
@@ -220,28 +219,6 @@ void LoadUI::mouseReleaseEvent(QMouseEvent * event)
 	this->isPressed = false;
 }
 
-bool LoadUI::eventFilter(QObject *obj, QEvent *event)
-{
-	if (obj == this->ui.close)
-	{
-		switch (event->type())
-		{
-		case QEvent::Enter:
-			this->ui.close->setPixmap(QPixmap(QString::fromUtf8(":/Resources/Buttons/CloseOver.png")));
-			break;
-		case QEvent::Leave:
-			this->ui.close->setPixmap(QPixmap(QString::fromUtf8(":/Resources/Buttons/CloseNormalW.png")));
-			break;
-		case QEvent::MouseButtonPress:
-			emit this->canceled();
-			break;
-		default:
-			break;
-		}
-	}
-
-	return QWidget::eventFilter(obj, event);
-}
 
 LoadUI::~LoadUI()
 {

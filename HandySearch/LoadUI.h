@@ -34,12 +34,11 @@ public slots:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent * event);
-	bool eventFilter(QObject *obj, QEvent *event);
 	
 signals:
 	void canceled();
 	void finished();
 private:
-	Ui::Loading ui;
+	Ui::LoadUI ui;
 };
 
