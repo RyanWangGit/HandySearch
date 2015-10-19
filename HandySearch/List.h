@@ -63,8 +63,9 @@ public:
 	bool contains(const T& value);
 	/* Insert the value after the i(th) node */
 	bool insertAfter(int i, T& value);
-	/* Operator[] to get i(th) node's data */
+	/* Override operator[] to get i(th) node's data */
 	T& operator[](int i);
+	/* Override operator= to make assign objects */
 	List<T>& operator=(List<T>& other);
 	
 };
@@ -120,78 +121,63 @@ ListNode<T>* List<T>::getNode(int i)
 
 	//The distance between target and last queried pointer
 	int distances[3] = { i, abs(this->lastIndex - i), this->size() - 1 - i };
-	int minDist = MAXINT;
-	int minNum;
+	int minDistance = MAXINT;	
+	int minIndex;	
 	for (int j = 0; j < 3; j++)
 	{
-		if (minDist > distances[j])
+		if (minDistance > distances[j])
 		{
-			minDist = distances[j];
-			minNum = j;
+			minDistance = distances[j];
+			minIndex = j;
 		}
 	}
 
-	switch (minNum)
+	//Amount of steps from source node to target node
+	int steps = 0;
+	//Index of source pointer
+	int sourceIndex = 0;
+	ListNode<T>* sourcePtr = nullptr;
+	switch (minIndex)
 	{
+	//From head node
 	case 0:
-	{
-		ListNode<T>* p = this->head->next;
-		for (int n = 0; n <= i; n++)
-		{
-			if (p == nullptr)
-				throw QNullPointerException();
-			else if (n == i)
-			{
-				this->last = p;
-				this->lastIndex = i;
-				return p;
-			}
-			else
-				p = p->next;
-		}
+		sourceIndex = 0;
+		sourcePtr = this->head->next;
+		steps = i;
 		break;
-	}
+	//From last-queried node
 	case 1:
-	{
-		ListNode<T>* p = this->last;
-		for (int n = 0; n <= abs(this->lastIndex - i); n++)
-		{
-			if (p == nullptr)
-				throw QNullPointerException();
-			else if (n == abs(this->lastIndex - i))
-			{
-				this->last = p;
-				this->lastIndex = i;
-				return p;
-			}
-			else
-			{
-				if (this->lastIndex - i < 0)
-					p = p->next;
-				else
-					p = p->prior;
-			}
-		}
+		sourceIndex = this->lastIndex;
+		sourcePtr = this->last;
+		steps = abs(this->lastIndex - i);
 		break;
-	}
+	//From tail node
 	case 2:
-	{
-		ListNode<T>* p = this->tail;
-		for (int n = 0; n <= this->size() - 1 - i; n++)
-		{
-			if (p == nullptr)
-				throw QNullPointerException();
-			else if (n == this->size() - 1 - i)
-			{
-				this->last = p;
-				this->lastIndex = i;
-				return p;
-			}
-			else
-				p = p->prior;
-		}
+		sourceIndex = this->size();
+		sourcePtr = this->tail;
+		steps = this->size() - 1 - i;
 		break;
 	}
+
+	//Walk from source to destination node and return
+	for (int j = 0; j <= steps; j++)
+	{
+		if (sourcePtr == nullptr)
+			throw QNullPointerException();
+		else if (j == steps)
+		{
+			this->last = sourcePtr;
+			this->lastIndex = i;
+			return sourcePtr;
+		}
+		else
+		{
+			if (i >= sourceIndex)
+				sourcePtr = sourcePtr->next;
+			else
+				sourcePtr = sourcePtr->prior;
+		}
+			
 	}
 }
 

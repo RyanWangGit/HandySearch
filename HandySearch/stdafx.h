@@ -10,7 +10,7 @@
 #include "Index.h"
 #include "HashMap.h"
 #include "LoadUI.h"
-#include "handysearch.h"
+#include "HandySearch.h"
 #include "WordSegmenter.h"
 #include "LoadThread.h"
 

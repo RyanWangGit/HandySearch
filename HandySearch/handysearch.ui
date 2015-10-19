@@ -203,7 +203,7 @@ Ryan Wang @ HUST</string>
       <string>© 2015 All Rights Reseverd</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="about_">
+    <widget class="QPushButton" name="_about">
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -293,7 +293,7 @@ QPushButton:hover{color:rgb(58, 58, 58);}
    </hints>
   </connection>
   <connection>
-   <sender>about_</sender>
+   <sender>_about</sender>
    <signal>clicked()</signal>
    <receiver>HandySearchClass</receiver>
    <slot>about()</slot>

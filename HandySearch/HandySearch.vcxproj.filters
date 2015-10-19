@@ -41,18 +41,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="handysearch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_handysearch.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_handysearch.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\qrc_handysearch.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="Html.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -83,13 +71,22 @@
     <ClCompile Include="GeneratedFiles\Release\moc_LoadThread.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="HandySearch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_HandySearch.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_HandySearch.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_HandySearch.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_handysearch.h">
-      <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="Html.h">
       <Filter>Header Files</Filter>
@@ -112,31 +109,45 @@
     <ClInclude Include="Index.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_loadui.h">
+    <ClInclude Include="GeneratedFiles\ui_HandySearch.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_LoadUI.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="handysearch.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="handysearch.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="handysearch.qrc">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="LoadUI.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="LoadThread.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="loadui.ui">
+    <CustomBuild Include="HandySearch.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="HandySearch.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LoadUI.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="HandySearch.qrc">
+      <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HandySearch.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Loading\Loading.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="HandySearch.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Logo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
