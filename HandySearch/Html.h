@@ -28,7 +28,6 @@ public:
 	bool loadFrom(QString &filePath);
 	bool operator== (Html &other);
 	Html& operator= (const Html &other);
-	int hashCode();
 	/* Segment the content and save it to the inverted list */
 	void analyze();
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "Html.h"
 //#define SKIPLOAD
 //#define DEBUG
 

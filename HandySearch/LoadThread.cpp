@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#include "Html.h"
+#include "HandySearch.h"
+#include "LoadThread.h"
 
 Load::Load(const QDir &htmlFolder, const QDir &dictFolder)
 {

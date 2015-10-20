@@ -1,4 +1,12 @@
 #include "stdafx.h"
+#include "List.h"
+#include "BloomFilter.h"
+#include "Html.h"
+#include "Index.h"
+#include "HashMap.h"
+#include "HandySearch.h"
+#include "LoadThread.h"
+
 
 /* Initialize the static member */
 unsigned int LoadHtml::threadNum = 0;

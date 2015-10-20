@@ -1,5 +1,7 @@
 #include "stdafx.h"
+#include "BloomFilter.h"
 #include "WordSegmenter.h"
+#include "List.h"
 
 Chunk::Chunk(QString fWord,QString sWord,QString tWord)
 {

@@ -1,4 +1,6 @@
 #pragma once
+#include "Exceptions.h"
+
 //#define DEBUG
 template<typename T>
 class List;

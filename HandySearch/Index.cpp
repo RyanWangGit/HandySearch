@@ -1,4 +1,8 @@
 #include "stdafx.h"
+#include "List.h"
+#include "Html.h"
+#include "Index.h"
+
 
 Index::Index()
 {

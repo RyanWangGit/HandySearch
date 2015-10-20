@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "LoadUI.h"
+#include "LoadThread.h"
 //#define DEBUG
 
 LoadUI::LoadUI()

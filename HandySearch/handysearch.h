@@ -2,6 +2,11 @@
 #define HANDYSEARCH_H
 
 #include "ui_handysearch.h"
+#include "List.h"
+#include "BloomFilter.h"
+#include "HashMap.h"
+#include "Index.h"
+
 
 class HandySearch : public QMainWindow
 {

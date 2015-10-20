@@ -1,4 +1,9 @@
 #pragma once
+#include "List.h"
+#include "BloomFilter.h"
+#include "Html.h"
+
+
 class Chunk
 {
 private:

@@ -1,5 +1,9 @@
 #include "stdafx.h"
+#include "List.h"
 #include "Html.h"
+#include "Index.h"
+#include "WordSegmenter.h"
+#include "HandySearch.h"
 
 /* Initialize the static member */
 unsigned int Html::totalNum = 0;
@@ -197,10 +201,4 @@ Html& Html::operator= (const Html &other)
 	this->textContent = other.textContent;
 	this->title = other.title;
 	return *this;
-}
-
-int Html::hashCode()
-{
-	QByteArray str = this->title.toLocal8Bit();
-	return HashMap<int>::hashCode(str.data(), str.size());
 }
