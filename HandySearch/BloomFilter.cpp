@@ -1,12 +1,27 @@
 #include "stdafx.h"
 #include "BloomFilter.h"
 
+
+/*--------------------------
+* BloomFilter::BloomFilter
+* 	The default constructor of BloomFilter.
+----------------------------*/
 BloomFilter::BloomFilter()
 {
 	this->bitArray.resize(MAXSIZE);
 	this->maxLength = 0;
 }
 
+
+
+/*--------------------------
+* BloomFilter::hasItem
+* 	Find whether the item is in the BloomFilter or not.
+* Returns:	bool - Result.
+* Parameter:
+*	void * key - The key to search.
+*	int len - Length of string.
+----------------------------*/
 bool BloomFilter::hasItem(void *key, int len)
 {
 	return
@@ -29,6 +44,14 @@ bool BloomFilter::hasItem(void *key, int len)
 }
 
 
+/*--------------------------
+* BloomFilter::addItem
+* 	Add an item to the BloomFilter.
+* Returns:	bool - Operation result.
+* Parameter:
+*	void * key - String pointer.
+*	int len - Length of string.
+----------------------------*/
 bool BloomFilter::addItem(void *key, int len)
 {
 	//Update maxWordLength
@@ -59,11 +82,25 @@ bool BloomFilter::addItem(void *key, int len)
 	return true;
 }
 
+
+/*--------------------------
+* BloomFilter::getMaxLength
+* 	Get the maximum word length of the dictioanry.
+* Returns:	unsigned int - Maximum word length.
+----------------------------*/
 unsigned int BloomFilter::getMaxLength()
 {
 	return this->maxLength;
 }
 
+
+/*--------------------------
+* BloomFilter::hasItem
+* 	Override function,provides support for QString.
+* Returns:	bool - Result.
+* Parameter:
+*	const QString & key - The key to search.
+----------------------------*/
 bool BloomFilter::hasItem(const QString &key)
 {
 	if (key == "")
@@ -74,6 +111,13 @@ bool BloomFilter::hasItem(const QString &key)
 }
 
 
+/*--------------------------
+* BloomFilter::addItem
+* 	Override function,provides support for QString.
+* Returns:	bool - Operation result.
+* Parameter:
+* 	const QString & key - The key to add.
+----------------------------*/
 bool BloomFilter::addItem(const QString &key)
 {
 	if (key == "")
@@ -85,6 +129,13 @@ bool BloomFilter::addItem(const QString &key)
 }
 
 
+/*--------------------------
+* 14 Hash function list
+* Returns:	unsigned int - The hash code.
+* Parameter:
+* 	char * str - String to hash.
+* 	unsigned int len - Length of the string.
+----------------------------*/
 unsigned int BloomFilter::RSHash(char* str, unsigned int len) {
 	unsigned int b = 378551;
 	unsigned int a = 63689;
@@ -97,7 +148,6 @@ unsigned int BloomFilter::RSHash(char* str, unsigned int len) {
 	}
 	return hash;
 }
-/* End Of RS Hash Function */
 
 
 unsigned int BloomFilter::JSHash(char* str, unsigned int len)
@@ -110,7 +160,6 @@ unsigned int BloomFilter::JSHash(char* str, unsigned int len)
 	}
 	return hash;
 }
-/* End Of JS Hash Function */
 
 
 unsigned int BloomFilter::PJWHash(char* str, unsigned int len)
@@ -132,7 +181,6 @@ unsigned int BloomFilter::PJWHash(char* str, unsigned int len)
 
 	return hash;
 }
-/* End Of  P. J. Weinberger Hash Function */
 
 
 unsigned int BloomFilter::ELFHash(char* str, unsigned int len)
@@ -150,7 +198,6 @@ unsigned int BloomFilter::ELFHash(char* str, unsigned int len)
 	}
 	return hash;
 }
-/* End Of ELF Hash Function */
 
 
 unsigned int BloomFilter::BKDRHash(char* str, unsigned int len)
@@ -166,7 +213,6 @@ unsigned int BloomFilter::BKDRHash(char* str, unsigned int len)
 
 	return hash;
 }
-/* End Of BKDR Hash Function */
 
 
 unsigned int BloomFilter::SDBMHash(char* str, unsigned int len)
@@ -180,7 +226,6 @@ unsigned int BloomFilter::SDBMHash(char* str, unsigned int len)
 
 	return hash;
 }
-/* End Of SDBM Hash Function */
 
 
 unsigned int BloomFilter::DJBHash(char* str, unsigned int len)
@@ -194,7 +239,6 @@ unsigned int BloomFilter::DJBHash(char* str, unsigned int len)
 
 	return hash;
 }
-/* End Of DJB Hash Function */
 
 
 unsigned int BloomFilter::DEKHash(char* str, unsigned int len)
@@ -207,7 +251,6 @@ unsigned int BloomFilter::DEKHash(char* str, unsigned int len)
 	}
 	return hash;
 }
-/* End Of DEK Hash Function */
 
 
 unsigned int BloomFilter::BPHash(char* str, unsigned int len)
@@ -220,7 +263,6 @@ unsigned int BloomFilter::BPHash(char* str, unsigned int len)
 
 	return hash;
 }
-/* End Of BP Hash Function */
 
 
 unsigned int BloomFilter::FNVHash(char* str, unsigned int len)
@@ -236,7 +278,6 @@ unsigned int BloomFilter::FNVHash(char* str, unsigned int len)
 
 	return hash;
 }
-/* End Of FNV Hash Function */
 
 
 unsigned int BloomFilter::APHash(char* str, unsigned int len)
@@ -251,7 +292,6 @@ unsigned int BloomFilter::APHash(char* str, unsigned int len)
 
 	return hash;
 }
-/* End Of AP Hash Function */
 
 
 unsigned int BloomFilter::HFLPHash(char *str, unsigned int len)
@@ -264,7 +304,6 @@ unsigned int BloomFilter::HFLPHash(char *str, unsigned int len)
 	}
 	return n%len;
 }
-/* End Of HFLP Hash Function*/
 
 
 unsigned int BloomFilter::HFHash(char* str, unsigned int len)
@@ -279,7 +318,6 @@ unsigned int BloomFilter::HFHash(char* str, unsigned int len)
 		result = -result;
 	return result%len;
 }
-/*End Of HKHash Function */
 
 
 unsigned int BloomFilter::StrHash(char *str, unsigned int len)
@@ -293,4 +331,4 @@ unsigned int BloomFilter::StrHash(char *str, unsigned int len)
 	return h;
 
 }
-/*End Of StrHash Function*/
+/* End of hash function list */
