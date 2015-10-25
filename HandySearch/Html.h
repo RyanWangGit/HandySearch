@@ -1,7 +1,13 @@
 #pragma once
 
-/* This class first tries to open the file the path indicates, 
-and uses some methods to return different kinds of data */
+/**
+ * Class:	Html
+ *
+ * Brief:	This class first tries to open the file the path indicates,
+ * and uses some methods to return different kinds of data.
+ *
+ * Date:	Oct. 2015
+ */
 class Html 
 {
 private:

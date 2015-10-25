@@ -121,6 +121,14 @@ void Load::loadHtml()
 }
 
 
+/*--------------------------
+* Load::processHtml
+* 	Process html object.
+* Parameter:
+* 	unsigned int threadID - The thread ID.
+* 	Html * html - Html object pointer.
+* 	QString path - Path of html file processed.
+----------------------------*/
 void Load::processHtml(unsigned int threadID, Html* html, QString path)
 {
 	html->analyze();
@@ -136,6 +144,7 @@ void Load::processHtml(unsigned int threadID, Html* html, QString path)
 	//Transmit the signal to UI thread
 	emit htmlLoaded(threadID, path);
 }
+
 
 void Load::htmlThreadFinished()
 {

@@ -1,5 +1,13 @@
 #pragma once
 #include "ui_loadui.h"
+
+/**
+ * Class:	LoadUI
+ *
+ * Brief:	The loading dialog class.
+ *
+ * Date:	Oct. 2015
+ */
 class LoadUI : public QDialog
 {
 	Q_OBJECT

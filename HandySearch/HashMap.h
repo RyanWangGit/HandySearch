@@ -1,4 +1,12 @@
 #pragma once
+
+/**
+ * Class:	Entry
+ *
+ * Brief:	An entry of HashMap,Key should always be QString.
+ *
+ * Date:	Oct. 2015
+ */
 template <typename V >
 class Entry
 {
@@ -30,7 +38,13 @@ public:
 	}
 };
 
-
+/**
+ * Class:	HashMap
+ *
+ * Brief:	HashMap is used as inverted list,provides mainly put and get method.
+ *
+ * Date:	Oct. 2015
+ */
 template <typename V >
 class HashMap
 {

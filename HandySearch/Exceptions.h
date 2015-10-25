@@ -1,5 +1,12 @@
 #pragma once
 
+/**
+ * Class:	QNullPointerException
+ *
+ * Brief:	An exception thrown when encountered null pointer.
+ *
+ * Date:	Oct. 2015
+ */
 class QNullPointerException : private QException
 {
 private :
@@ -21,6 +28,14 @@ public:
 	} 
 };
 
+
+/**
+ * Class:	QOutOfBoundaryException
+ *
+ * Brief:	An exception thrown when visit is out of boudary.
+ *
+ * Date:	Oct. 2015
+ */
 class QOutOfBoundaryException : private QException
 {
 private:

@@ -1,6 +1,14 @@
 #pragma once
 #include "Html.h"
 
+/**
+ * Class:	Index
+ *
+ * Brief:	An index item of requested word,include the html pointer
+ * and list of positions.
+ *
+ * Date:	Oct. 2015
+ */
 class Index
 {
 private:

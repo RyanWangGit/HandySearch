@@ -4,6 +4,14 @@
 #include "Html.h"
 
 
+/**
+ * Class:	Chunk
+ *
+ * Brief:	A chunk consists of at most three word,it represents 
+ * one possible segmentation.
+ *
+ * Date:	Oct. 2015
+ */
 class Chunk
 {
 private:
@@ -25,6 +33,14 @@ public:
 };
 
 
+/**
+ * Class:	WordSegmenter
+ *
+ * Brief:	Using MMSeg algorithm,thi class is implemented to 
+ * do word segmentation.
+ *
+ * Date:	Oct. 2015
+ */
 class WordSegmenter
 {
 private:

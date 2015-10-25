@@ -7,7 +7,13 @@
 #include "HashMap.h"
 #include "Index.h"
 
-
+/**
+ * Class:	HandySearch
+ *
+ * Brief:	Main QT class,manages all threads and global variables,posseses UI thread.
+ *
+ * Date:	Oct. 2015
+ */
 class HandySearch : public QMainWindow
 {
 #define SHADOWWIDTH 10

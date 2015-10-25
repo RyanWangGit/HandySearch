@@ -1,6 +1,14 @@
-
 #pragma once
 
+/**
+ * Class:	BloomFilter
+ *
+ * Brief:	This BloomFilter is used as dictionary,
+ * provides O(1) put and get effiency,with error rate
+ * down to around 1% .
+ *
+ * Date:	Oct. 2015
+ */
 class BloomFilter
 {
 #define MAXSIZE 67108864 // 2^26

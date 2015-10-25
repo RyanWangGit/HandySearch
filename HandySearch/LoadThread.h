@@ -3,7 +3,14 @@
 //#define SKIPLOAD
 //#define DEBUG
 
-//Html load sub-thread
+
+/**
+ * Class:	LoadHtml
+ *
+ * Brief:	Html load sub-thread class.
+ *
+ * Date:	Oct. 2015
+ */
 class LoadHtml : public QObject
 {
 	Q_OBJECT
@@ -35,9 +42,15 @@ public slots:
 	}
 };
 
-//Initial Load thread
-//Manages the dictionary loading
-//and html loading threadlets
+
+/**
+ * Class:	Load
+ *
+ * Brief:	Initial Load thread,manages the dictionary loading
+ * and html loading threadlets.
+ *
+ * Date:	Oct. 2015
+ */
 class Load : public QObject
 {
 	Q_OBJECT
@@ -74,12 +87,7 @@ public slots:
 
 		emit loadStarted();
 	}
-
-	//Html process needs to be done in single-thread 
-	//because HashMap isn't thread-safe
 	void processHtml(unsigned int threadID,Html* html,QString path);
-
-	//Check if all the sub-threads have returned
 	void htmlThreadFinished();
 };
 
