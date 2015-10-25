@@ -3,6 +3,11 @@
 #include "LoadThread.h"
 //#define DEBUG
 
+
+/*--------------------------
+* LoadUI::LoadUI
+* 	Loading dialog constructor.
+----------------------------*/
 LoadUI::LoadUI()
 {
 	ui.setupUi(this);
@@ -17,6 +22,12 @@ LoadUI::LoadUI()
 	this->show();
 }
 
+
+/*--------------------------
+* LoadUI::loadData
+* 	Start loading htmls and dictionary,connect the signals and slots,
+* and start initialization thread.
+----------------------------*/
 void LoadUI::loadData()
 {
 	//Start the application clock
@@ -28,6 +39,7 @@ void LoadUI::loadData()
 	//The default dictionary library path
 	this->dictFolder = currentPath + "/Dictionary Library";
 
+	//If html folder or dictionary folder doesn't exist
 	if (!this->htmlFolder.exists() || !this->dictFolder.exists())
 	{
 		while (!this->dictFolder.exists())
@@ -56,7 +68,6 @@ void LoadUI::loadData()
 				}
 			}
 		}
-
 	}
 
 	//Initialization of application
@@ -83,9 +94,15 @@ void LoadUI::loadData()
 	return;
 }
 
+
 /* ------Slot functions--------- */
+/*--------------------------
+* LoadUI::loadingDots
+* 	Controls the moving trace of five loading dots,provides a fancy loading animation.
+----------------------------*/
 void LoadUI::loadingDots()
 {
+	//The implementaion seems stupid and needs to be improved.
 	static int time1 = 0;
 	static int time2 = -2;
 	static int time3 = -4;
@@ -131,6 +148,10 @@ void LoadUI::loadingDots()
 }
 
 
+/*--------------------------
+* LoadUI::htmlLoadStarted
+* 	Initialize the variables and get ready to load html.
+----------------------------*/
 void LoadUI::htmlLoadStarted()
 {
 	QDir dir(this->htmlFolder);
@@ -139,6 +160,14 @@ void LoadUI::htmlLoadStarted()
 	this->ui.statusBar->setText("Started Loading Html Library");
 }
 
+
+/*--------------------------
+* LoadUI::htmlLoaded
+* 	Receive html loaded signal from sub-threads and set the loading text.
+* Parameter:
+* 	unsigned int threadID - Thread ID the html was loaded,not currently used.
+* 	QString path - Html file path,not currently used.
+----------------------------*/
 void LoadUI::htmlLoaded(unsigned int threadID, QString path)
 {
 	this->currentProgress++;
@@ -149,11 +178,21 @@ void LoadUI::htmlLoaded(unsigned int threadID, QString path)
 	this->ui.statusBar->setText(msg);
 }
 
+
+/*--------------------------
+* LoadUI::htmlLoadFinished
+* 	Receives html loading finished signal,set loading text.
+----------------------------*/
 void LoadUI::htmlLoadFinished()
 {
 	this->ui.statusBar->setText("Ready");
 }
 
+
+/*--------------------------
+* LoadUI::dictLoadStarted
+* 	Initialize the variables and get ready to load dictionary.
+----------------------------*/
 void LoadUI::dictLoadStarted()
 {
 	//Started Loading Dictionary Library
@@ -161,6 +200,13 @@ void LoadUI::dictLoadStarted()
 	this->maximumProgress = 0;
 }
 
+
+/*--------------------------
+* LoadUI::dictLoaded
+* 	Receive html loaded signal and set the loading text.
+* Parameter:
+* 	int num - Number of dictionary items loaded.
+----------------------------*/
 void LoadUI::dictLoaded(int num)
 {
 	this->currentProgress += num;
@@ -170,12 +216,21 @@ void LoadUI::dictLoaded(int num)
 	this->ui.statusBar->setText(msg);
 }
 
+
+/*--------------------------
+* LoadUI::dictLoadFinished
+* 	Receives html loading finished signal,this method is not implemented.
+----------------------------*/
 void LoadUI::dictLoadFinished()
 {
 	//Dictionary Load Finished
 }
 
 
+/*--------------------------
+* LoadUI::loadStarted
+* 	Receives load started signal,loading text fades in,initiate loading dots animation.
+----------------------------*/
 void LoadUI::loadStarted()
 {
 	connect(&timer, &QTimer::timeout, this, &LoadUI::loadingDots);
@@ -192,6 +247,11 @@ void LoadUI::loadStarted()
 	geometry->start();
 }
 
+
+/*--------------------------
+* LoadUI::loadFinished
+* 	Recieves load finished signal,close the dialog.
+----------------------------*/
 void LoadUI::loadFinished()
 {
 #ifdef DEBUG
@@ -203,12 +263,25 @@ void LoadUI::loadFinished()
 }
 
 
+/*--------------------------
+* LoadUI::mousePressEvent
+* 	Override method to implement drag movement.
+* Parameter:
+* 	QMouseEvent * event - Mouse event.
+----------------------------*/
 void LoadUI::mousePressEvent(QMouseEvent *event)
 {
 	this->isPressed = true;
 	this->origin = event->pos();
 }
 
+
+/*--------------------------
+* LoadUI::mouseMoveEvent
+* 	Override method to implement drag movement.
+* Parameter:
+* 	QMouseEvent * event - Mouse event.
+----------------------------*/
 void LoadUI::mouseMoveEvent(QMouseEvent *event)
 {
 	if (this->isPressed)
@@ -216,12 +289,22 @@ void LoadUI::mouseMoveEvent(QMouseEvent *event)
 }
 
 
+/*--------------------------
+* LoadUI::mouseReleaseEvent
+* 	Override method to implement drag movement.
+* Parameter:
+* 	QMouseEvent * event - Mouse event.
+----------------------------*/
 void LoadUI::mouseReleaseEvent(QMouseEvent * event)
 {
 	this->isPressed = false;
 }
 
 
+/*--------------------------
+* LoadUI::~LoadUI
+* 	Destructor of LoadUI,not implemented.
+----------------------------*/
 LoadUI::~LoadUI()
 {
 }
