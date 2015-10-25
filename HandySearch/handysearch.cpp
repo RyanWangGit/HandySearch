@@ -1,7 +1,20 @@
 #include "stdafx.h"
-#include "handysearch.h"
+#include "List.h"
+#include "Html.h"
+#include "Index.h"
+#include "HandySearch.h"
+#include "WordSegmenter.h"
+#include "LoadUI.h"
+
 #define DEBUG
 
+/*--------------------------
+* HandySearch::HandySearch
+* 	The default constructor of HandySearch,setup UI andconnect signal and
+* slots between loadUI and HandySearch class,and start initiating threads.
+* Parameter:
+* 	QWidget * parent - Parent of MainWindow.
+----------------------------*/
 HandySearch::HandySearch(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -27,16 +40,27 @@ HandySearch::HandySearch(QWidget *parent)
 }
 
 
+/*--------------------------
+* HandySearch::segment
+* 	Retrive the text in searchEdit and do segmentations,
+* and put the result back in searchEdit.
+----------------------------*/
 void HandySearch::segment()
 {
 	WordSegmenter ws(this->ui.searchEdit->text(), this->dictionary);
 	QString result;
-	QStringList qsl = ws.getResult();
-	for (QString word : qsl)
+	QStringList wordList = ws.getResult();
+	for (QString word : wordList)
 		result.append(word + "/");
 	this->ui.searchEdit->setText(result);
 }
 
+
+/*--------------------------
+* HandySearch::search
+* 	Set the UI Layout into result mode,collect the search result
+* in the inverted list and sort it,then show the result.
+----------------------------*/
 void HandySearch::search()
 {
 	this->clock.start();
@@ -45,18 +69,19 @@ void HandySearch::search()
 		this->setDefaultUILayout();
 		return;
 	}
-	//Two lists each containing results that include and exclude title
-	List<Index*> titleList;
-	List<Index*> contentList;
-	QString searchContent = this->ui.searchEdit->text();
-	searchContent.mid(0, 20);
+
+	//Put all results into one sorted list
+	List<Index*> sortedList;
+
+	QString searchContent = this->ui.searchEdit->text().mid(0,20);
 	WordSegmenter ws(searchContent, this->dictionary);
-	QStringList qsl = ws.getResult();
-	qsl.removeDuplicates();
-	qsl.removeAll(" ");
+	QStringList wordList = ws.getResult();
+	wordList.removeDuplicates();
+	wordList.removeAll(" ");
 	
-	for (QString word : qsl)
+	for (QString word : wordList)
 	{
+		//Get the indexList from inverted list
 		List<Index>* indexList = nullptr;
 		List<Index>** pIndexList = HandySearch::index.get(word);
 		if (pIndexList == nullptr)
@@ -64,13 +89,14 @@ void HandySearch::search()
 		else
 			indexList = *pIndexList;
 
+		//Traverse all index and put them into sorted list
 		for (int i = 0; i < indexList->size(); i++)
 		{
 			Index* index = &indexList->get(i);
-			Html *html = index->getHtml();
-
+			this->putInSortedList(index, sortedList);
+			/*
 			bool isInTitle = false;
-			for (QString word : qsl)
+			for (QString word : wordList)
 			{
 				if (html->getTitle().contains(word))
 				{
@@ -84,11 +110,19 @@ void HandySearch::search()
 				this->putInTitleList(index, titleList);
 			//Collect those don't
 			else
-				this->putInContentList(index, contentList);
+				this->putInContentList(index, contentList);*/
 		}
 	}
 	this->ui.resultEdit->clear(); 
-	this->showResult(titleList.append(contentList), qsl);
+	this->showResult(sortedList, wordList);
+}
+
+
+//Auto sort when putting index into list by weight
+void HandySearch::putInSortedList(Index* index, List<Index *>& list)
+{
+	Html* html = index->getHtml();
+
 }
 
 //Auto sort when putting index into list by weight
@@ -110,6 +144,7 @@ void HandySearch::putInTitleList(Index* index, List<Index *>& list)
 		list.append(index);
 }
 
+
 //Auto sort when putting index into list by weight
 void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
 {
@@ -118,9 +153,12 @@ void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
 	for (int i = 0; i < list.size(); i++)
 	{
 		Index* index = list.get(i);
+		//If found duplicate index
 		if (index->getHtml()->getTitle() == html->getTitle())
 		{
 			index->getRefWeight() += newIndex->getFrequency();
+			//Iterate forwards to find one whose weight
+			//is higher than current one
 			for (int j = i - 1; j >= 0; j--)
 			{
 				if (list.get(j)->getRefWeight() > index->getRefWeight())
@@ -142,17 +180,33 @@ void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
 	}
 }
 
+/*--------------------------
+* HandySearch::anchorClicked
+* 	Open the url in native browser.
+* Parameter:
+* 	const QUrl & url - The url user clicked.
+----------------------------*/
 void HandySearch::anchorClicked(const QUrl& url)
 {
 	QDesktopServices::openUrl(QUrl("file:///" + url.toString()));
 }
 
 
+/*--------------------------
+* HandySearch::about
+* 	Show about dialog.
+----------------------------*/
 void HandySearch::about()
 {
 	this->segment();
 }
 
+/*--------------------------
+* HandySearch::resizeEvent
+* 	Handle resize event.
+* Parameter:
+* 	QResizeEvent * event - The resize event.
+----------------------------*/
 void HandySearch::resizeEvent(QResizeEvent *event)
 {
 	if (!isResultShown)
@@ -162,7 +216,11 @@ void HandySearch::resizeEvent(QResizeEvent *event)
 }
 
 
-
+/*--------------------------
+* HandySearch::setDefaultUILayout
+* 	Set defaulkt UI layout,which puts logo in the center
+* and searchEdit below the logo.
+----------------------------*/
 void HandySearch::setDefaultUILayout()
 {
 	this->ui.about->show();
@@ -198,6 +256,12 @@ void HandySearch::setDefaultUILayout()
 		));
 }
 
+
+/*--------------------------
+* HandySearch::setResultUILayout
+* 	Set result-showing UI layout which puts logo in the left-top
+* cornor and searchEdit at its right,with resultEdit put below them.
+----------------------------*/
 void HandySearch::setResultUILayout()
 {
 	this->isResultShown = true;
@@ -239,6 +303,15 @@ void HandySearch::setResultUILayout()
 		);
 }
 
+
+/*--------------------------
+* HandySearch::showResult
+* 	Organize the result in the resultList and show them in the 
+* resultEdit.
+* Parameter:
+* 	List<Index * > & resultList - List of results.
+* 	QStringList & wordList - List of key words
+----------------------------*/
 void HandySearch::showResult(List<Index*> &resultList, QStringList &wordList)
 {
 	this->setResultUILayout();
@@ -260,11 +333,21 @@ void HandySearch::showResult(List<Index*> &resultList, QStringList &wordList)
 	this->clock.restart();
 }
 
+
+/*--------------------------
+* HandySearch::loadCanceled
+* 	Quit application when initiating load was canceled.
+----------------------------*/
 void HandySearch::loadCanceled()
 {
 	QApplication::quit();
 }
 
+
+/*--------------------------
+* HandySearch::loadFinished
+* 	Show the main window and set the completer.
+----------------------------*/
 void HandySearch::loadFinished()
 {
 	this->show();
@@ -274,18 +357,3 @@ void HandySearch::loadFinished()
 	this->ui.searchEdit->setCompleter(completer);
 }
 
-
-//This is a test method
-void HandySearch::onCloseButtonClick()
-{
-	try
-	{
-		QApplication::exit();
-	}	
-	catch (...)
-	{
-		qDebug() << "Shutdown Error";
-	}
-		
-	
-}

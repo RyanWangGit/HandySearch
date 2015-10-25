@@ -3,12 +3,26 @@
 #include "HandySearch.h"
 #include "LoadThread.h"
 
+
+/*--------------------------
+* Load::Load
+* 	Load object constructor,load with html folder and dictonary folder,
+* this is the common-used constructor.
+* Parameter:
+* 	const QDir & htmlFolder - 
+* 	const QDir & dictFolder - 
+----------------------------*/
 Load::Load(const QDir &htmlFolder, const QDir &dictFolder)
 {
 	this->htmlFolder = htmlFolder;
 	this->dictFolder = dictFolder;
 }
 
+
+/*--------------------------
+* Load::loadDictionary
+* 	Load dictonary from dictionary folder.
+----------------------------*/
 void Load::loadDictionary()
 {
 	/* -----Load dictionary----- */
@@ -17,13 +31,17 @@ void Load::loadDictionary()
 	QFile file;
 	QString path;
 	QString temp;
+
 	int index = 0;
+	//Traverse dictionary folder
 	while (dictIter.hasNext())
 	{
+		//Open dictionary file
 		path = dictIter.next();
 		file.setFileName(path);
 		if (!file.open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text))
 			continue;
+		//Read dictionary file
 		while (!file.atEnd())
 		{
 			index++;
@@ -41,6 +59,11 @@ void Load::loadDictionary()
 	/* ---------- */
 }
 
+
+/*--------------------------
+* Load::loadHtml
+* 	Load htmls from html folder.
+----------------------------*/
 void Load::loadHtml()
 {
 	/* -----Load htmls----- */
@@ -48,49 +71,55 @@ void Load::loadHtml()
 	QDirIterator htmlIter(htmlFolder, QDirIterator::Subdirectories);
 
 	QStringList pathList;
-	int i = 0;
+	int index = 0;
+	//Traverse html folder
 	while (htmlIter.hasNext())
 	{
 		QString path = htmlIter.next();
+		//Ignore "./" or "../"
 		if (path.endsWith("."))
 			continue;
+
+		//Create multiple threads to load htmls
 		pathList.append(path);
-		i++;
-		if (i == 250)
+		index++;
+		//Create one thread to process html object every 250 files
+		if (index == 250)
 		{
 			QThread *loadHtmlThread = new QThread();
 			LoadHtml *loadHtml = new LoadHtml(pathList);
 			loadHtml->moveToThread(loadHtmlThread);
 			connect(loadHtmlThread, &QThread::started, loadHtml, &LoadHtml::load);
-			connect(loadHtml, &LoadHtml::finished, this, &Load::htmlThreadFinished);
+			connect(loadHtml, &LoadHtml::finished, this, &Load::htmlThreadFinished, Qt::QueuedConnection);
 			connect(loadHtml, &LoadHtml::finished, loadHtml, &QObject::deleteLater);
 			connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QThread::quit);
 			connect(loadHtmlThread, &QThread::finished, loadHtmlThread, &QObject::deleteLater);
 			connect(loadHtml, &LoadHtml::processHtml, this, &Load::processHtml, Qt::QueuedConnection);
-
+			
 			loadHtmlThread->start();
 			pathList.clear();
-			i = 0;
+			index = 0;
 		}
 	}
-	//The remaining
+	//The remaining files 
 	if (pathList.size() != 0)
 	{
 		QThread *loadHtmlThread = new QThread();
 		LoadHtml *loadHtml = new LoadHtml(pathList);
 		loadHtml->moveToThread(loadHtmlThread);
 		connect(loadHtmlThread, &QThread::started, loadHtml, &LoadHtml::load);
-		connect(loadHtml, &LoadHtml::finished, this, &Load::htmlThreadFinished);
+		connect(loadHtml, &LoadHtml::finished, this, &Load::htmlThreadFinished, Qt::QueuedConnection);
 		connect(loadHtml, &LoadHtml::finished, loadHtml, &QObject::deleteLater);
 		connect(loadHtml, &LoadHtml::finished, loadHtmlThread, &QThread::quit);
 		connect(loadHtmlThread, &QThread::finished, loadHtmlThread, &QObject::deleteLater);
 		connect(loadHtml, &LoadHtml::processHtml, this, &Load::processHtml, Qt::QueuedConnection);
 
 		loadHtmlThread->start();
-		i = 0;
+		index = 0;
 	}
 	/* ---------- */
 }
+
 
 void Load::processHtml(unsigned int threadID, Html* html, QString path)
 {
@@ -119,7 +148,12 @@ void Load::htmlThreadFinished()
 }
 
 
-//Html load threadlet
+/*--------------------------
+* LoadHtml::LoadHtml
+* 	Html load threadlet constructor.
+* Parameter:
+* 	const QStringList & pathList - Path of files.
+----------------------------*/
 LoadHtml::LoadHtml(const QStringList &pathList)
 {
 	threadNum++;

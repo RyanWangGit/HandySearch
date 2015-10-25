@@ -34,8 +34,8 @@ private:
 	unsigned int pos;
 	void mmFilter(List<Chunk> &chunks);
 	void lawlFilter(List<Chunk> &chunks);
-	void svmlFilter(List<Chunk> &chunks);
-	void logFreqFilter(List<Chunk> &chunks);
+	void svwlFilter(List<Chunk> &chunks);
+	void sdmfFilter(List<Chunk> &chunks);
 	bool isChineseChar(QChar &ch);
 	bool isPunctuation(QChar *ch);
 	QChar getNextChar();
