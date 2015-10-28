@@ -1,3 +1,17 @@
+/*************************************
+ * Copyright(C),2015-2016,Ryan Wang 
+ * 
+ * File:	LoadUI.cpp
+ *
+ * Version: V1.0
+ * 
+ * Brief:	This implements the user interface of loading dialog,supporting
+ * multiple animations and information-displaying.
+ *
+ * Author:	Ryan
+ 
+ * Date:	Oct. 2015
+*************************************/
 #include "stdafx.h"
 #include "LoadUI.h"
 #include "LoadThread.h"

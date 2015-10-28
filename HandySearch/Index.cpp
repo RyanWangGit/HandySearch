@@ -1,3 +1,18 @@
+/*************************************
+ * Copyright(C),2015-2016,Ryan Wang 
+ * 
+ * File:	Index.cpp
+ *
+ * Version: V1.0
+ * 
+ * Brief:	This is the implementations of Index class,
+ * it is an entry of the hashmap,which provides wrapper
+ * of html pointer and list of positions of word appearance.
+ *
+ * Author:	Ryan
+ 
+ * Date:	Oct. 2015
+*************************************/
 #include "stdafx.h"
 #include "List.h"
 #include "Html.h"

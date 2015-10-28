@@ -1,3 +1,17 @@
+/*************************************
+ * Copyright(C),2015-2016,Ryan Wang 
+ * 
+ * File:	WordSegmenter.cpp
+ *
+ * Version: V1.0
+ * 
+ * Brief:	This implements a word segementer based on MMSeg algorithm,
+ * providing fast segmentation and also real good accuracy.
+ *
+ * Author:	Ryan
+ 
+ * Date:	Oct. 2015
+*************************************/
 #include "stdafx.h"
 #include "BloomFilter.h"
 #include "WordSegmenter.h"

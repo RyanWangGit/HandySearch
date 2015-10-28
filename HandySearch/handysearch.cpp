@@ -1,3 +1,18 @@
+/*************************************
+ * Copyright(C),2015-2016,Ryan Wang 
+ * 
+ * File:	HandySearch.cpp
+ *
+ * Version: V1.0
+ * 
+ * Brief:	This is the implementations of HandySearch class,
+ * which is the main QT class that controls and manages every
+ * QT objects and main window.
+ *
+ * Author:	Ryan
+ 
+ * Date:	Oct. 2015
+*************************************/
 #include "stdafx.h"
 #include "List.h"
 #include "Html.h"
@@ -71,7 +86,9 @@ void HandySearch::search()
 	}
 
 	//Put all results into one sorted list
-	List<Index*> sortedList;
+	//List<Index*> sortedList;
+	List<Index*> titleList;
+	List<Index*> contentList;
 
 	QString searchContent = this->ui.searchEdit->text().mid(0,20);
 	WordSegmenter ws(searchContent, this->dictionary);
@@ -88,16 +105,18 @@ void HandySearch::search()
 			continue;
 		else
 			indexList = *pIndexList;
-
+		
 		//Traverse all index and put them into sorted list
 		for (int i = 0; i < indexList->size(); i++)
 		{
 			Index* index = &indexList->get(i);
-			this->putInSortedList(index, sortedList);
-			/*
+			Html* html = index->getHtml();
+			//this->putInSortedList(index, sortedList);
+			
 			bool isInTitle = false;
 			for (QString word : wordList)
 			{
+				
 				if (html->getTitle().contains(word))
 				{
 					isInTitle = true;
@@ -110,22 +129,29 @@ void HandySearch::search()
 				this->putInTitleList(index, titleList);
 			//Collect those don't
 			else
-				this->putInContentList(index, contentList);*/
+				this->putInContentList(index, contentList);
 		}
 	}
 	this->ui.resultEdit->clear(); 
-	this->showResult(sortedList, wordList);
+	this->showResult(titleList.append(contentList), wordList);
 }
 
-
+/*
 //Auto sort when putting index into list by weight
 void HandySearch::putInSortedList(Index* index, List<Index *>& list)
 {
 	Html* html = index->getHtml();
 
-}
+}*/
 
-//Auto sort when putting index into list by weight
+
+/*--------------------------
+* HandySearch::putInTitleList
+* 	Auto sort when putting index into list by weight.
+* Parameter:
+* 	Index * index - An index.
+* 	List<Index * > & list - List of indexes which contains title.
+----------------------------*/
 void HandySearch::putInTitleList(Index* index, List<Index *>& list)
 {
 	bool hasFound = false;
@@ -145,7 +171,13 @@ void HandySearch::putInTitleList(Index* index, List<Index *>& list)
 }
 
 
-//Auto sort when putting index into list by weight
+/*--------------------------
+* HandySearch::putInContentList
+* 	Auto sort when putting index into list by weight.
+* Parameter:
+* 	Index * newIndex - An index.
+* 	List<Index * > & list - List of indexes which key words are in content.
+----------------------------*/
 void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
 {
 	Html *html = newIndex->getHtml();

@@ -1,3 +1,17 @@
+/*************************************
+ * Copyright(C),2015-2016,Ryan Wang 
+ * 
+ * File:	LoadThread.cpp
+ *
+ * Version: V1.0
+ * 
+ * Brief:	These are the implementations of multiple working threads
+ * which accelerates the initial loading procedure.
+ *
+ * Author:	Ryan
+ 
+ * Date:	Oct. 2015
+*************************************/
 #include "stdafx.h"
 #include "Html.h"
 #include "HandySearch.h"

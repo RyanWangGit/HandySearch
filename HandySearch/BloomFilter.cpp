@@ -1,3 +1,18 @@
+/*************************************
+ * Copyright(C),2015-2016,Ryan Wang 
+ * 
+ * File:	BloomFilter.cpp
+ *
+ * Version: V1.0
+ * 
+ * Brief:	This is the implementation of BloomFilter,simple use addItem to put
+ * new dictionary entry to the dictionary and use hasItem to test whether an entry
+ * is in the dictionary or not.
+ *
+ * Author:	Ryan
+ 
+ * Date:	Oct. 2015
+*************************************/
 #include "stdafx.h"
 #include "BloomFilter.h"
 

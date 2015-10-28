@@ -1,3 +1,18 @@
+/*************************************
+ * Copyright(C),2015-2016,Ryan Wang 
+ * 
+ * File:	Html.cpp
+ *
+ * Version: V1.0
+ * 
+ * Brief:	This is the implementations of Html class,
+ * provides wrapper of html files,providing several operations
+ * of the html file.
+ *
+ * Author:	Ryan
+ 
+ * Date:	Oct. 2015
+*************************************/
 #include "stdafx.h"
 #include "List.h"
 #include "Html.h"
