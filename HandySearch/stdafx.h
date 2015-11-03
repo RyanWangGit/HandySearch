@@ -2,3 +2,4 @@
 #include <QtWidgets>
 #include <QDebug>
 #include <QObject>
+//#define DEBUG

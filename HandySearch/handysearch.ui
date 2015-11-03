@@ -262,22 +262,6 @@ QPushButton:hover{color:rgb(58, 58, 58);}
   </connection>
   <connection>
    <sender>searchEdit</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>HandySearchClass</receiver>
-   <slot>textChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>170</x>
-     <y>272</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>168</x>
-     <y>340</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>searchEdit</sender>
    <signal>returnPressed()</signal>
    <receiver>search</receiver>
    <slot>click()</slot>

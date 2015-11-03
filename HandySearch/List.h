@@ -24,7 +24,6 @@
 *****************************************/
 #pragma once
 #include "Exceptions.h"
-//#define DEBUG
 
 //Declaration of List class
 template<typename T>
@@ -77,6 +76,7 @@ private:
 	/* Store the last queried pointer to reduce search time when iterating */
 	ListNode<T>* last;
 	int lastIndex;
+	QMutex mutex;
 
 	ListNode<T>* List<T>::getNode(int i);
 	bool List<T>::removeNode(ListNode<T>* node);
@@ -106,11 +106,11 @@ public:
 template<typename T>
 List<T>::List()
 {
-	this->head = new ListNode<T>();
-	this->tail = head;
-	this->length = 0;
-	this->last = nullptr;
-	this->lastIndex = -MAXSHORT;
+	head = new ListNode<T>();
+	tail = head;
+	length = 0;
+	last = nullptr;
+	lastIndex = -MAXSHORT;
 }
 
 
@@ -121,8 +121,8 @@ List<T>::List()
 template<typename T>
 List<T>::~List()
 {
-	this->clear();
-	delete this->head;
+	clear();
+	delete head;
 }
 
 /*--------------------------
@@ -135,7 +135,7 @@ List<T>::~List()
 template<typename T>
 T& List<T>::operator[](int i)
 {
-	return this->get(i);
+	return get(i);
 }
 
 
@@ -149,21 +149,22 @@ T& List<T>::operator[](int i)
 template<typename T>
 ListNode<T>* List<T>::getNode(int i)
 {
+	mutex.lock();
 	//Return the head node if index is -1
 	if (i == -1)
 	{
-		this->last = nullptr;
-		this->lastIndex = -MAXSHORT;
-		return this->head;
+		last = nullptr;
+		lastIndex = -MAXSHORT;
+		return head;
 	}
-	if (i >= this->size())
+	if (i >= size())
 		throw new QOutOfBoundaryException();
 
 	//Use of last pointer to optimize when iterating
 	//by finding the shortest path to the index queried
 
 	//The distance between target and last queried pointer
-	int distances[3] = { i, abs(this->lastIndex - i), this->size() - 1 - i };
+	int distances[3] = { i, abs(lastIndex - i), size() - 1 - i };
 	int minDistance = MAXINT;
 	int minIndex;
 	for (int j = 0; j < 3; j++)
@@ -185,20 +186,20 @@ ListNode<T>* List<T>::getNode(int i)
 		//From head node
 	case 0:
 		sourceIndex = 0;
-		sourcePtr = this->head->next;
+		sourcePtr = head->next;
 		steps = i;
 		break;
 		//From last-queried node
 	case 1:
-		sourceIndex = this->lastIndex;
-		sourcePtr = this->last;
-		steps = abs(this->lastIndex - i);
+		sourceIndex = lastIndex;
+		sourcePtr = last;
+		steps = abs(lastIndex - i);
 		break;
 		//From tail node
 	case 2:
-		sourceIndex = this->size();
-		sourcePtr = this->tail;
-		steps = this->size() - 1 - i;
+		sourceIndex = size();
+		sourcePtr = tail;
+		steps = size() - 1 - i;
 		break;
 	}
 
@@ -209,8 +210,10 @@ ListNode<T>* List<T>::getNode(int i)
 			throw QNullPointerException();
 		else if (j == steps)
 		{
-			this->last = sourcePtr;
-			this->lastIndex = i;
+			last = sourcePtr;
+			lastIndex = i;
+
+			mutex.unlock();
 			return sourcePtr;
 		}
 		else
@@ -221,6 +224,7 @@ ListNode<T>* List<T>::getNode(int i)
 				sourcePtr = sourcePtr->prior;
 		}
 	}
+	return nullptr;
 }
 
 
@@ -237,28 +241,31 @@ bool List<T>::removeNode(ListNode<T> *node)
 	if (node == nullptr)
 		throw QNullPointerException();
 
-	if (node == this->last)
+	mutex.lock();
+	if (node == last)
 	{
-		if (node->prior == this->head)
+		if (node->prior == head)
 		{
-			this->last = nullptr;
-			this->lastIndex = -MAXSHORT;
+			last = nullptr;
+			lastIndex = -MAXSHORT;
 		}
 		else
 		{
-			this->last = node->prior;
-			this->lastIndex--;
+			last = node->prior;
+			lastIndex--;
 		}
 	}
 
 	node->prior->next = node->next;
 	if (node->next == nullptr)
-		this->tail = node->prior;
+		tail = node->prior;
 	else
 		node->next->prior = node->prior;
 
 	delete node;
-	this->length--;
+	length--;
+
+	mutex.unlock();
 
 	return true;
 }
@@ -276,8 +283,8 @@ List<T>& List<T>::operator=(List<T>& other)
 {
 	if (this == &other)
 		return *this;
-	this->clear();
-	this->append(other);
+	clear();
+	append(other);
 	return *this;
 }
 
@@ -292,7 +299,7 @@ List<T>& List<T>::operator=(List<T>& other)
 template<typename T>
 T& List<T>::get(int i)
 {
-	return this->getNode(i)->data;
+	return getNode(i)->data;
 }
 
 
@@ -306,13 +313,16 @@ T& List<T>::get(int i)
 template<typename T>
 List<T>& List<T>::append(T& data)
 {
-	ListNode<T>* p = this->tail;
+	mutex.lock();
+	ListNode<T>* p = tail;
+
 	p->next = new ListNode<T>(data);
 	
 	p->next->prior = p;
-	this->tail = p->next;
-	this->length++;
+	tail = p->next;
+	length++;
 
+	mutex.unlock();
 	return *this;
 }
 
@@ -328,7 +338,7 @@ template<typename T>
 List<T>&  List<T>::append(List<T>& list)
 {
 	for (int i = 0; i < list.size(); i++)
-		this->append(list.get(i));
+		append(list.get(i));
 
 	return *this;
 }
@@ -343,14 +353,17 @@ template<typename T>
 bool List<T>::clear()
 {
 	ListNode<T>* temp = nullptr;
-	while (this->tail != this->head)
+
+	mutex.lock();
+	while (tail != head)
 	{
-		temp = this->tail;
-		this->tail = this->tail->prior;
+		temp = tail;
+		tail = tail->prior;
 		delete temp;
 	}
-	this->last = nullptr;
-	this->lastIndex = -MAXSHORT;
+	last = nullptr;
+	lastIndex = -MAXSHORT;
+	mutex.unlock();
 
 	return true;
 }
@@ -378,7 +391,7 @@ bool List<T>::isEmpty()
 template<typename T>
 bool List<T>::remove(int i)
 {
-	return this->removeNode(this->getNode(i));
+	return removeNode(getNode(i));
 }
 
 
@@ -392,9 +405,9 @@ bool List<T>::remove(int i)
 template<typename T>
 int List<T>::indexOf(T &value)
 {
-	ListNode<T>* p = this->head->next;
+	ListNode<T>* p = head->next;
 	int i;
-	for (i = 0; i < this->size(); i++)
+	for (i = 0; i < size(); i++)
 	{
 		if (p == nullptr)
 			throw QNullPointerException("in indexOf(T &value) function");
@@ -418,8 +431,8 @@ int List<T>::indexOf(T &value)
 template<typename T>
 bool List<T>::replace(int i, T& value)
 {
-	this->remove(i);
-	this->insertAfter(i - 1, value);
+	remove(i);
+	insertAfter(i - 1, value);
 	return true;
 }
 
@@ -432,7 +445,7 @@ bool List<T>::replace(int i, T& value)
 template<typename T>
 long List<T>::size()
 {
-	return this->length;
+	return length;
 }
 
 /*--------------------------
@@ -446,9 +459,9 @@ template<typename T>
 bool List<T>::contains(const T &value)
 { 
 	ListNode<T> *p = nullptr;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < size(); i++)
 	{
-		p = this->getNode(i);
+		p = getNode(i);
 		
 		if (p->data == value)
 			return true;
@@ -470,7 +483,9 @@ bool List<T>::insertAfter(int i, T& value)
 	ListNode<T> *p = nullptr;
 	ListNode<T> *temp = nullptr;
 
-	p = this->getNode(i);
+	p = getNode(i);
+
+	mutex.lock();
 
 	temp = p->next;
 	p->next = new ListNode<T>(value); 
@@ -479,7 +494,8 @@ bool List<T>::insertAfter(int i, T& value)
 	if (temp != nullptr)
 		temp->prior = p->next;
 
-	this->length++;
+	length++;
+	mutex.unlock();
 
 	return true;
 }

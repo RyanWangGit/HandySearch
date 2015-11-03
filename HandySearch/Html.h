@@ -43,22 +43,23 @@ private:
 	QString textContent;
 	/* Title extracted from file content*/
 	QString title;
+	static unsigned int totalNum;
 	bool hasAnalyzed;
 	void extractText(const QString &fileContent);
 	void extractTitle(const QString &fileContent);
+	/* Segment the content and save it to the inverted list */
+	void analyze();
 	bool load();
 public:
-	static unsigned int totalNum;
 	Html();
 	Html(const QString &filePath);
 	Html(const Html &c);
 	QString &getText();
 	QString &getTitle();
 	QString getFilePath();
+	static unsigned int getTotalHtmlCount();
 	bool loadFrom(QString &filePath);
 	bool operator== (Html &other);
 	Html& operator= (const Html &other);
-	/* Segment the content and save it to the inverted list */
-	void analyze();
 };
 

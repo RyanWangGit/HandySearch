@@ -25,94 +25,71 @@
 #pragma once
 #include "Html.h"
 //#define SKIPLOAD
-//#define DEBUG
 
 
 /**
- * Class:	LoadHtml
+ * Class:	HtmlLoadSubTask
  *
- * Brief:	Html load sub-thread class.
+ * Brief:	Html load sub-task class.
  *
- * Date:	Oct. 2015
+ * Date:	Nov. 2015
  */
-class LoadHtml : public QObject
+class HtmlLoadSubTask : public QObject, public QRunnable
 {
 	Q_OBJECT
 private:
-	int id;
 	QStringList pathList;
 public:
-	static unsigned int threadNum;
-	LoadHtml(const QStringList &pathList);
+	HtmlLoadSubTask(const QStringList &pathList);
 
 signals:
-	void processHtml(unsigned int, Html*, QString);
-	void finished();
+	void htmlLoaded();
 
-public slots:
-	void load()
-	{
-#ifdef DEBUG
-		qDebug() << "[Html Loading Thread #" << this->id << "]" << "Thread Received " << pathList.size() << "Files";
-#endif 
-		for (int i = 0; i < pathList.size(); i++)
-		{
-#ifndef SKIPLOAD 
-			Html *pHtml = new Html(pathList[i]);
-			emit processHtml(this->id, pHtml, pathList.at(i));
-#endif
-		}		
-		emit finished();
-	}
+public:
+	void run();
 };
 
 
 /**
- * Class:	Load
+ * Class:	HtmlLoadTask
  *
- * Brief:	Initial Load thread,manages the dictionary loading
- * and html loading threadlets.
+ * Brief:	A html load task,which manages several html load sub-tasks
+ * and merges all the local hashmap.
  *
- * Date:	Oct. 2015
+ * Date:	Nov. 2015
  */
-class Load : public QObject
+class HtmlLoadTask : public QObject
 {
 	Q_OBJECT
 private:
+	QObject* parent;
 	QDir htmlFolder;
-	QDir dictFolder;
 public:
-	Load(const QDir &htmlFolder, const QDir &dictFolder);
-
+	HtmlLoadTask(const QDir& htmlFolder, QObject * parent = 0);
+	void load();
 signals:
-	void loadStarted();
-	void loadFinished();
-	//Html Thread Signals
-	void htmlLoaded(unsigned int, QString);
 	void htmlLoadStarted();
 	void htmlLoadFinished();
-	//Dictionary Thread Signals
-	void dictLoaded(int num);
-	void dictLoadStarted();
-	void dictLoadFinished();
-
-private slots:
-	//Load tasks
-	void loadDictionary();
-	void loadHtml();
-
-public slots:
-	//Initial load thread
-	void run()
-	{
-		connect(this, &Load::loadStarted, this, &Load::loadDictionary);
-		connect(this, &Load::dictLoadFinished, this, &Load::loadHtml);
-		connect(this, &Load::htmlLoadFinished, this, &Load::loadFinished);
-
-		emit loadStarted();
-	}
-	void processHtml(unsigned int threadID,Html* html,QString path);
-	void htmlThreadFinished();
 };
 
 
+/**
+ * Class:	DictLoadTask
+ *
+ * Brief:	A dictionary load task.
+ *
+ * Date:	Nov. 2015
+ */
+class DictLoadTask : public QObject
+{
+	Q_OBJECT
+private:
+	QDir dictFolder;
+public:
+	DictLoadTask(const QDir& dictFolder);
+	void load();
+signals:
+	void dictLoadStarted();
+	void dictLoaded(int num);
+	void dictLoadFinished();
+};

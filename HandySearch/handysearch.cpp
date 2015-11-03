@@ -21,7 +21,6 @@
 #include "WordSegmenter.h"
 #include "LoadUI.h"
 
-#define DEBUG
 
 /*--------------------------
 * HandySearch::HandySearch
@@ -34,24 +33,19 @@ HandySearch::HandySearch(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
-	this->isResultShown = false;
-	this->setMinimumHeight(MINHEIGHT);
-	this->setMinimumWidth(MINWIDTH);
-	this->setWindowIconText("HandySearch");
+	isResultShown = false;
+	setMinimumHeight(MINHEIGHT);
+	setMinimumWidth(MINWIDTH);
+	setWindowIconText("HandySearch");
 
-	connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, this, &HandySearch::anchorClicked);
+	connect(ui.resultEdit, &QTextBrowser::anchorClicked, this, &HandySearch::anchorClicked);
 	
-	//LoadUI initializations
-	QThread* loadUIThread = new QThread();
+	//LoadUI dialog show up
 	LoadUI* loadUI = new LoadUI();
-	loadUI->moveToThread(loadUIThread);
-	connect(loadUIThread, &QThread::started, loadUI, &LoadUI::loadData);
 	connect(loadUI, &LoadUI::canceled, this, &HandySearch::loadCanceled);
-	connect(loadUI, &LoadUI::loadFinished, loadUI, &QObject::deleteLater);
-	connect(loadUI, &LoadUI::loadFinished, loadUIThread, &QThread::quit);
-	connect(loadUI, &LoadUI::loadFinished, loadUIThread, &QObject::deleteLater);
 	connect(loadUI, &LoadUI::finished, this, &HandySearch::loadFinished);
-	loadUIThread->start();
+	connect(loadUI, &LoadUI::finished, loadUI, &QObject::deleteLater);
+	loadUI->loadData();
 }
 
 
@@ -62,12 +56,9 @@ HandySearch::HandySearch(QWidget *parent)
 ----------------------------*/
 void HandySearch::segment()
 {
-	WordSegmenter ws(this->ui.searchEdit->text(), this->dictionary);
-	QString result;
+	WordSegmenter ws(ui.searchEdit->text(), dictionary);
 	QStringList wordList = ws.getResult();
-	for (QString word : wordList)
-		result.append(word + "/");
-	this->ui.searchEdit->setText(result);
+	ui.searchEdit->setText(wordList.join("\\"));
 }
 
 
@@ -78,10 +69,10 @@ void HandySearch::segment()
 ----------------------------*/
 void HandySearch::search()
 {
-	this->clock.start();
-	if (this->ui.searchEdit->text() == "")
+	clock.start();
+	if (ui.searchEdit->text() == "")
 	{
-		this->setDefaultUILayout();
+		setDefaultUILayout();
 		return;
 	}
 
@@ -90,8 +81,8 @@ void HandySearch::search()
 	List<Index*> titleList;
 	List<Index*> contentList;
 
-	QString searchContent = this->ui.searchEdit->text().mid(0,20);
-	WordSegmenter ws(searchContent, this->dictionary);
+	QString searchContent = ui.searchEdit->text().mid(0,20);
+	WordSegmenter ws(searchContent, dictionary);
 	QStringList wordList = ws.getResult();
 	wordList.removeDuplicates();
 	wordList.removeAll(" ");
@@ -111,7 +102,7 @@ void HandySearch::search()
 		{
 			Index* index = &indexList->get(i);
 			Html* html = index->getHtml();
-			//this->putInSortedList(index, sortedList);
+			//putInSortedList(index, sortedList);
 			
 			bool isInTitle = false;
 			for (QString word : wordList)
@@ -126,14 +117,14 @@ void HandySearch::search()
 
 			//Collect those have keywords in title
 			if (isInTitle)
-				this->putInTitleList(index, titleList);
+				putInTitleList(index, titleList);
 			//Collect those don't
 			else
-				this->putInContentList(index, contentList);
+				putInContentList(index, contentList);
 		}
 	}
-	this->ui.resultEdit->clear(); 
-	this->showResult(titleList.append(contentList), wordList);
+	ui.resultEdit->clear(); 
+	showResult(titleList.append(contentList), wordList);
 }
 
 /*
@@ -230,7 +221,7 @@ void HandySearch::anchorClicked(const QUrl& url)
 ----------------------------*/
 void HandySearch::about()
 {
-	this->segment();
+	segment();
 }
 
 /*--------------------------
@@ -242,9 +233,9 @@ void HandySearch::about()
 void HandySearch::resizeEvent(QResizeEvent *event)
 {
 	if (!isResultShown)
-		this->setDefaultUILayout();
+		setDefaultUILayout();
 	else
-		this->setResultUILayout();
+		setResultUILayout();
 }
 
 
@@ -255,36 +246,36 @@ void HandySearch::resizeEvent(QResizeEvent *event)
 ----------------------------*/
 void HandySearch::setDefaultUILayout()
 {
-	this->ui.about->show();
-	this->ui.segment->hide();
-	this->ui.resultEdit->hide();
-	this->isResultShown = false;
-	this->ui.copyright->setText("Designed and Powered By:\nRyan Wang @ HUST");
-	this->ui.copyright->setFont(QFont(QStringLiteral("Segoe UI Light"), 14));
-	this->ui.logo->setGeometry(
-		this->width() / 2 - 356 / 2,
-		this->height() / 2 - 97 / 2 - 100,
+	ui.about->show();
+	ui.segment->hide();
+	ui.resultEdit->hide();
+	isResultShown = false;
+	ui.copyright->setText("Designed and Powered By:\nRyan Wang @ HUST");
+	ui.copyright->setFont(QFont(QStringLiteral("Segoe UI Light"), 14));
+	ui.logo->setGeometry(
+		width() / 2 - 356 / 2,
+		height() / 2 - 97 / 2 - 100,
 		356,
 		97
 		);
-	this->ui.logo->setScaledContents(true);
-	this->ui.searchEdit->move(QPoint(
-		this->ui.logo->x() - 80,
-		this->ui.logo->y() + this->ui.logo->height() + 20
+	ui.logo->setScaledContents(true);
+	ui.searchEdit->move(QPoint(
+		ui.logo->x() - 80,
+		ui.logo->y() + ui.logo->height() + 20
 		));
-	this->ui.search->move(QPoint(
-		this->ui.searchEdit->x() + this->ui.searchEdit->width(),
-		this->ui.searchEdit->y())
+	ui.search->move(QPoint(
+		ui.searchEdit->x() + ui.searchEdit->width(),
+		ui.searchEdit->y())
 		);
-	this->ui.copyright->setGeometry(
-		this->width() / 2 - this->ui.copyright->width() / 2,
-		this->height() / 2 + 100,
+	ui.copyright->setGeometry(
+		width() / 2 - ui.copyright->width() / 2,
+		height() / 2 + 100,
 		251,
 		81
 		);
-	this->ui.about->move(QPoint(
-		this->width() / 2 - this->ui.about->width() / 2,
-		this->height() - this->ui.about->height()
+	ui.about->move(QPoint(
+		width() / 2 - ui.about->width() / 2,
+		height() - ui.about->height()
 		));
 }
 
@@ -296,40 +287,40 @@ void HandySearch::setDefaultUILayout()
 ----------------------------*/
 void HandySearch::setResultUILayout()
 {
-	this->isResultShown = true;
-	this->ui.about->hide();
-	this->ui.segment->show();
-	this->ui.resultEdit->show();
-	this->ui.copyright->setText("Designed and Powered by : Ryan Wang @ HUST");
-	this->ui.copyright->setFont(QFont(QStringLiteral("Segoe UI Light"), 8));
-	this->ui.logo->setGeometry(5, 5, 150, 41);
-	this->ui.logo->setScaledContents(true);
-	this->ui.searchEdit->move(QPoint(
-		this->ui.logo->x() + this->ui.logo->width() + 20,
-		this->ui.logo->y()
+	isResultShown = true;
+	ui.about->hide();
+	ui.segment->show();
+	ui.resultEdit->show();
+	ui.copyright->setText("Designed and Powered by : Ryan Wang @ HUST");
+	ui.copyright->setFont(QFont(QStringLiteral("Segoe UI Light"), 8));
+	ui.logo->setGeometry(5, 5, 150, 41);
+	ui.logo->setScaledContents(true);
+	ui.searchEdit->move(QPoint(
+		ui.logo->x() + ui.logo->width() + 20,
+		ui.logo->y()
 		));
 
-	this->ui.searchEdit->setFixedWidth(471 + this->width() - MINWIDTH);
+	ui.searchEdit->setFixedWidth(471 + width() - MINWIDTH);
 
-	this->ui.search->move(QPoint(
-		this->ui.searchEdit->x() + this->ui.searchEdit->width(),
-		this->ui.searchEdit->y())
+	ui.search->move(QPoint(
+		ui.searchEdit->x() + ui.searchEdit->width(),
+		ui.searchEdit->y())
 		);
-	this->ui.segment->setGeometry(
+	ui.segment->setGeometry(
 		0,
-		this->ui.logo->y() + this->ui.logo->height() + 10,
-		this->width(),
+		ui.logo->y() + ui.logo->height() + 10,
+		width(),
 		20
 		);
-	this->ui.resultEdit->setGeometry(
-		this->ui.segment->x() + 15,
-		this->ui.segment->y() + 30,
-		this->width() - 30,
-		this->height() - this->ui.segment->y() - 45
+	ui.resultEdit->setGeometry(
+		ui.segment->x() + 15,
+		ui.segment->y() + 30,
+		width() - 30,
+		height() - ui.segment->y() - 45
 		);
-	this->ui.copyright->setGeometry(
-		this->width() - 221 - 15,
-		this->height() - 16,
+	ui.copyright->setGeometry(
+		width() - 221 - 15,
+		height() - 16,
 		221,
 		16
 		);
@@ -346,8 +337,8 @@ void HandySearch::setResultUILayout()
 ----------------------------*/
 void HandySearch::showResult(List<Index*> &resultList, QStringList &wordList)
 {
-	this->setResultUILayout();
-	QString resultContent(this->ui.resultEdit->toHtml());
+	setResultUILayout();
+	QString resultContent(ui.resultEdit->toHtml());
 	for (int i = 0; i < resultList.size(); i++)
 	{
 		Index* index = resultList.get(i);
@@ -360,9 +351,9 @@ void HandySearch::showResult(List<Index*> &resultList, QStringList &wordList)
 	for (QString word : wordList)
 		resultContent.replace(word, "<font color=\"#cc0000\">" + word + "</font>");
 
-	this->ui.resultEdit->setHtml(resultContent);
-	this->ui.segment->setText("   HandySearch has provided " + QString::number(resultList.size()) + " result(s) for you in " + QString::number((double)this->clock.elapsed() / 1000) + " second(s)");
-	this->clock.restart();
+	ui.resultEdit->setHtml(resultContent);
+	ui.segment->setText("   HandySearch has provided " + QString::number(resultList.size()) + " result(s) for you in " + QString::number((double)clock.elapsed() / 1000) + " second(s)");
+	clock.restart();
 }
 
 
@@ -382,10 +373,10 @@ void HandySearch::loadCanceled()
 ----------------------------*/
 void HandySearch::loadFinished()
 {
-	this->show();
+	show();
 	//Set Auto completer
 	HandySearch::sentences.removeDuplicates();
-	this->completer = new QCompleter(HandySearch::sentences, this);
-	this->ui.searchEdit->setCompleter(completer);
+	completer = new QCompleter(HandySearch::sentences, this);
+	ui.searchEdit->setCompleter(completer);
 }
 

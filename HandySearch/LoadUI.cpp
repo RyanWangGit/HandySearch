@@ -15,7 +15,6 @@
 #include "stdafx.h"
 #include "LoadUI.h"
 #include "LoadThread.h"
-//#define DEBUG
 
 
 /*--------------------------
@@ -25,15 +24,67 @@
 LoadUI::LoadUI()
 {
 	ui.setupUi(this);
-	connect(this->ui.close, &QPushButton::clicked, this, &LoadUI::canceled);
+	/* Initialize variables */
+	isPressed = false;
+	currentProgress = 0;
+	maximumProgress = 0;
+	htmlLoad = nullptr;
+	dictLoad = nullptr;
 
-	this->setWindowIconText("Handy Search");
-	this->setWindowFlags(Qt::FramelessWindowHint);
-	this->isPressed = false;
-	this->currentProgress = 0;
-	this->maximumProgress = 0;
+	/* Bind the signal */
+	connect(ui.close, &QPushButton::clicked, this, &LoadUI::canceled);
 
-	this->show();
+	setWindowIconText("Handy Search");
+	setWindowFlags(Qt::FramelessWindowHint);
+	setAttribute(Qt::WA_DeleteOnClose);
+	show();
+	checkDirectory();
+}
+
+
+/*--------------------------
+* LoadUI::checkDirectory
+* 	Check if current directory is correct or not,and queries for right directory if not.
+----------------------------*/
+void LoadUI::checkDirectory()
+{
+	QString currentPath = QApplication::applicationDirPath();
+	//The default html library path
+	htmlFolder = currentPath + "/Html Library";
+
+	//The default dictionary library path
+	dictFolder = currentPath + "/Dictionary Library";
+
+	//If html folder or dictionary folder doesn't exist
+	if (!htmlFolder.exists() || !dictFolder.exists())
+	{
+		while (!dictFolder.exists())
+		{
+			dictFolder = QFileDialog::getExistingDirectory(this, "Choose Dictionary Library", "");
+			if (!dictFolder.exists())
+			{
+				QApplication::beep();
+				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
+				{
+					emit canceled();
+					return;
+				}
+			}
+		}
+		while (!htmlFolder.exists())
+		{
+			htmlFolder = QFileDialog::getExistingDirectory(this, "Choose Html Library", "");
+			if (!htmlFolder.exists())
+			{
+				QApplication::beep();
+				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
+				{
+					emit canceled();
+					return;
+				}
+			}
+		}
+	}
 }
 
 
@@ -44,66 +95,32 @@ LoadUI::LoadUI()
 ----------------------------*/
 void LoadUI::loadData()
 {
-	//Start the application clock
+	/* Start the loading clock */
 	clock.start();
-	QString currentPath = QApplication::applicationDirPath();
-	//The default html library path
-	this->htmlFolder = currentPath + "/Html Library";
+	
+	/* Create task objects and connect UI signals/slots */
+	dictLoad = new DictLoadTask(dictFolder);
+	dictLoad->moveToThread(&loadThread);
+	connect(dictLoad, &DictLoadTask::dictLoadStarted, this, &LoadUI::dictLoadStarted);
+	connect(dictLoad, &DictLoadTask::dictLoaded, this, &LoadUI::dictLoaded);
+	connect(dictLoad, &DictLoadTask::dictLoadFinished, this, &LoadUI::dictLoadFinished);
+	connect(dictLoad, &DictLoadTask::dictLoadFinished, dictLoad, &QObject::deleteLater);
 
-	//The default dictionary library path
-	this->dictFolder = currentPath + "/Dictionary Library";
+	htmlLoad = new HtmlLoadTask(htmlFolder, this);
+	htmlLoad->moveToThread(&loadThread);
+	connect(htmlLoad, &HtmlLoadTask::htmlLoadStarted, this, &LoadUI::htmlLoadStarted);
+	//connect(htmlLoad, &HtmlLoadTask::htmlLoaded, this, &LoadUI::htmlLoaded);
+	connect(htmlLoad, &HtmlLoadTask::htmlLoadFinished, this, &LoadUI::htmlLoadFinished);
+	connect(htmlLoad, &HtmlLoadTask::htmlLoadFinished, htmlLoad, &QObject::deleteLater);
+	
+	/* Connect the loading procedure signals/slots */
+	connect(&loadThread, &QThread::started, this, &LoadUI::loadStarted);
+	connect(&loadThread, &QThread::started, dictLoad, &DictLoadTask::load);
+	connect(dictLoad, &DictLoadTask::dictLoadFinished, htmlLoad, &HtmlLoadTask::load);
+	connect(htmlLoad, &HtmlLoadTask::htmlLoadFinished, this, &LoadUI::loadFinished);
 
-	//If html folder or dictionary folder doesn't exist
-	if (!this->htmlFolder.exists() || !this->dictFolder.exists())
-	{
-		while (!this->dictFolder.exists())
-		{
-			this->dictFolder = QFileDialog::getExistingDirectory(this, "Choose Dictionary Library", "");
-			if (!this->dictFolder.exists())
-			{
-				QApplication::beep();
-				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
-				{
-					emit this->canceled();
-					return;
-				}
-			}
-		}
-		while (!this->htmlFolder.exists())
-		{
-			this->htmlFolder = QFileDialog::getExistingDirectory(this, "Choose Html Library", "");
-			if (!this->htmlFolder.exists())
-			{
-				QApplication::beep();
-				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
-				{
-					emit this->canceled();
-					return;
-				}
-			}
-		}
-	}
-
-	//Initialization of application
-	QThread *initialLoadThread = new QThread();
-	Load *initialLoad = new Load(htmlFolder, dictFolder);
-	initialLoad->moveToThread(initialLoadThread);
-	connect(initialLoadThread, &QThread::started, initialLoad, &Load::run);
-	connect(initialLoad, &Load::loadFinished, initialLoad, &QObject::deleteLater);
-	connect(initialLoad, &Load::loadFinished, initialLoadThread, &QThread::quit);
-	connect(initialLoadThread, &QThread::finished, initialLoadThread, &QObject::deleteLater);
-
-	//Connect the thread signals to the UI slots
-	/* Loading procedure */
-	connect(initialLoad, &Load::loadStarted, this, &LoadUI::loadStarted);
-	connect(initialLoad, &Load::loadFinished, this, &LoadUI::loadFinished);
-	connect(initialLoad, &Load::htmlLoaded, this, &LoadUI::htmlLoaded);
-	connect(initialLoad, &Load::htmlLoadStarted, this, &LoadUI::htmlLoadStarted);
-	connect(initialLoad, &Load::htmlLoadFinished, this, &LoadUI::htmlLoadFinished);
-	connect(initialLoad, &Load::dictLoaded, this, &LoadUI::dictLoaded);
-	connect(initialLoad, &Load::dictLoadStarted, this, &LoadUI::dictLoadStarted);
-	connect(initialLoad, &Load::dictLoadFinished, this, &LoadUI::dictLoadFinished);
-	initialLoadThread->start();
+	/* Start loading */
+	loadThread.start();
 
 	return;
 }
@@ -116,17 +133,19 @@ void LoadUI::loadData()
 ----------------------------*/
 void LoadUI::loadingDots()
 {
+	//TODO:
 	//The implementaion seems stupid and needs to be improved.
+	//To be an QWidget
 	static int time1 = 0;
 	static int time2 = -2;
 	static int time3 = -4;
 	static int time4 = -6;
 	static int time5 = -8;
-	QPoint point1 = this->ui.dot1->pos();
-	QPoint point2 = this->ui.dot2->pos();
-	QPoint point3 = this->ui.dot3->pos();
-	QPoint point4 = this->ui.dot4->pos();
-	QPoint point5 = this->ui.dot5->pos();
+	QPoint point1 = ui.dot1->pos();
+	QPoint point2 = ui.dot2->pos();
+	QPoint point3 = ui.dot3->pos();
+	QPoint point4 = ui.dot4->pos();
+	QPoint point5 = ui.dot5->pos();
 
 	point1.rx() = pow(time1 - 25, 3) * 0.0069 + 200;
 	if (point1.rx() >= 350)
@@ -143,11 +162,11 @@ void LoadUI::loadingDots()
 	point5.rx() = pow(time5 - 25, 3) * 0.0069 + 176;
 	if (point5.rx() >= 326)
 		point5.rx() = 26;
-	this->ui.dot1->move(point1);
-	this->ui.dot2->move(point2);
-	this->ui.dot3->move(point3);
-	this->ui.dot4->move(point4);
-	this->ui.dot5->move(point5);
+	ui.dot1->move(point1);
+	ui.dot2->move(point2);
+	ui.dot3->move(point3);
+	ui.dot4->move(point4);
+	ui.dot5->move(point5);
 
 	time1++;
 	time2++;
@@ -168,10 +187,10 @@ void LoadUI::loadingDots()
 ----------------------------*/
 void LoadUI::htmlLoadStarted()
 {
-	QDir dir(this->htmlFolder);
-	this->currentProgress = 0;
-	this->maximumProgress = dir.entryList().size();
-	this->ui.statusBar->setText("Started Loading Html Library");
+	QDir dir(htmlFolder);
+	currentProgress = 0;
+	maximumProgress = dir.entryList().size();
+	ui.statusBar->setText("Started Loading Html Library");
 }
 
 
@@ -182,24 +201,26 @@ void LoadUI::htmlLoadStarted()
 * 	unsigned int threadID - Thread ID the html was loaded,not currently used.
 * 	QString path - Html file path,not currently used.
 ----------------------------*/
-void LoadUI::htmlLoaded(unsigned int threadID, QString path)
+void LoadUI::htmlLoaded()
 {
-	this->currentProgress++;
+	currentProgress++;
 	QString msg ;
-	int percent = ((float)this->currentProgress / this->maximumProgress) * 100;
+	int percent = ((float)currentProgress / maximumProgress) * 100;
 	msg.append(QString::number(percent));
 	msg.append(" % - Loading Htmls");
-	this->ui.statusBar->setText(msg);
+	ui.statusBar->setText(msg);
 }
 
 
 /*--------------------------
 * LoadUI::htmlLoadFinished
-* 	Receives html loading finished signal,set loading text.
+* 	Receives html loading finished signal,set loading text and quit loading thread.
 ----------------------------*/
 void LoadUI::htmlLoadFinished()
 {
-	this->ui.statusBar->setText("Ready");
+	ui.statusBar->setText("Ready");
+	currentProgress = 0;
+	maximumProgress = 0;
 }
 
 
@@ -210,8 +231,8 @@ void LoadUI::htmlLoadFinished()
 void LoadUI::dictLoadStarted()
 {
 	//Started Loading Dictionary Library
-	this->currentProgress = 0;
-	this->maximumProgress = 0;
+	currentProgress = 0;
+	maximumProgress = 0;
 }
 
 
@@ -223,11 +244,11 @@ void LoadUI::dictLoadStarted()
 ----------------------------*/
 void LoadUI::dictLoaded(int num)
 {
-	this->currentProgress += num;
+	currentProgress += num;
 	QString msg;
 	msg.append(QString::number(currentProgress));
 	msg.append(" Items Loaded");
-	this->ui.statusBar->setText(msg);
+	ui.statusBar->setText(msg);
 }
 
 
@@ -237,7 +258,8 @@ void LoadUI::dictLoaded(int num)
 ----------------------------*/
 void LoadUI::dictLoadFinished()
 {
-	//Dictionary Load Finished
+	/* Quit the task-load threads */
+	
 }
 
 
@@ -250,15 +272,15 @@ void LoadUI::loadStarted()
 	connect(&timer, &QTimer::timeout, this, &LoadUI::loadingDots);
 	timer.start(20);
 
-	QPropertyAnimation *geometry = new QPropertyAnimation(this->ui.statusBar, "geometry");
-	geometry->setDuration(1000);
-	QPoint leftTop = this->ui.statusBar->pos();
-	QPoint rightBot(leftTop.x() + this->ui.statusBar->width(), leftTop.y() + this->ui.statusBar->height());
+	QPropertyAnimation geometry(ui.statusBar, "geometry");
+	geometry.setDuration(1000);
+	QPoint leftTop = ui.statusBar->pos();
+	QPoint rightBot(leftTop.x() + ui.statusBar->width(), leftTop.y() + ui.statusBar->height());
 	QRect rect(leftTop, rightBot);
-	geometry->setStartValue(rect);
+	geometry.setStartValue(rect);
 	rect.setY(rect.y() - 15);
-	geometry->setEndValue(rect);
-	geometry->start();
+	geometry.setEndValue(rect);
+	geometry.start();
 }
 
 
@@ -268,12 +290,17 @@ void LoadUI::loadStarted()
 ----------------------------*/
 void LoadUI::loadFinished()
 {
-#ifdef DEBUG
 	QMessageBox::information(nullptr, "Time", "Time elapsed: " + QString::number(clock.elapsed()));
-	qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::totalNum;
+#ifdef DEBUG
+	
+	qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::getTotalHtmlCount();
 #endif
 	emit finished();
-	this->close();
+	/* Quit the load thread */
+	loadThread.quit();
+	loadThread.wait();
+	/* Close the dialog */
+	close();
 }
 
 
@@ -285,8 +312,8 @@ void LoadUI::loadFinished()
 ----------------------------*/
 void LoadUI::mousePressEvent(QMouseEvent *event)
 {
-	this->isPressed = true;
-	this->origin = event->pos();
+	isPressed = true;
+	origin = event->pos();
 }
 
 
@@ -298,8 +325,8 @@ void LoadUI::mousePressEvent(QMouseEvent *event)
 ----------------------------*/
 void LoadUI::mouseMoveEvent(QMouseEvent *event)
 {
-	if (this->isPressed)
-		this->move(event->globalX() - this->origin.x(), event->globalY() - this->origin.y());
+	if (isPressed)
+		move(event->globalX() - origin.x(), event->globalY() - origin.y());
 }
 
 
@@ -311,7 +338,7 @@ void LoadUI::mouseMoveEvent(QMouseEvent *event)
 ----------------------------*/
 void LoadUI::mouseReleaseEvent(QMouseEvent * event)
 {
-	this->isPressed = false;
+	isPressed = false;
 }
 
 
@@ -322,3 +349,4 @@ void LoadUI::mouseReleaseEvent(QMouseEvent * event)
 LoadUI::~LoadUI()
 {
 }
+

@@ -65,7 +65,7 @@ Index & Index::operator= (Index &other)
 
 int& Index::getRefWeight()
 {
-	return this->weight;
+	return weight;
 }
 
 
@@ -76,7 +76,7 @@ int& Index::getRefWeight()
 ----------------------------*/
 Html* Index::getHtml()
 {
-	return this->html;
+	return html;
 }
 
 
@@ -87,7 +87,7 @@ Html* Index::getHtml()
 ----------------------------*/
 unsigned int Index::getFrequency()
 {
-	return this->position.size();
+	return position.size();
 }
 
 
@@ -98,6 +98,6 @@ unsigned int Index::getFrequency()
 ----------------------------*/
 List<unsigned int> &Index::getPosition()
 {
-	return this->position;
+	return position;
 }
 

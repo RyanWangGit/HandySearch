@@ -23,7 +23,9 @@
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
 #pragma once
+#include "stdafx.h"
 #include "ui_loadui.h"
+#include "LoadThread.h"
 
 /**
  * Class:	LoadUI
@@ -38,15 +40,23 @@ class LoadUI : public QDialog
 private:
 	QDir htmlFolder;
 	QDir dictFolder;
+	/* Load tasks and their threads */
+	HtmlLoadTask* htmlLoad;
+	DictLoadTask* dictLoad;
+	QThread loadThread;
+	/* Loading clock */
 	QTime clock;
 	QTimer timer;
+	/* For dragging the window */
 	QPoint origin;
 	bool isPressed;
+	/* For showing current progress */
 	unsigned long currentProgress;
 	unsigned long maximumProgress;
 public:
 	LoadUI();
 	~LoadUI();
+	void checkDirectory();
 public slots:
 	void loadData();
 	/* UI slots */
@@ -56,7 +66,7 @@ public slots:
 	void loadFinished();
 	//Html load slots
 	void htmlLoadStarted();
-	void htmlLoaded(unsigned int threadID, QString path);
+	void htmlLoaded();
 	void htmlLoadFinished();
 	//Dictionary load slots
 	void dictLoadStarted();
@@ -66,7 +76,6 @@ public slots:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent * event);
-	
 signals:
 	void canceled();
 	void finished();

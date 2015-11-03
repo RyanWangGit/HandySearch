@@ -39,9 +39,10 @@ Html::Html() { void; }
 ----------------------------*/
 Html::Html(const QString &filePath)
 {
-	this->hasAnalyzed = false;
-	this->file.setFileName(filePath);
-	this->load();
+	totalNum++;
+	hasAnalyzed = false;
+	file.setFileName(filePath);
+	load();
 }
 
 
@@ -67,7 +68,7 @@ Html::Html(const Html &c)
 ----------------------------*/
 QString& Html::getText()
 {
-	return this->textContent;
+	return textContent;
 }
 
 
@@ -78,7 +79,7 @@ QString& Html::getText()
 ----------------------------*/
 QString& Html::getTitle()
 {
-	return this->title;
+	return title;
 }
 
 
@@ -89,9 +90,14 @@ QString& Html::getTitle()
 ----------------------------*/
 QString Html::getFilePath()
 {
-	return this->file.fileName();
+	return file.fileName();
 }
 
+
+unsigned int Html::getTotalHtmlCount()
+{
+	return Html::totalNum;
+}
 
 /*--------------------------
 * Html::extractText
@@ -102,51 +108,51 @@ QString Html::getFilePath()
 void Html::extractText(const QString &fileContent)
 {
 	//If has processed
-	if (!this->textContent.isEmpty())
-		this->textContent.clear();
+	if (!textContent.isEmpty())
+		textContent.clear();
 
-	if (this->file.isOpen())
+	if (file.isOpen())
 	{
 		//Copy
-		this->textContent = fileContent;
+		textContent = fileContent;
 
 		//Remove line breaks and tabs
-		this->textContent.replace(QRegExp("[\r|\n|\t]"), "");
+		textContent.replace(QRegExp("[\r|\n|\t]"), "");
 
 		//Remove header
-		this->textContent.replace(QRegExp("<head>.*</head>"), "");
+		textContent.replace(QRegExp("<head>.*</head>"), "");
 		
 		//Remove scripts
-		this->textContent.replace(QRegExp("<( )*script([^>])*>"), "<script>");
-		this->textContent.replace(QRegExp("<script>.*</script>"), "");
+		textContent.replace(QRegExp("<( )*script([^>])*>"), "<script>");
+		textContent.replace(QRegExp("<script>.*</script>"), "");
 
 		//Remove all styles
-		this->textContent.replace(QRegExp("<( )*style([^>])*>"), "<style>");
-		this->textContent.replace(QRegExp("<style>.*</style>"), "");
+		textContent.replace(QRegExp("<( )*style([^>])*>"), "<style>");
+		textContent.replace(QRegExp("<style>.*</style>"), "");
 		
 		//Remove td tags
-		this->textContent.replace(QRegExp("<( )*td([^>])*>"), "");
+		textContent.replace(QRegExp("<( )*td([^>])*>"), "");
 
 		//Insert line breaks in <br> and <li> tags
-		this->textContent.replace(QRegExp("<( )*br( )*>"), "\n");
-		this->textContent.replace(QRegExp("<( )*li( )*>"), "\n");
+		textContent.replace(QRegExp("<( )*br( )*>"), "\n");
+		textContent.replace(QRegExp("<( )*li( )*>"), "\n");
 		
 		//Insert line paragraphs in <tr> and <p> tags
-		this->textContent.replace(QRegExp("<( )*tr( )*>"), "\r");
-		this->textContent.replace(QRegExp("<( )*p( )*>"), "\r");
+		textContent.replace(QRegExp("<( )*tr( )*>"), "\r");
+		textContent.replace(QRegExp("<( )*p( )*>"), "\r");
 
 		//Remove anything that's enclosed inside < >
-		this->textContent.replace(QRegExp("<[^>]*>"), "");
+		textContent.replace(QRegExp("<[^>]*>"), "");
 		
 		//Replace special characters
-		this->textContent.replace(QRegExp("&amp;"), "&");
-		this->textContent.replace(QRegExp("&nbsp;"), " ");
-		this->textContent.replace(QRegExp("&lt;"), "<");
-		this->textContent.replace(QRegExp("&gt;"), ">");
-		this->textContent.replace(QRegExp("&(.{2,6});"), "");
+		textContent.replace(QRegExp("&amp;"), "&");
+		textContent.replace(QRegExp("&nbsp;"), " ");
+		textContent.replace(QRegExp("&lt;"), "<");
+		textContent.replace(QRegExp("&gt;"), ">");
+		textContent.replace(QRegExp("&(.{2,6});"), "");
 
 		//Remove extra line breaks
-		this->textContent.replace(QRegExp(" ( )+"), "");
+		textContent.replace(QRegExp(" ( )+"), "");
 	}
 }
 
@@ -159,12 +165,12 @@ void Html::extractText(const QString &fileContent)
 ----------------------------*/
 void Html::extractTitle(const QString &fileContent)
 {
-	this->title = fileContent;
+	title = fileContent;
 	QRegExp rx("<title>(.*)</title>");
 	rx.setMinimal(true);
-	this->title.indexOf(rx);
+	title.indexOf(rx);
 	
-	this->title = rx.cap(1);
+	title = rx.cap(1);
 }
 
 
@@ -175,18 +181,19 @@ void Html::extractTitle(const QString &fileContent)
 ----------------------------*/
 void Html::analyze()
 {
-	if (this->hasAnalyzed)
+	if (hasAnalyzed)
 		return;
 	else
-		this->hasAnalyzed = true;
+		hasAnalyzed = true;
 
 	unsigned int pos = 0;
-	QString content = this->textContent;
-	content.append(" " + this->title);
+	QString content = textContent;
+	content.append(" " + title);
 	WordSegmenter ws(content, HandySearch::dictionary);
 
-	QStringList result = ws.getResult();
-	for (QString word : result) 
+	QStringList wordList = ws.getResult();
+
+	for (QString word : wordList)
 	{
 		pos += word.size();
 		//If the first character isn't chinese
@@ -238,24 +245,19 @@ bool Html::load()
 	QString fileContent;
 
 	//Open the file
-	if (this->file.exists())
-		if (!this->file.open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text))
+	if (file.exists())
+		if (!file.open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text))
 			return false;
 
-	if (this->file.isOpen() && this->file.isReadable())
+	if (file.isOpen() && file.isReadable())
 	{
-		fileContent = this->file.readAll();
+		fileContent = file.readAll();
 		extractTitle(fileContent);
 		extractText(fileContent);
-		this->fileName = file.fileName();
-		this->file.close();
-		/**
-		*	The analysis of html file was not called
-		*	here because HandySearch::index was not thread-safe
-		*	thus making it necessary to call the Html::analyze
-		*	in the main load thread instead of calling it in 
-		*	sub-thread(by sending signals to the main load thread).
-		*/
+		analyze();
+		fileName = file.fileName();
+		file.close();
+
 		return true;
 	}
 	else
@@ -272,9 +274,9 @@ bool Html::load()
 ----------------------------*/
 bool Html::loadFrom(QString &filePath)
 {
-	this->file.close();
-	this->file.setFileName(filePath);
-	return this->load();
+	file.close();
+	file.setFileName(filePath);
+	return load();
 }
 
 
@@ -288,7 +290,7 @@ bool Html::loadFrom(QString &filePath)
 ----------------------------*/
 bool Html::operator== (Html &other)
 {
-	return (this->file.fileName() == other.file.fileName());
+	return (file.fileName() == other.file.fileName());
 }
 
 

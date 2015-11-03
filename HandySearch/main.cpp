@@ -24,7 +24,6 @@
 
 
 /* Initialize the static member */
-unsigned int LoadHtml::threadNum = 0;
 BloomFilter HandySearch::dictionary;
 HashMap<List<Index>*> HandySearch::index;
 QStringList HandySearch::sentences;

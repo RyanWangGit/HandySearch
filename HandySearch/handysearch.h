@@ -40,7 +40,6 @@
  */
 class HandySearch : public QMainWindow
 {
-#define SHADOWWIDTH 10
 #define MINWIDTH 850
 #define MINHEIGHT 500
 	Q_OBJECT

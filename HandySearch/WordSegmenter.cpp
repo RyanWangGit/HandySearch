@@ -73,14 +73,14 @@ Chunk::Chunk(const Chunk & other)
 ----------------------------*/
 int Chunk::getCount()
 {
-	if (this->wordCount < 0)
+	if (wordCount < 0)
 	{
-		this->wordCount = 0;
+		wordCount = 0;
 		for (QString word : words)
 			if (!word.isEmpty())
-				this->wordCount++;
+				wordCount++;
 	}
-	return this->wordCount;
+	return wordCount;
 }
 
 
@@ -91,16 +91,16 @@ int Chunk::getCount()
 ----------------------------*/
 int Chunk::getLength()
 {
-	if (this->totalLen < 0)
+	if (totalLen < 0)
 	{
-		this->totalLen = 0;
+		totalLen = 0;
 		for (QString word : words)
 		{
 			if (!word.isEmpty())
-				this->totalLen += word.size();
+				totalLen += word.size();
 		}
 	}
-	return this->totalLen;
+	return totalLen;
 }
 
 
@@ -111,9 +111,9 @@ int Chunk::getLength()
 ----------------------------*/
 double Chunk::getAvgLen()
 {
-	if (this->avgLen < 0)
-		this->avgLen = (double)this->getLength() / this->getCount();
-	return this->avgLen;
+	if (avgLen < 0)
+		avgLen = (double)getLength() / getCount();
+	return avgLen;
 }
 
 
@@ -124,20 +124,20 @@ double Chunk::getAvgLen()
 ----------------------------*/
 double Chunk::getVariance()
 {
-	if (this->variance < 0)
+	if (variance < 0)
 	{
 		double sum = 0;
 		for (QString word : words)
 		{
 			if (!word.isEmpty())
 			{
-				double var = word.size() - this->getAvgLen();
+				double var = word.size() - getAvgLen();
 				sum += var * var;
 			}
 		}
-		this->variance = sum / this->getCount();
+		variance = sum / getCount();
 	}
-	return this->variance;
+	return variance;
 }
 
 
@@ -148,7 +148,7 @@ double Chunk::getVariance()
 ----------------------------*/
 QStringList & Chunk::getWords()
 {
-	return this->words;
+	return words;
 }
 
 
@@ -276,7 +276,7 @@ bool WordSegmenter::isChineseChar(QChar &ch)
 ----------------------------*/
 QChar WordSegmenter::getNextChar()
 {
-	return this->content.data()[this->pos];
+	return content.data()[pos];
 }
 
 
@@ -288,21 +288,21 @@ QChar WordSegmenter::getNextChar()
 QStringList WordSegmenter::getMaxMatchingWord()
 {
 	QStringList words;
-	unsigned int originalPos = this->pos;
+	unsigned int originalPos = pos;
 
-	while (this->pos < this->content.size())
+	while (pos < content.size())
 	{
-		if (this->pos - originalPos > this->dict->getMaxLength())
+		if (pos - originalPos > dict->getMaxLength())
 			break;
-		if (!this->isChineseChar(this->getNextChar()))
+		if (!isChineseChar(getNextChar()))
 			break;
-		this->pos++;
+		pos++;
 		
-		QString word = this->content.mid(originalPos, this->pos - originalPos);
+		QString word = content.mid(originalPos, pos - originalPos);
 		if (word.size() == 1  || dict->hasItem(word))
 			words.append(word);
 	}
-	this->pos = originalPos;
+	pos = originalPos;
 	return words;
 }
 
@@ -316,22 +316,22 @@ QStringList WordSegmenter::getChineseWords()
 {
 	//Find all possible chunks
 	List<Chunk> chunks;
-	this->createChunks(chunks);
+	createChunks(chunks);
 	if (chunks.size() > 1)
-		this->mmFilter(chunks);
+		mmFilter(chunks);
 	if (chunks.size() > 1)
-		this->lawlFilter(chunks);
+		lawlFilter(chunks);
 	if (chunks.size() > 1)
-		this->svwlFilter(chunks);
+		svwlFilter(chunks);
 	if (chunks.size() > 1)
-		this->sdmfFilter(chunks);
+		sdmfFilter(chunks);
 	
 	//There should be only one chunk remaining
 	//after the four filters
 	if (chunks.size() == 0)
 		return QStringList();
 
-	this->pos += chunks.get(0).getLength();
+	pos += chunks.get(0).getLength();
 	return chunks.get(0).getWords();
 }
 
@@ -343,29 +343,29 @@ QStringList WordSegmenter::getChineseWords()
 ----------------------------*/
 QString WordSegmenter::getASCIIWords()
 {
-	unsigned int start = this->pos;
+	unsigned int start = pos;
 
-	if (this->getNextChar().isLetterOrNumber())
-		while (this->pos < this->content.size())
+	if (getNextChar().isLetterOrNumber())
+		while (pos < content.size())
 		{
-			QChar ch = this->getNextChar();
-			if (ch.isPunct() || ch.isSpace() || this->isChineseChar(ch))
+			QChar ch = getNextChar();
+			if (ch.isPunct() || ch.isSpace() || isChineseChar(ch))
 				break;
 			else
-				this->pos++;
+				pos++;
 		}
 			
 	else
-		while (this->pos < this->content.size())
+		while (pos < content.size())
 		{
-			QChar ch = this->getNextChar();
-			if (this->isChineseChar(ch) || ch.isLetterOrNumber())
+			QChar ch = getNextChar();
+			if (isChineseChar(ch) || ch.isLetterOrNumber())
 				break;
 			else
-				this->pos++;
+				pos++;
 		}
 
-	QString result = this->content.mid(start, this->pos - start);
+	QString result = content.mid(start, pos - start);
 	return result;
 }
 
@@ -378,15 +378,15 @@ QString WordSegmenter::getASCIIWords()
 ----------------------------*/
 void WordSegmenter::createChunks(List<Chunk> &chunks)
 {
-	unsigned int originalPos = this->pos;
-	QStringList words1 = this->getMaxMatchingWord();
+	unsigned int originalPos = pos;
+	QStringList words1 = getMaxMatchingWord();
 	for (QString word1 : words1)
 	{
-		this->pos += word1.size();
+		pos += word1.size();
 
-		if (this->pos < this->content.size())
+		if (pos < content.size())
 		{
-			QStringList words2 = this->getMaxMatchingWord();
+			QStringList words2 = getMaxMatchingWord();
 
 			//If there are no words found
 			if (words2.isEmpty())
@@ -394,10 +394,10 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 
 			for (QString word2 : words2)
 			{
-				this->pos += word2.size();
-				if (this->pos < this->content.size())
+				pos += word2.size();
+				if (pos < content.size())
 				{
-					QStringList words3 = this->getMaxMatchingWord();
+					QStringList words3 = getMaxMatchingWord();
 
 					//If there are no words found
 					if (words3.isEmpty())
@@ -406,18 +406,18 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 					for (QString word3 : words3)
 						chunks.append(Chunk(word1, word2, word3));
 				}
-				else if (this->pos == this->content.size())
+				else if (pos == content.size())
 					chunks.append(Chunk(word1, word2, QString::null));
 
-				this->pos -= word2.size();
+				pos -= word2.size();
 			}
 		}
-		else if (this->pos == this->content.size())
+		else if (pos == content.size())
 			chunks.append(Chunk(word1, QString::null, QString::null));
 
-		this->pos -= word1.size();
+		pos -= word1.size();
 	}
-	this->pos = originalPos;
+	pos = originalPos;
 }
 
 
@@ -443,16 +443,16 @@ WordSegmenter::WordSegmenter(QString &content, BloomFilter &dict)
 ----------------------------*/
 QStringList & WordSegmenter::getResult()
 {
-	if (!this->result.isEmpty())
-		return this->result;
+	if (!result.isEmpty())
+		return result;
 
-	while (this->pos < this->content.size())
+	while (pos < content.size())
 	{
 		//If it is a chinese charactor
-		if (this->isChineseChar(this->getNextChar()))
-			result.append(this->getChineseWords());
+		if (isChineseChar(getNextChar()))
+			result.append(getChineseWords());
 		else
-			result.append(this->getASCIIWords());
+			result.append(getASCIIWords());
 	}
-	return this->result;
+	return result;
 }
