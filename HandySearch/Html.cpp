@@ -14,11 +14,7 @@
  * Date:	Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "List.h"
 #include "Html.h"
-#include "Index.h"
-#include "WordSegmenter.h"
-#include "HandySearch.h"
 
 /* Initialize the static member */
 unsigned int Html::totalNum = 0;
@@ -40,7 +36,7 @@ Html::Html() { void; }
 Html::Html(const QString &filePath)
 {
 	totalNum++;
-	hasAnalyzed = false;
+	analyzed = false;
 	file.setFileName(filePath);
 	load();
 }
@@ -54,7 +50,7 @@ Html::Html(const QString &filePath)
 ----------------------------*/
 Html::Html(const Html &c)
 {
-	this->hasAnalyzed = c.hasAnalyzed;
+	this->analyzed = c.analyzed;
 	this->file.setFileName(c.file.fileName());
 	this->textContent = c.textContent;
 	this->title = c.title;
@@ -117,42 +113,45 @@ void Html::extractText(const QString &fileContent)
 		textContent = fileContent;
 
 		//Remove line breaks and tabs
-		textContent.replace(QRegExp("[\r|\n|\t]"), "");
+		textContent.replace(QRegularExpression("[\r|\n|\t]"), "");
+
+		//Remove notes
+		textContent.replace(QRegularExpression("<!--.[^-]*(?=-->)-->"), "");
 
 		//Remove header
-		textContent.replace(QRegExp("<head>.*</head>"), "");
-		
+		textContent.replace(QRegularExpression("<head>.*</head>"), "");
+
 		//Remove scripts
-		textContent.replace(QRegExp("<( )*script([^>])*>"), "<script>");
-		textContent.replace(QRegExp("<script>.*</script>"), "");
+		textContent.replace(QRegularExpression("<( )*script([^>])*>"), "<script>");
+		textContent.replace(QRegularExpression("<script>.*</script>"), "");
 
 		//Remove all styles
-		textContent.replace(QRegExp("<( )*style([^>])*>"), "<style>");
-		textContent.replace(QRegExp("<style>.*</style>"), "");
-		
+		textContent.replace(QRegularExpression("<( )*style([^>])*>"), "<style>");
+		textContent.replace(QRegularExpression("<style>.*</style>"), "");
+
 		//Remove td tags
-		textContent.replace(QRegExp("<( )*td([^>])*>"), "");
+		textContent.replace(QRegularExpression("<( )*td([^>])*>"), "");
 
 		//Insert line breaks in <br> and <li> tags
-		textContent.replace(QRegExp("<( )*br( )*>"), "\n");
-		textContent.replace(QRegExp("<( )*li( )*>"), "\n");
-		
+		textContent.replace(QRegularExpression("<( )*br( )*>"), " ");
+		textContent.replace(QRegularExpression("<( )*li( )*>"), " ");
+
 		//Insert line paragraphs in <tr> and <p> tags
-		textContent.replace(QRegExp("<( )*tr( )*>"), "\r");
-		textContent.replace(QRegExp("<( )*p( )*>"), "\r");
+		textContent.replace(QRegularExpression("<( )*tr( )*>"), " ");
+		textContent.replace(QRegularExpression("<( )*p( )*>"), " ");
 
 		//Remove anything that's enclosed inside < >
-		textContent.replace(QRegExp("<[^>]*>"), "");
-		
-		//Replace special characters
-		textContent.replace(QRegExp("&amp;"), "&");
-		textContent.replace(QRegExp("&nbsp;"), " ");
-		textContent.replace(QRegExp("&lt;"), "<");
-		textContent.replace(QRegExp("&gt;"), ">");
-		textContent.replace(QRegExp("&(.{2,6});"), "");
+		textContent.replace(QRegularExpression("<[^>]*>"), "");
 
-		//Remove extra line breaks
-		textContent.replace(QRegExp(" ( )+"), "");
+		//Replace special characters
+		textContent.replace(QRegularExpression("&amp;"), "&");
+		textContent.replace(QRegularExpression("&nbsp;"), " ");
+		textContent.replace(QRegularExpression("&lt;"), "<");
+		textContent.replace(QRegularExpression("&gt;"), ">");
+		textContent.replace(QRegularExpression("&(.{2,6});"), "");
+
+		//Remove line breaks and tabs
+		textContent.replace(QRegularExpression("[ ]+"), " ");
 	}
 }
 
@@ -165,12 +164,21 @@ void Html::extractText(const QString &fileContent)
 ----------------------------*/
 void Html::extractTitle(const QString &fileContent)
 {
-	title = fileContent;
-	QRegExp rx("<title>(.*)</title>");
-	rx.setMinimal(true);
-	title.indexOf(rx);
-	
-	title = rx.cap(1);
+	QRegularExpression rx("<title>(.*)</title>", QRegularExpression::InvertedGreedinessOption);
+	QRegularExpressionMatch match = rx.match(fileContent);
+	title = match.captured(0);
+}
+
+
+bool Html::hasAnalyzed()
+{
+	return analyzed;
+}
+
+
+void Html::setAnalyzed(bool analyzed)
+{
+	this->analyzed = analyzed;
 }
 
 
@@ -179,60 +187,10 @@ void Html::extractTitle(const QString &fileContent)
 * 	Analyze the html and do the word segmentation,create index and 
 * put the index into inverted list.
 ----------------------------*/
-void Html::analyze()
-{
-	if (hasAnalyzed)
-		return;
-	else
-		hasAnalyzed = true;
-
-	unsigned int pos = 0;
-	QString content = textContent;
-	content.append(" " + title);
-	WordSegmenter ws(content, HandySearch::dictionary);
-
-	QStringList wordList = ws.getResult();
-
-	for (QString word : wordList)
-	{
-		pos += word.size();
-		//If the first character isn't chinese
-		QChar ch = word.at(0);	
-		if (!(ch.unicode() >= 0x4e00 && ch.unicode() <= 0x9FA5))
-			continue;
-		
-		//Find if there's a list existed
-		List<Index>* indexList = nullptr;
-		List<Index>** pIndexList = HandySearch::index.get(word);
-		if (pIndexList == nullptr)
-		{
-			indexList = new List<Index>();
-			HandySearch::index.put(word, indexList);
-		}
-		else
-			indexList = *pIndexList;
-
-		//Find if the word belongs to an existed index
-		bool hasFound = false;
-		for (int i = 0; i < indexList->size(); i++)
-		{
-			Index* index = &indexList->get(i);
-			//Yes
-			if (index->getHtml() == this)
-			{
-				index->getPosition().append(pos);
-				hasFound = true;
-				break;
-			}
-		}
-		//No
-		if (!hasFound)
-		{
-			Html* temp = this;
-			indexList->append(Index(temp, pos));
-		}
-	}
-}
+// void Html::putToInvertedList(HashMap<List<Index>*>* invertedList)
+// {
+// 	
+// }
 
 
 /*--------------------------
@@ -254,7 +212,6 @@ bool Html::load()
 		fileContent = file.readAll();
 		extractTitle(fileContent);
 		extractText(fileContent);
-		analyze();
 		fileName = file.fileName();
 		file.close();
 
