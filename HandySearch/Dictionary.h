@@ -23,71 +23,24 @@
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
 #pragma once
-#include "Html.h"
-//#define SKIPLOAD
+#include "stdafx.h"
+#include "BloomFilter.h"
 
-
-/**
- * Class:	HtmlLoadSubTask
- *
- * Brief:	Html load sub-task class.
- *
- * Date:	Nov. 2015
- */
-class HtmlLoadSubTask : public QObject, public QRunnable
+class Dictionary : public QObject
 {
 	Q_OBJECT
 private:
-	QStringList pathList;
-public:
-	HtmlLoadSubTask(const QStringList &pathList);
-
-signals:
-	void htmlLoaded();
-
-public:
-	void run();
-};
-
-
-/**
- * Class:	HtmlLoadTask
- *
- * Brief:	A html load task,which manages several html load sub-tasks
- * and merges all the local hashmap.
- *
- * Date:	Nov. 2015
- */
-class HtmlLoadTask : public QObject
-{
-	Q_OBJECT
-private:
-	QObject* parent;
-	QDir htmlFolder;
-public:
-	HtmlLoadTask(const QDir& htmlFolder, QObject * parent = 0);
-	void load();
-signals:
-	void htmlLoadStarted();
-	void htmlLoadFinished();
-};
-
-
-/**
- * Class:	DictLoadTask
- *
- * Brief:	A dictionary load task.
- *
- * Date:	Nov. 2015
- */
-class DictLoadTask : public QObject
-{
-	Q_OBJECT
-private:
+	BloomFilter bf;
 	QDir dictFolder;
+	unsigned int maxLength;
+	bool hasLoaded;
 public:
-	DictLoadTask(const QDir& dictFolder);
+	Dictionary();
 	void load();
+	void setDictFolder(const QDir& dictFolder);
+	bool hasItem(const QString &key);
+	bool addItem(const QString &key);
+	unsigned int getMaxLength();
 signals:
 	void dictLoadStarted();
 	void dictLoaded(int num);

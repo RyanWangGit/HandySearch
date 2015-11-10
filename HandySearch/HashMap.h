@@ -73,12 +73,11 @@ public:
 template <typename V >
 class HashMap
 {
-#define INDEX_SIZE 1024000 //2^20
+#define INDEX_SIZE (256) //2^20
 private:
 	List<Entry<V>> *index[INDEX_SIZE];
 	float loadFactor;
 	int loadNum;
-	QMutex mutex;
 
 public:
 	HashMap();
@@ -117,7 +116,6 @@ bool HashMap<V>::put(const QString &key, V &value)
 	char* str = ba.data();
 
 	//Lock up to prevent from other thread to write
-	mutex.lock();
 	unsigned int i = HashMap::hashCode(str, ba.size()) % INDEX_SIZE;
 
 	if (index[i] == nullptr)
@@ -144,9 +142,6 @@ bool HashMap<V>::put(const QString &key, V &value)
 		bucket->append(temp);
 	}
 
-	//Unlock
-	mutex.unlock();
-
 	return true;
 }
 
@@ -162,20 +157,14 @@ V* HashMap<V>::get(const QString &key)
 	if (index[i] == nullptr)
 		return nullptr;
 
-	mutex.lock();
-
 	List<Entry<V>>* bucket = index[i];
 	for (int k = 0; k < bucket->size(); k++)
 	{
 		Entry<V> *temp = &bucket->get(k);
 		if (temp->key == key)
-		{
-			mutex.unlock();
 			return &temp->value;
-		}
 	}
 
-	mutex.unlock();
 	return nullptr;
 }
 

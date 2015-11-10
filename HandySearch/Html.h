@@ -34,6 +34,13 @@
  */
 class Html 
 {
+public:
+	enum class WeightType
+	{
+		NotAssigned,
+		InContent,
+		InTitle,
+	};
 private:
 	/* The html file */
 	QFile file;
@@ -43,8 +50,15 @@ private:
 	QString textContent;
 	/* Title extracted from file content*/
 	QString title;
+	QString brief;
 	static unsigned int totalNum;
 	bool analyzed;
+	/* The weight member is for sorting  when displaying the results
+	 * NOTE:Everytime new search begins the weight becomes meaningless
+	 * and will be restored when sorting. 
+	 */
+	int weight;
+	Html::WeightType type;
 	void extractText(const QString &fileContent);
 	void extractTitle(const QString &fileContent);
 	bool load();
@@ -52,14 +66,22 @@ public:
 	Html();
 	Html(const QString &filePath);
 	Html(const Html &c);
+	Html::WeightType getWeightType();
+	void setWeightType(Html::WeightType type);
+	int getWeight();
+	void setWeight(int weight);
+	void clearWeight();
 	QString& getText();
 	QString& getTitle();
 	QString getFilePath();
+	QString& getBrief();
+	void setBrief(const QString& brief);
 	static unsigned int getTotalHtmlCount();
 	bool hasAnalyzed();
 	void setAnalyzed(bool analyzed);
-	bool loadFrom(QString &filePath);
-	bool operator== (Html &other);
+	bool loadFrom(QString& filePath);
+	bool operator== (Html& other);
+	bool operator< (Html& other);
 	Html& operator= (const Html &other);
 };
 

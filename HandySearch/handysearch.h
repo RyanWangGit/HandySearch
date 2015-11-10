@@ -22,14 +22,16 @@
 * - License: GNU Lesser General Public License (LGPL)
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
-#ifndef HANDYSEARCH_H
-#define HANDYSEARCH_H
+#pragma once
 
 #include "ui_handysearch.h"
 #include "List.h"
 #include "BloomFilter.h"
 #include "HashMap.h"
 #include "Index.h"
+#include "LoadUI.h"
+#include "InvertedList.h"
+#include "Dictionary.h"
 
 /**
  * Class:	HandySearch
@@ -40,35 +42,39 @@
  */
 class HandySearch : public QMainWindow
 {
-#define MINWIDTH 850
-#define MINHEIGHT 500
 	Q_OBJECT
-public:
-	static QStringList sentences;
-	static BloomFilter dictionary;
-	static HashMap<List<Index>*> index;
 public slots:
 	void loadCanceled();
 	void loadFinished();
-	//UI slots
+	/* UI slots */
 	void segment();
 	void search();
+	void searchResult(const QList<Html*> &resultList, const QStringList &keyWordList);
 	void anchorClicked(const QUrl& url);
 	void about();
 public:
 	HandySearch(QWidget *parent = 0);
+	Dictionary* getDictionary();
+	InvertedList* getInvertedList();
+	static HandySearch* getInstance();
+protected:
 	void resizeEvent(QResizeEvent *event);
-
 private:
 	QTime clock;
 	bool isResultShown;
-	void putInContentList(Index* index, List<Index *>& list);
-	void putInTitleList(Index* index, List<Index *>& list);
 	void setDefaultUILayout();
 	void setResultUILayout();
-	void showResult(List<Index*> &resultList, QStringList &wordList);
+	void showResult(const QList<Html*> &resultList, const QStringList &wordList);
 	QCompleter* completer;
+	static HandySearch* instance;
+	Dictionary dictionary;
+	InvertedList invertedList;
+	QThread dictThread;
+	QThread listThread;
+	LoadUI loadUI;
 	Ui::HandySearchClass ui;
+	/* Constants */
+	const int MINWIDTH;
+	const int MINHEIGHT;
 };
 
-#endif // HANDYSEARCH_H

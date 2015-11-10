@@ -426,12 +426,12 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 * 	Constructor of segmenter.
 * Parameter:
 * 	QString & content - The content needed to be segmented.
-* 	BloomFilter & dict - Dictionary object.
+* 	Dictionary* dict - Dictionary object pointer.
 ----------------------------*/
-WordSegmenter::WordSegmenter(QString &content, BloomFilter &dict)
+WordSegmenter::WordSegmenter(QString& content, Dictionary* dict)
 {
 	this->content = content;
-	this->dict = &dict;
+	this->dict = dict;
 	this->pos = 0;
 }
 

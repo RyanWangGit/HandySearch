@@ -20,7 +20,10 @@
 #include "HandySearch.h"
 #include "WordSegmenter.h"
 #include "LoadUI.h"
+#include "InvertedList.h"
 
+/* Initialization of static members */
+HandySearch* HandySearch::instance = nullptr;
 
 /*--------------------------
 * HandySearch::HandySearch
@@ -30,24 +33,47 @@
 * 	QWidget * parent - Parent of MainWindow.
 ----------------------------*/
 HandySearch::HandySearch(QWidget *parent)
-	: QMainWindow(parent)
+	: QMainWindow(parent), MINHEIGHT(500), MINWIDTH(850)
 {
 	ui.setupUi(this);
+	/* Initialize variables */
 	isResultShown = false;
+	instance = &(*this);
+
 	setMinimumHeight(MINHEIGHT);
 	setMinimumWidth(MINWIDTH);
 	setWindowIconText("HandySearch");
 
 	connect(ui.resultEdit, &QTextBrowser::anchorClicked, this, &HandySearch::anchorClicked);
-	
-	//LoadUI dialog show up
-	LoadUI* loadUI = new LoadUI();
-	connect(loadUI, &LoadUI::canceled, this, &HandySearch::loadCanceled);
-	connect(loadUI, &LoadUI::finished, this, &HandySearch::loadFinished);
-	connect(loadUI, &LoadUI::finished, loadUI, &QObject::deleteLater);
-	loadUI->loadData();
+
+	/* Turn on separate thread to store Dictionary and inverted list 
+		in order to work independently */
+	connect(&invertedList, &InvertedList::queryResult, this, &HandySearch::searchResult);
+	dictionary.moveToThread(&dictThread);
+	invertedList.moveToThread(&listThread);
+	dictThread.start();
+	listThread.start();
+	/* Connect LoadUI signals/slots */
+	connect(&loadUI, &LoadUI::canceled, this, &HandySearch::loadCanceled);
+	connect(&loadUI, &LoadUI::finished, this, &HandySearch::loadFinished);
+	loadUI.loadData();
 }
 
+
+Dictionary* HandySearch::getDictionary()
+{
+	return &dictionary;
+}
+
+InvertedList* HandySearch::getInvertedList()
+{
+	return &invertedList;
+}
+
+HandySearch* HandySearch::getInstance()
+{
+	return instance;
+}
 
 /*--------------------------
 * HandySearch::segment
@@ -56,7 +82,7 @@ HandySearch::HandySearch(QWidget *parent)
 ----------------------------*/
 void HandySearch::segment()
 {
-	WordSegmenter ws(ui.searchEdit->text(), dictionary);
+	WordSegmenter ws(ui.searchEdit->text(), &dictionary);
 	QStringList wordList = ws.getResult();
 	ui.searchEdit->setText(wordList.join("\\"));
 }
@@ -76,132 +102,22 @@ void HandySearch::search()
 		return;
 	}
 
-	//Put all results into one sorted list
-	//List<Index*> sortedList;
-	List<Index*> titleList;
-	List<Index*> contentList;
-
-	QString searchContent = ui.searchEdit->text().mid(0,20);
-	WordSegmenter ws(searchContent, dictionary);
+	QString searchContent = ui.searchEdit->text().mid(0, 20);
+	WordSegmenter ws(searchContent, &dictionary);
 	QStringList wordList = ws.getResult();
 	wordList.removeDuplicates();
 	wordList.removeAll(" ");
-	
-	for (QString word : wordList)
-	{
-		//Get the indexList from inverted list
-		List<Index>* indexList = nullptr;
-		List<Index>** pIndexList = HandySearch::index.get(word);
-		if (pIndexList == nullptr)
-			continue;
-		else
-			indexList = *pIndexList;
-		
-		//Traverse all index and put them into sorted list
-		for (int i = 0; i < indexList->size(); i++)
-		{
-			Index* index = &indexList->get(i);
-			Html* html = index->getHtml();
-			//putInSortedList(index, sortedList);
-			
-			bool isInTitle = false;
-			for (QString word : wordList)
-			{
-				
-				if (html->getTitle().contains(word))
-				{
-					isInTitle = true;
-					index->getRefWeight()++;
-				}		
-			}
+	invertedList.query(wordList);
 
-			//Collect those have keywords in title
-			if (isInTitle)
-				putInTitleList(index, titleList);
-			//Collect those don't
-			else
-				putInContentList(index, contentList);
-		}
-	}
-	ui.resultEdit->clear(); 
-	showResult(titleList.append(contentList), wordList);
+	/* TODO: Start searching animations */
 }
 
-/*
-//Auto sort when putting index into list by weight
-void HandySearch::putInSortedList(Index* index, List<Index *>& list)
+void HandySearch::searchResult(const QList<Html*> &resultList, const QStringList &keyWordList)
 {
-	Html* html = index->getHtml();
-
-}*/
-
-
-/*--------------------------
-* HandySearch::putInTitleList
-* 	Auto sort when putting index into list by weight.
-* Parameter:
-* 	Index * index - An index.
-* 	List<Index * > & list - List of indexes which contains title.
-----------------------------*/
-void HandySearch::putInTitleList(Index* index, List<Index *>& list)
-{
-	bool hasFound = false;
-	for (int i = 0; i < list.size(); i++)
-	{
-		if (list.get(i)->getRefWeight() >= index->getRefWeight())
-			continue;
-		else
-		{
-			hasFound = true;
-			list.insertAfter(i - 1, index);
-			break;
-		}
-	}
-	if (!hasFound)
-		list.append(index);
+	ui.resultEdit->clear();
+	showResult(resultList, keyWordList);
 }
 
-
-/*--------------------------
-* HandySearch::putInContentList
-* 	Auto sort when putting index into list by weight.
-* Parameter:
-* 	Index * newIndex - An index.
-* 	List<Index * > & list - List of indexes which key words are in content.
-----------------------------*/
-void HandySearch::putInContentList(Index* newIndex, List<Index *>& list)
-{
-	Html *html = newIndex->getHtml();
-	bool hasFound = false;
-	for (int i = 0; i < list.size(); i++)
-	{
-		Index* index = list.get(i);
-		//If found duplicate index
-		if (index->getHtml()->getTitle() == html->getTitle())
-		{
-			index->getRefWeight() += newIndex->getFrequency();
-			//Iterate forwards to find one whose weight
-			//is higher than current one
-			for (int j = i - 1; j >= 0; j--)
-			{
-				if (list.get(j)->getRefWeight() > index->getRefWeight())
-				{
-					list.insertAfter(j, index);
-					list.remove(i + 1);
-					break;
-				}
-			}
-			hasFound = true;
-			break;
-		}
-	}
-		
-	if (!hasFound)
-	{
-		newIndex->getRefWeight() = newIndex->getFrequency();
-		list.append(newIndex);
-	}
-}
 
 /*--------------------------
 * HandySearch::anchorClicked
@@ -335,24 +251,27 @@ void HandySearch::setResultUILayout()
 * 	List<Index * > & resultList - List of results.
 * 	QStringList & wordList - List of key words
 ----------------------------*/
-void HandySearch::showResult(List<Index*> &resultList, QStringList &wordList)
+void HandySearch::showResult(const QList<Html*> &resultList, const QStringList &keyWordList)
 {
 	setResultUILayout();
 	QString resultContent(ui.resultEdit->toHtml());
-	for (int i = 0; i < resultList.size(); i++)
+	
+	for (Html* html : resultList)
 	{
-		Index* index = resultList.get(i);
-		QString brief = index->getHtml()->getText().mid(index->getPosition().get(0) - HandySearch::dictionary.getMaxLength(), 200);
-		brief.replace(QRegExp("[\n || \t ]"), "");
-		resultContent.append("<a href=\"" + index->getHtml()->getFilePath() + "\"><font size = \"5\">" + index->getHtml()->getTitle() + "</font></a>");
-		resultContent.append("<br>&emsp;......" + brief + "......" + "<br><br>");
+		resultContent.append("<a href=\"" + html->getFilePath() + "\"><font size = \"5\">" + html->getTitle() + "</font></a>");
+		resultContent.append("<br>&emsp;......" + html->getBrief() + "......" + "<br><br>");
 	}
 
-	for (QString word : wordList)
+	for (QString word : keyWordList)
 		resultContent.replace(word, "<font color=\"#cc0000\">" + word + "</font>");
 
 	ui.resultEdit->setHtml(resultContent);
 	ui.segment->setText("   HandySearch has provided " + QString::number(resultList.size()) + " result(s) for you in " + QString::number((double)clock.elapsed() / 1000) + " second(s)");
+	
+	/* Clear all html's weight info in result list */
+	for (Html* html : resultList)
+		html->clearWeight();
+
 	clock.restart();
 }
 
@@ -374,9 +293,8 @@ void HandySearch::loadCanceled()
 void HandySearch::loadFinished()
 {
 	show();
-	//Set Auto completer
-	HandySearch::sentences.removeDuplicates();
-	completer = new QCompleter(HandySearch::sentences, this);
+	/* Set Auto completer */
+	completer = new QCompleter(invertedList.getTitleList(), this);
 	ui.searchEdit->setCompleter(completer);
 }
 

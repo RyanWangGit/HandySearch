@@ -24,7 +24,6 @@
 BloomFilter::BloomFilter()
 {
 	this->bitArray.resize(MAXSIZE);
-	this->maxLength = 0;
 }
 
 
@@ -69,78 +68,21 @@ bool BloomFilter::hasItem(void *key, int len)
 ----------------------------*/
 bool BloomFilter::addItem(void *key, int len)
 {
-	//Update maxWordLength
-	if (len / 2 > maxLength)
-		maxLength = len / 2;
-
-	try
-	{
-		bitArray.setBit(APHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(BKDRHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(BPHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(DEKHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(DJBHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(ELFHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(FNVHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(HFHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(HFLPHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(JSHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(PJWHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(RSHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(SDBMHash((char *)key, len) % MAXSIZE);
-		bitArray.setBit(StrHash((char *)key, len) % MAXSIZE);
-	}
-	catch (...)
-	{
-		return false;
-	}
+	bitArray.setBit(APHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(BKDRHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(BPHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(DEKHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(DJBHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(ELFHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(FNVHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(HFHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(HFLPHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(JSHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(PJWHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(RSHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(SDBMHash((char *)key, len) % MAXSIZE);
+	bitArray.setBit(StrHash((char *)key, len) % MAXSIZE);
 	return true;
-}
-
-
-/*--------------------------
-* BloomFilter::getMaxLength
-* 	Get the maximum word length of the dictioanry.
-* Returns:	unsigned int - Maximum word length.
-----------------------------*/
-unsigned int BloomFilter::getMaxLength()
-{
-	return maxLength;
-}
-
-
-/*--------------------------
-* BloomFilter::hasItem
-* 	Override function,provides support for QString.
-* Returns:	bool - Result.
-* Parameter:
-*	const QString & key - The key to search.
-----------------------------*/
-bool BloomFilter::hasItem(const QString &key)
-{
-	if (key == "")
-		return false;
-	QByteArray ba = key.toLocal8Bit();
-	char * str = ba.data();
-	return hasItem(str, ba.size());
-}
-
-
-/*--------------------------
-* BloomFilter::addItem
-* 	Override function,provides support for QString.
-* Returns:	bool - Operation result.
-* Parameter:
-* 	const QString & key - The key to add.
-----------------------------*/
-bool BloomFilter::addItem(const QString &key)
-{
-	if (key == "")
-		return false;
-	QByteArray ba = key.toLocal8Bit();
-	char * str = ba.data();
-
-	return addItem(str, ba.size());
 }
 
 

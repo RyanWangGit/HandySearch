@@ -24,7 +24,7 @@
 *****************************************/
 #pragma once
 #include "List.h"
-#include "BloomFilter.h"
+#include "Dictionary.h"
 #include "Html.h"
 
 
@@ -70,21 +70,20 @@ class WordSegmenter
 private:
 	QString content;
 	QStringList result;
-	BloomFilter *dict;
+	Dictionary *dict;
 	unsigned int pos;
 	void mmFilter(List<Chunk> &chunks);
 	void lawlFilter(List<Chunk> &chunks);
 	void svwlFilter(List<Chunk> &chunks);
 	void sdmfFilter(List<Chunk> &chunks);
 	bool isChineseChar(QChar &ch);
-	bool isPunctuation(QChar *ch);
 	QChar getNextChar();
 	QStringList getMaxMatchingWord();
 	QStringList getChineseWords();
 	QString getASCIIWords();
 	void createChunks(List<Chunk> &chunks);
 public:
-	WordSegmenter(QString &content,BloomFilter &dict);
-	QStringList & getResult();
+	WordSegmenter(QString& content, Dictionary* dict);
+	QStringList& getResult();
 };
 

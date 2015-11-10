@@ -14,8 +14,10 @@
 *************************************/
 #include "stdafx.h"
 #include "LoadUI.h"
-#include "LoadThread.h"
+#include "HandySearch.h"
 
+/* Initialization of static members */
+LoadUI* LoadUI::instance = nullptr;
 
 /*--------------------------
 * LoadUI::LoadUI
@@ -28,34 +30,31 @@ LoadUI::LoadUI()
 	isPressed = false;
 	currentProgress = 0;
 	maximumProgress = 0;
-	htmlLoad = nullptr;
-	dictLoad = nullptr;
+	instance = &(*this);
 
 	/* Bind the signal */
 	connect(ui.close, &QPushButton::clicked, this, &LoadUI::canceled);
 
 	setWindowIconText("Handy Search");
 	setWindowFlags(Qt::FramelessWindowHint);
-	setAttribute(Qt::WA_DeleteOnClose);
-	show();
-	checkDirectory();
 }
 
 
 /*--------------------------
 * LoadUI::checkDirectory
 * 	Check if current directory is correct or not,and queries for right directory if not.
+* Returns:	Whether the user decides to quit the appilication or not.
 ----------------------------*/
-void LoadUI::checkDirectory()
+bool LoadUI::checkDirectory()
 {
 	QString currentPath = QApplication::applicationDirPath();
-	//The default html library path
+	/* The default html library path */
 	htmlFolder = currentPath + "/Html Library";
 
-	//The default dictionary library path
+	/* The default dictionary library path */
 	dictFolder = currentPath + "/Dictionary Library";
 
-	//If html folder or dictionary folder doesn't exist
+	/* If html folder or dictionary folder doesn't exist */
 	if (!htmlFolder.exists() || !dictFolder.exists())
 	{
 		while (!dictFolder.exists())
@@ -67,7 +66,7 @@ void LoadUI::checkDirectory()
 				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
 				{
 					emit canceled();
-					return;
+					return false;
 				}
 			}
 		}
@@ -80,11 +79,12 @@ void LoadUI::checkDirectory()
 				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
 				{
 					emit canceled();
-					return;
+					return false;
 				}
 			}
 		}
 	}
+	return true;
 }
 
 
@@ -95,32 +95,38 @@ void LoadUI::checkDirectory()
 ----------------------------*/
 void LoadUI::loadData()
 {
+	/* Show up the dialog */
+	show();
+	/* Check the directory is correct or not */
+	if (!checkDirectory())
+		return;
+
 	/* Start the loading clock */
 	clock.start();
 	
-	/* Create task objects and connect UI signals/slots */
-	dictLoad = new DictLoadTask(dictFolder);
-	dictLoad->moveToThread(&loadThread);
-	connect(dictLoad, &DictLoadTask::dictLoadStarted, this, &LoadUI::dictLoadStarted);
-	connect(dictLoad, &DictLoadTask::dictLoaded, this, &LoadUI::dictLoaded);
-	connect(dictLoad, &DictLoadTask::dictLoadFinished, this, &LoadUI::dictLoadFinished);
-	connect(dictLoad, &DictLoadTask::dictLoadFinished, dictLoad, &QObject::deleteLater);
+	/* Set dictionary folder and connect UI signals */
+	Dictionary* dict = HandySearch::getInstance()->getDictionary();
+	dict->setDictFolder(dictFolder);
+	connect(dict, &Dictionary::dictLoadStarted, this, &LoadUI::dictLoadStarted);
+	connect(dict, &Dictionary::dictLoaded, this, &LoadUI::dictLoaded);
+	connect(dict, &Dictionary::dictLoadFinished, this, &LoadUI::dictLoadFinished);
 
-	htmlLoad = new HtmlLoadTask(htmlFolder, this);
-	htmlLoad->moveToThread(&loadThread);
-	connect(htmlLoad, &HtmlLoadTask::htmlLoadStarted, this, &LoadUI::htmlLoadStarted);
-	//connect(htmlLoad, &HtmlLoadTask::htmlLoaded, this, &LoadUI::htmlLoaded);
-	connect(htmlLoad, &HtmlLoadTask::htmlLoadFinished, this, &LoadUI::htmlLoadFinished);
-	connect(htmlLoad, &HtmlLoadTask::htmlLoadFinished, htmlLoad, &QObject::deleteLater);
+	/* Set html folder and connect UI signals */
+	InvertedList* invertedList = HandySearch::getInstance()->getInvertedList();
+	invertedList->setHtmlFolder(htmlFolder);
+	connect(invertedList, &InvertedList::htmlLoadStarted, this, &LoadUI::htmlLoadStarted);
+	/* htmlLoaded signal is directly connected to LoadUI inside HtmlLoadTask */
+	connect(invertedList, &InvertedList::htmlLoadFinished, this, &LoadUI::htmlLoadFinished);
+	
 	
 	/* Connect the loading procedure signals/slots */
-	connect(&loadThread, &QThread::started, this, &LoadUI::loadStarted);
-	connect(&loadThread, &QThread::started, dictLoad, &DictLoadTask::load);
-	connect(dictLoad, &DictLoadTask::dictLoadFinished, htmlLoad, &HtmlLoadTask::load);
-	connect(htmlLoad, &HtmlLoadTask::htmlLoadFinished, this, &LoadUI::loadFinished);
+	connect(this, &LoadUI::start, this, &LoadUI::loadStarted);
+	connect(this, &LoadUI::start, dict, &Dictionary::load);
+	connect(dict, &Dictionary::dictLoadFinished, invertedList, &InvertedList::load);
+	connect(invertedList, &InvertedList::htmlLoadFinished, this, &LoadUI::loadFinished);
 
 	/* Start loading */
-	loadThread.start();
+	emit start();
 
 	return;
 }
@@ -201,9 +207,9 @@ void LoadUI::htmlLoadStarted()
 * 	unsigned int threadID - Thread ID the html was loaded,not currently used.
 * 	QString path - Html file path,not currently used.
 ----------------------------*/
-void LoadUI::htmlLoaded()
+void LoadUI::htmlLoaded(const int num)
 {
-	currentProgress++;
+	currentProgress += num;
 	QString msg ;
 	int percent = ((float)currentProgress / maximumProgress) * 100;
 	msg.append(QString::number(percent));
@@ -230,7 +236,7 @@ void LoadUI::htmlLoadFinished()
 ----------------------------*/
 void LoadUI::dictLoadStarted()
 {
-	//Started Loading Dictionary Library
+	/* Started Loading Dictionary Library */
 	currentProgress = 0;
 	maximumProgress = 0;
 }
@@ -242,7 +248,7 @@ void LoadUI::dictLoadStarted()
 * Parameter:
 * 	int num - Number of dictionary items loaded.
 ----------------------------*/
-void LoadUI::dictLoaded(int num)
+void LoadUI::dictLoaded(const int num)
 {
 	currentProgress += num;
 	QString msg;
@@ -290,15 +296,11 @@ void LoadUI::loadStarted()
 ----------------------------*/
 void LoadUI::loadFinished()
 {
+#ifdef _DEBUG
 	QMessageBox::information(nullptr, "Time", "Time elapsed: " + QString::number(clock.elapsed()));
-#ifdef DEBUG
-	
 	qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::getTotalHtmlCount();
 #endif
 	emit finished();
-	/* Quit the load thread */
-	loadThread.quit();
-	loadThread.wait();
 	/* Close the dialog */
 	close();
 }
@@ -348,5 +350,10 @@ void LoadUI::mouseReleaseEvent(QMouseEvent * event)
 ----------------------------*/
 LoadUI::~LoadUI()
 {
+}
+
+LoadUI* LoadUI::getInstance()
+{
+	return instance;
 }
 

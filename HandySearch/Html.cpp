@@ -37,6 +37,8 @@ Html::Html(const QString &filePath)
 {
 	totalNum++;
 	analyzed = false;
+	weight = 0;
+	type = WeightType::NotAssigned;
 	file.setFileName(filePath);
 	load();
 }
@@ -90,6 +92,16 @@ QString Html::getFilePath()
 }
 
 
+QString& Html::getBrief()
+{
+	return brief;
+}
+
+void Html::setBrief(const QString& brief)
+{
+	this->brief = brief;
+}
+
 unsigned int Html::getTotalHtmlCount()
 {
 	return Html::totalNum;
@@ -103,54 +115,54 @@ unsigned int Html::getTotalHtmlCount()
 ----------------------------*/
 void Html::extractText(const QString &fileContent)
 {
-	//If has processed
+	/* If has processed */
 	if (!textContent.isEmpty())
-		textContent.clear();
+		return;
 
 	if (file.isOpen())
 	{
-		//Copy
+		/* Copy */
 		textContent = fileContent;
 
-		//Remove line breaks and tabs
+		/* Remove line breaks and tabs */
 		textContent.replace(QRegularExpression("[\r|\n|\t]"), "");
 
-		//Remove notes
+		/* Remove notes */
 		textContent.replace(QRegularExpression("<!--.[^-]*(?=-->)-->"), "");
 
-		//Remove header
+		/* Remove header */
 		textContent.replace(QRegularExpression("<head>.*</head>"), "");
 
-		//Remove scripts
+		/*Remove scripts */
 		textContent.replace(QRegularExpression("<( )*script([^>])*>"), "<script>");
 		textContent.replace(QRegularExpression("<script>.*</script>"), "");
 
-		//Remove all styles
+		/* Remove all styles */
 		textContent.replace(QRegularExpression("<( )*style([^>])*>"), "<style>");
 		textContent.replace(QRegularExpression("<style>.*</style>"), "");
 
-		//Remove td tags
+		/* Remove td tags */
 		textContent.replace(QRegularExpression("<( )*td([^>])*>"), "");
 
-		//Insert line breaks in <br> and <li> tags
+		/* Insert line breaks in <br> and <li> tags */
 		textContent.replace(QRegularExpression("<( )*br( )*>"), " ");
 		textContent.replace(QRegularExpression("<( )*li( )*>"), " ");
 
-		//Insert line paragraphs in <tr> and <p> tags
+		/* Insert line paragraphs in <tr> and <p> tags */
 		textContent.replace(QRegularExpression("<( )*tr( )*>"), " ");
 		textContent.replace(QRegularExpression("<( )*p( )*>"), " ");
 
-		//Remove anything that's enclosed inside < >
+		/* Remove anything that's enclosed inside < > */
 		textContent.replace(QRegularExpression("<[^>]*>"), "");
 
-		//Replace special characters
+		/* Replace special characters */
 		textContent.replace(QRegularExpression("&amp;"), "&");
 		textContent.replace(QRegularExpression("&nbsp;"), " ");
 		textContent.replace(QRegularExpression("&lt;"), "<");
 		textContent.replace(QRegularExpression("&gt;"), ">");
 		textContent.replace(QRegularExpression("&(.{2,6});"), "");
 
-		//Remove line breaks and tabs
+		/* Remove line breaks and tabs */
 		textContent.replace(QRegularExpression("[ ]+"), " ");
 	}
 }
@@ -166,7 +178,7 @@ void Html::extractTitle(const QString &fileContent)
 {
 	QRegularExpression rx("<title>(.*)</title>", QRegularExpression::InvertedGreedinessOption);
 	QRegularExpressionMatch match = rx.match(fileContent);
-	title = match.captured(0);
+	title = match.captured(1);
 }
 
 
@@ -182,16 +194,34 @@ void Html::setAnalyzed(bool analyzed)
 }
 
 
-/*--------------------------
-* Html::analyze
-* 	Analyze the html and do the word segmentation,create index and 
-* put the index into inverted list.
-----------------------------*/
-// void Html::putToInvertedList(HashMap<List<Index>*>* invertedList)
-// {
-// 	
-// }
+Html::WeightType Html::getWeightType()
+{
+	return type;
+}
 
+void Html::setWeightType(Html::WeightType type)
+{
+	this->type = type;
+}
+
+int Html::getWeight()
+{
+	return weight;
+}
+
+
+void Html::setWeight(int weight)
+{
+	this->weight = weight;
+}
+
+
+void Html::clearWeight()
+{
+	brief.clear();
+	setWeightType(WeightType::NotAssigned);
+	setWeight(0);
+}
 
 /*--------------------------
 * Html::load
@@ -202,7 +232,7 @@ bool Html::load()
 {
 	QString fileContent;
 
-	//Open the file
+	/* Open the file */
 	if (file.exists())
 		if (!file.open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text))
 			return false;
@@ -236,6 +266,16 @@ bool Html::loadFrom(QString &filePath)
 	return load();
 }
 
+
+bool Html::operator<(Html& other)
+{
+	if (this->getWeightType() < other.getWeightType())
+		return true;
+	else if (this->getWeightType() == other.getWeightType())
+		return this->getWeight() < other.getWeight();
+	else
+		return false;
+}
 
 /*--------------------------
 * Html::operator==

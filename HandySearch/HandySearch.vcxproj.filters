@@ -33,6 +33,33 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Source Files\Dictionary">
+      <UniqueIdentifier>{58433e76-9d26-4560-b7b2-08a02ece259f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Load">
+      <UniqueIdentifier>{08448f9f-64d2-4f5c-a16a-4185f0c11eb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\InvertedList">
+      <UniqueIdentifier>{6d130092-427d-46f4-b1b5-2ab76162b230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\WordSegmenter">
+      <UniqueIdentifier>{ce3ecb90-88d8-43aa-9937-f5fa02827c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Basics">
+      <UniqueIdentifier>{9bc1455c-cbd8-402c-937d-6b925089dbf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Dictionary">
+      <UniqueIdentifier>{96b6e16a-23a6-4d74-8162-edcf27bbc1e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Load">
+      <UniqueIdentifier>{4d0bb362-84ff-4a3d-9bc5-3c5da0b4d64b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\WordSegmenter">
+      <UniqueIdentifier>{8a65f00f-e555-44b8-b4c4-74e296f17bdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\InvertedList">
+      <UniqueIdentifier>{90c461ba-d7df-42de-b7d0-0f157be9c288}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -41,34 +68,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Html.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BloomFilter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WordSegmenter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Index.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_LoadUI.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_LoadUI.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadThread.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_LoadThread.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_LoadThread.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="HandySearch.cpp">
@@ -83,30 +86,51 @@
     <ClCompile Include="GeneratedFiles\qrc_HandySearch.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="BloomFilter.cpp">
+      <Filter>Source Files\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadUI.cpp">
+      <Filter>Source Files\Load</Filter>
+    </ClCompile>
+    <ClCompile Include="Index.cpp">
+      <Filter>Source Files\InvertedList</Filter>
+    </ClCompile>
+    <ClCompile Include="WordSegmenter.cpp">
+      <Filter>Source Files\WordSegmenter</Filter>
+    </ClCompile>
+    <ClCompile Include="InvertedList.cpp">
+      <Filter>Source Files\InvertedList</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalInvertedList.cpp">
+      <Filter>Source Files\InvertedList</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_InvertedList.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_InvertedList.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_LocalInvertedList.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_LocalInvertedList.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="Html.cpp">
+      <Filter>Source Files\InvertedList</Filter>
+    </ClCompile>
+    <ClCompile Include="Dictionary.cpp">
+      <Filter>Source Files\Dictionary</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_Dictionary.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_Dictionary.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Html.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="List.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Exceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HashMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BloomFilter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WordSegmenter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Index.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_HandySearch.h">
@@ -115,14 +139,29 @@
     <ClInclude Include="GeneratedFiles\ui_LoadUI.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="HashMap.h">
+      <Filter>Header Files\Basics</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
+      <Filter>Header Files\Basics</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomFilter.h">
+      <Filter>Header Files\Dictionary</Filter>
+    </ClInclude>
+    <ClInclude Include="Exceptions.h">
+      <Filter>Header Files\Basics</Filter>
+    </ClInclude>
+    <ClInclude Include="WordSegmenter.h">
+      <Filter>Header Files\WordSegmenter</Filter>
+    </ClInclude>
+    <ClInclude Include="Index.h">
+      <Filter>Header Files\InvertedList</Filter>
+    </ClInclude>
+    <ClInclude Include="Html.h">
+      <Filter>Header Files\InvertedList</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="LoadUI.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="LoadThread.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="HandySearch.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -134,6 +173,18 @@
     </CustomBuild>
     <CustomBuild Include="HandySearch.qrc">
       <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LoadUI.h">
+      <Filter>Header Files\Load</Filter>
+    </CustomBuild>
+    <CustomBuild Include="InvertedList.h">
+      <Filter>Header Files\InvertedList</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LocalInvertedList.h">
+      <Filter>Header Files\InvertedList</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Dictionary.h">
+      <Filter>Header Files\Dictionary</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

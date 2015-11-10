@@ -26,7 +26,6 @@
 Index::Index()
 {
 	this->html = nullptr;
-	this->weight = 0;
 }
 
 
@@ -42,7 +41,6 @@ Index::Index(Html* html, unsigned int firstPos)
 {
 	this->html = html;
 	this->position.append(firstPos);
-	this->weight = 0;
 }
 
 
@@ -60,12 +58,6 @@ Index & Index::operator= (Index &other)
 	this->html = other.html;
 	this->position = other.position;
 	return *this;
-}
-
-
-int& Index::getRefWeight()
-{
-	return weight;
 }
 
 

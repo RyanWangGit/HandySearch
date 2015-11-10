@@ -22,63 +22,35 @@
 * - License: GNU Lesser General Public License (LGPL)
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
-#pragma once
-#include "stdafx.h"
-#include "ui_loadui.h"
+#pragma  once
+#include "List.h"
+#include "HashMap.h"
+#include "Index.h"
+#include "Html.h"
 
 /**
- * Class:	LoadUI
- *
- * Brief:	The loading dialog class.
- *
- * Date:	Oct. 2015
- */
-class LoadUI : public QDialog
+* Class:	LocalHtmlCache
+*
+* Brief:	Html load sub-task class.
+*
+* Date:	Nov. 2015
+*/
+class LocalInvertedList : public QObject
 {
 	Q_OBJECT
 private:
-	QDir htmlFolder;
-	QDir dictFolder;
-	/* Loading clock */
-	QTime clock;
-	QTimer timer;
-	/* For dragging the window */
-	QPoint origin;
-	bool isPressed;
-	/* For showing current progress */
-	unsigned long currentProgress;
-	unsigned long maximumProgress;
-	static LoadUI* instance;
-	bool checkDirectory();
-protected:
-	//Override event handler
-	void mousePressEvent(QMouseEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);
-	void mouseReleaseEvent(QMouseEvent * event);
+	HashMap<List<Index>*>* localHashMap;
+	QStringList pathList;
+	/* Segment the content and save it to the inverted list */
+	void putInLocalList(Html* html);
 public:
-	LoadUI();
-	~LoadUI();
-	static LoadUI* getInstance();
+	LocalInvertedList(const QStringList &pathList);
+	~LocalInvertedList();
 public slots:
-	void loadData();
-	/* UI slots */
-	void loadingDots();
-	/* Load slots */
-	void loadStarted();
-	void loadFinished();
-	//Html load slots
-	void htmlLoadStarted();
-	void htmlLoaded(const int num);
-	void htmlLoadFinished();
-	//Dictionary load slots
-	void dictLoadStarted();
-	void dictLoaded(const int num);
-	void dictLoadFinished();
+	void localLoadStart();
+	void localQuery(const QStringList &keyWordList);
 signals:
-	void start();
-	void canceled();
-	void finished();
-private:
-	Ui::LoadUI ui;
+	void htmlLoaded(int num);
+	void localLoadFinished(QThread *, const QStringList&);
+	void localQueryResult(QThread *, const QList<Html*>&);
 };
-

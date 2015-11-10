@@ -76,7 +76,6 @@ private:
 	/* Store the last queried pointer to reduce search time when iterating */
 	ListNode<T>* last;
 	int lastIndex;
-	QMutex mutex;
 
 	ListNode<T>* List<T>::getNode(int i);
 	bool List<T>::removeNode(ListNode<T>* node);
@@ -149,7 +148,6 @@ T& List<T>::operator[](int i)
 template<typename T>
 ListNode<T>* List<T>::getNode(int i)
 {
-	mutex.lock();
 	//Return the head node if index is -1
 	if (i == -1)
 	{
@@ -212,8 +210,6 @@ ListNode<T>* List<T>::getNode(int i)
 		{
 			last = sourcePtr;
 			lastIndex = i;
-
-			mutex.unlock();
 			return sourcePtr;
 		}
 		else
@@ -241,7 +237,6 @@ bool List<T>::removeNode(ListNode<T> *node)
 	if (node == nullptr)
 		throw QNullPointerException();
 
-	mutex.lock();
 	if (node == last)
 	{
 		if (node->prior == head)
@@ -264,9 +259,6 @@ bool List<T>::removeNode(ListNode<T> *node)
 
 	delete node;
 	length--;
-
-	mutex.unlock();
-
 	return true;
 }
 
@@ -313,7 +305,6 @@ T& List<T>::get(int i)
 template<typename T>
 List<T>& List<T>::append(T& data)
 {
-	mutex.lock();
 	ListNode<T>* p = tail;
 
 	p->next = new ListNode<T>(data);
@@ -321,8 +312,6 @@ List<T>& List<T>::append(T& data)
 	p->next->prior = p;
 	tail = p->next;
 	length++;
-
-	mutex.unlock();
 	return *this;
 }
 
@@ -354,7 +343,6 @@ bool List<T>::clear()
 {
 	ListNode<T>* temp = nullptr;
 
-	mutex.lock();
 	while (tail != head)
 	{
 		temp = tail;
@@ -363,7 +351,6 @@ bool List<T>::clear()
 	}
 	last = nullptr;
 	lastIndex = -MAXSHORT;
-	mutex.unlock();
 
 	return true;
 }
@@ -485,8 +472,6 @@ bool List<T>::insertAfter(int i, T& value)
 
 	p = getNode(i);
 
-	mutex.lock();
-
 	temp = p->next;
 	p->next = new ListNode<T>(value); 
 	p->next->prior = p;
@@ -495,7 +480,6 @@ bool List<T>::insertAfter(int i, T& value)
 		temp->prior = p->next;
 
 	length++;
-	mutex.unlock();
 
 	return true;
 }

@@ -38,7 +38,6 @@ class BloomFilter
 #define MAXSIZE 67108864 // 2^26
 private:
 	QBitArray bitArray;
-	unsigned int maxLength;
 	/* Hash functions */
 	//14 Hash functions and 20 times of number of items length for bitArray
 	//makes error rate 0.0001
@@ -61,7 +60,4 @@ public:
 	BloomFilter();
 	bool hasItem(void *key, int len);
 	bool addItem(void *key, int len);
-	bool hasItem(const QString &key);
-	bool addItem(const QString &key);
-	unsigned int getMaxLength();
 };
