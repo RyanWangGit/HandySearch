@@ -64,7 +64,7 @@ Html::Html(const Html &c)
 * 	Returns the pure text of the html file.
 * Returns:	QString& - Pure text of html.
 ----------------------------*/
-QString& Html::getText()
+const QString& Html::getText()
 {
 	return textContent;
 }
@@ -75,7 +75,7 @@ QString& Html::getText()
 * 	Returns the title of the html file.
 * Returns:	QString& - Title of html.
 ----------------------------*/
-QString& Html::getTitle()
+const QString& Html::getTitle()
 {
 	return title;
 }
@@ -86,13 +86,13 @@ QString& Html::getTitle()
 * 	Returns the path of the html file.
 * Returns:	QString - Path of html file.
 ----------------------------*/
-QString Html::getFilePath()
+const QString Html::getFilePath()
 {
 	return file.fileName();
 }
 
 
-QString& Html::getBrief()
+const QString& Html::getBrief()
 {
 	return brief;
 }
@@ -182,7 +182,7 @@ void Html::extractTitle(const QString &fileContent)
 }
 
 
-bool Html::hasAnalyzed()
+bool Html::hasAnalyzed() const
 {
 	return analyzed;
 }
@@ -194,7 +194,7 @@ void Html::setAnalyzed(bool analyzed)
 }
 
 
-Html::WeightType Html::getWeightType()
+Html::WeightType Html::getWeightType() const
 {
 	return type;
 }
@@ -204,7 +204,7 @@ void Html::setWeightType(Html::WeightType type)
 	this->type = type;
 }
 
-int Html::getWeight()
+int Html::getWeight() const
 {
 	return weight;
 }
@@ -259,7 +259,7 @@ bool Html::load()
 * Parameter:
 * 	QString & filePath - Path of html file.
 ----------------------------*/
-bool Html::loadFrom(QString &filePath)
+bool Html::loadFrom(const QString &filePath)
 {
 	file.close();
 	file.setFileName(filePath);
@@ -267,7 +267,7 @@ bool Html::loadFrom(QString &filePath)
 }
 
 
-bool Html::operator<(Html& other)
+bool Html::operator<(const Html& other)
 {
 	if (this->getWeightType() < other.getWeightType())
 		return true;
@@ -285,7 +285,7 @@ bool Html::operator<(Html& other)
 * Parameter:
 * 	Html & other - The other html object.
 ----------------------------*/
-bool Html::operator== (Html &other)
+bool Html::operator== (const Html &other)
 {
 	return (file.fileName() == other.file.fileName());
 }

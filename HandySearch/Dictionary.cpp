@@ -19,7 +19,7 @@ Dictionary::Dictionary()
 * Parameter:
 *	const QString & key - The key to search.
 ----------------------------*/
-bool Dictionary::hasItem(const QString &key)
+bool Dictionary::hasItem(const QString &key) const
 {
 	if (key == "")
 		return false;
@@ -56,7 +56,7 @@ bool Dictionary::addItem(const QString &key)
 * 	Get the maximum word length of the dictioanry.
 * Returns:	unsigned int - Maximum word length.
 ----------------------------*/
-unsigned int Dictionary::getMaxLength()
+unsigned int Dictionary::getMaxLength() const
 {
 	return maxLength;
 }

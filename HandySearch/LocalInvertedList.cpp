@@ -41,6 +41,7 @@ void LocalInvertedList::putInLocalList(Html* html)
 		{
 			indexList = new List<Index>();
 			localHashMap->put(word, indexList);
+			hashMapContent.append(indexList);
 		}
 		else
 			indexList = *pIndexList;
@@ -82,6 +83,10 @@ LocalInvertedList::LocalInvertedList(const QStringList& pathList)
 
 LocalInvertedList::~LocalInvertedList()
 {
+	/* Delete the content of hashmap */
+	for (List<Index>* indexList : hashMapContent)
+		delete indexList;
+
 	delete localHashMap;
 }
 
@@ -106,8 +111,8 @@ void LocalInvertedList::localLoadStart()
 		Html *pHtml = new Html(path);
 		putInLocalList(pHtml);
 
-		QString title = pHtml->getTitle();
 		/* Remove all pucntuations , both English and Chinese ones */
+		QString title = pHtml->getTitle();
 		title.replace(QRegularExpression("\\pP|\\pS"), "");
 		title.chop(10);
 		titleList.append(title);
@@ -115,8 +120,8 @@ void LocalInvertedList::localLoadStart()
 #ifdef _DEBUG
 		qDebug() << "[Html Loading Thread # " << QObject::thread()->currentThreadId() << "]" << "Compelete #" << Html::getTotalHtmlCount() << path << pHtml->getTitle();
 #endif
-		if (i % 5 == 0)
-		emit htmlLoaded(5);
+		if (i % 3 == 0)
+		emit htmlLoaded(3);
 #endif
 	}
 	emit localLoadFinished(QThread::currentThread(), titleList);
@@ -154,6 +159,7 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
 						html->setWeight(html->getWeight() + word.size());
 					}
 				}
+				/* If html's weight type hasn't been set it means it's InContent */
 				if (html->getWeightType() == Html::WeightType::NotAssigned)
 					html->setWeightType(Html::WeightType::InContent);
 
@@ -169,9 +175,7 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
 				html->setWeight(html->getWeight() + index->getFrequency() * word.size());
 				break;
 			}
-			/* Any html whose weight type is Html::WeightType::InTitle
-			 * is processed at the first time.
-			 */
+			/* Any html whose weight type is Html::WeightType::InTitle is processed at the first time. */
 			default:break;
 			}
 		}

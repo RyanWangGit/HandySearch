@@ -39,12 +39,12 @@ private:
 	List<unsigned int> position;
 	Html* html;
 public:
-	Html* getHtml();
-	unsigned int getFrequency();
+	Html* getHtml() const;
+	unsigned int getFrequency() const;
 	List<unsigned int> &getPosition();
 	Index();
-	Index(Html* html, unsigned int firstPos);  
-	Index &operator= (Index &other);
+	Index(Html *html, unsigned int firstPos);  
+	Index &operator= (const Index &other);
 };
 
 

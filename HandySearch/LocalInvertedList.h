@@ -39,10 +39,11 @@ class LocalInvertedList : public QObject
 {
 	Q_OBJECT
 private:
-	HashMap<List<Index>*>* localHashMap;
+	HashMap<List<Index>*> *localHashMap;
+	QList<List<Index>*> hashMapContent;
 	QStringList pathList;
 	/* Segment the content and save it to the inverted list */
-	void putInLocalList(Html* html);
+	void putInLocalList(Html *html);
 public:
 	LocalInvertedList(const QStringList &pathList);
 	~LocalInvertedList();
@@ -51,6 +52,6 @@ public slots:
 	void localQuery(const QStringList &keyWordList);
 signals:
 	void htmlLoaded(int num);
-	void localLoadFinished(QThread *, const QStringList&);
-	void localQueryResult(QThread *, const QList<Html*>&);
+	void localLoadFinished(QThread *, const QStringList &);
+	void localQueryResult(QThread *, const QList<Html*> &);
 };

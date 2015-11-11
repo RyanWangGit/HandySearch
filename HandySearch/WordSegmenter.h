@@ -70,20 +70,20 @@ class WordSegmenter
 private:
 	QString content;
 	QStringList result;
-	Dictionary *dict;
+	const Dictionary *dict;
 	unsigned int pos;
 	void mmFilter(List<Chunk> &chunks);
 	void lawlFilter(List<Chunk> &chunks);
 	void svwlFilter(List<Chunk> &chunks);
 	void sdmfFilter(List<Chunk> &chunks);
-	bool isChineseChar(QChar &ch);
-	QChar getNextChar();
+	bool isChineseChar(const QChar &ch);
+	QChar getNextChar() const;
 	QStringList getMaxMatchingWord();
 	QStringList getChineseWords();
 	QString getASCIIWords();
 	void createChunks(List<Chunk> &chunks);
 public:
-	WordSegmenter(QString& content, Dictionary* dict);
-	QStringList& getResult();
+	WordSegmenter(const QString &content, const Dictionary *dict);
+	const QStringList &getResult();
 };
 

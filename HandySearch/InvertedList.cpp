@@ -33,7 +33,7 @@ InvertedList::~InvertedList()
 	}
 }
 
-void InvertedList::setHtmlFolder(const QDir& htmlFolder)
+void InvertedList::setHtmlFolder(const QDir &htmlFolder)
 {
 	this->htmlFolder = htmlFolder;
 }
@@ -76,7 +76,7 @@ void InvertedList::load()
 	emit localLoadStart();
 }
 
-QStringList& InvertedList::getTitleList()
+const QStringList & InvertedList::getTitleList() const
 {
 	return titleList;
 }

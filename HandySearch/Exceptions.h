@@ -46,7 +46,7 @@ public:
 		this->errorMsg = errorMsg;
 	}
 
-	const QString getErrorMsg()
+	const QString &getErrorMsg()
 	{
 		return errorMsg;
 	} 
@@ -75,7 +75,7 @@ public:
 		this->errorMsg = errorMsg;
 	}
 
-	const QString getErrorMsg()
+	const QString &getErrorMsg()
 	{
 		return errorMsg;
 	}

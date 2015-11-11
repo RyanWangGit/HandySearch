@@ -207,7 +207,7 @@ void LoadUI::htmlLoadStarted()
 * 	unsigned int threadID - Thread ID the html was loaded,not currently used.
 * 	QString path - Html file path,not currently used.
 ----------------------------*/
-void LoadUI::htmlLoaded(const int num)
+void LoadUI::htmlLoaded(int num)
 {
 	currentProgress += num;
 	QString msg ;
@@ -248,7 +248,7 @@ void LoadUI::dictLoadStarted()
 * Parameter:
 * 	int num - Number of dictionary items loaded.
 ----------------------------*/
-void LoadUI::dictLoaded(const int num)
+void LoadUI::dictLoaded(int num)
 {
 	currentProgress += num;
 	QString msg;

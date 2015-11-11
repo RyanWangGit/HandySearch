@@ -42,20 +42,20 @@ private:
 public:
 	InvertedList();
 	~InvertedList();
-	void setHtmlFolder(const QDir& htmlFolder);
 	void load();
-	QStringList& getTitleList();
+	void setHtmlFolder(const QDir &htmlFolder);
+	const QStringList &getTitleList() const;
 	/* Signals/Slots for inner objects */
 private slots:
 	void localQueryResult(QThread *thread, const QList<Html*> &resultList);
 	void localLoadFinished(QThread *thread, const QStringList& titleList);
 signals:
-	void localQuery(const QStringList& keyWordList);
+	void localQuery(const QStringList &keyWordList);
 	void localLoadStart();
 	
 	/* Signals/Slots for outer objects */
 public slots:
-	void query(const QStringList& keyWordList);
+	void query(const QStringList &keyWordList);
 signals:
 	void queryResult(const QList<Html*>&, const QStringList&);
 	void htmlLoadStarted();

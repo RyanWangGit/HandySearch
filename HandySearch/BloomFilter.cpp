@@ -36,7 +36,7 @@ BloomFilter::BloomFilter()
 *	void * key - The key to search.
 *	int len - Length of string.
 ----------------------------*/
-bool BloomFilter::hasItem(void *key, int len)
+bool BloomFilter::hasItem(const void *key, int len) const
 {
 	return
 		(
@@ -66,7 +66,7 @@ bool BloomFilter::hasItem(void *key, int len)
 *	void * key - String pointer.
 *	int len - Length of string.
 ----------------------------*/
-bool BloomFilter::addItem(void *key, int len)
+bool BloomFilter::addItem(const void *key, int len)
 {
 	bitArray.setBit(APHash((char *)key, len) % MAXSIZE);
 	bitArray.setBit(BKDRHash((char *)key, len) % MAXSIZE);
@@ -93,7 +93,7 @@ bool BloomFilter::addItem(void *key, int len)
 * 	char * str - String to hash.
 * 	unsigned int len - Length of the string.
 ----------------------------*/
-unsigned int BloomFilter::RSHash(char* str, unsigned int len) {
+unsigned int BloomFilter::RSHash(const char* str, unsigned int len) const {
 	unsigned int b = 378551;
 	unsigned int a = 63689;
 	unsigned int hash = 0;
@@ -107,7 +107,7 @@ unsigned int BloomFilter::RSHash(char* str, unsigned int len) {
 }
 
 
-unsigned int BloomFilter::JSHash(char* str, unsigned int len)
+unsigned int BloomFilter::JSHash(const char* str, unsigned int len) const
 {
 	unsigned int hash = 1315423911;
 	unsigned int i = 0;
@@ -119,7 +119,7 @@ unsigned int BloomFilter::JSHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::PJWHash(char* str, unsigned int len)
+unsigned int BloomFilter::PJWHash(const char* str, unsigned int len) const
 {
 	const unsigned int BitsInUnsignedInt = (unsigned int)(sizeof(unsigned int) * 8);
 	const unsigned int ThreeQuarters = (unsigned int)((BitsInUnsignedInt * 3) / 4);
@@ -140,7 +140,7 @@ unsigned int BloomFilter::PJWHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::ELFHash(char* str, unsigned int len)
+unsigned int BloomFilter::ELFHash(const char* str, unsigned int len) const
 {
 	unsigned int hash = 0;
 	unsigned int x = 0;
@@ -157,7 +157,7 @@ unsigned int BloomFilter::ELFHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::BKDRHash(char* str, unsigned int len)
+unsigned int BloomFilter::BKDRHash(const char* str, unsigned int len) const
 {
 	unsigned int seed = 131; /* 31 131 1313 13131 131313 etc.. */
 	unsigned int hash = 0;
@@ -172,7 +172,7 @@ unsigned int BloomFilter::BKDRHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::SDBMHash(char* str, unsigned int len)
+unsigned int BloomFilter::SDBMHash(const char* str, unsigned int len) const
 {
 	unsigned int hash = 0;
 	unsigned int i = 0;
@@ -185,7 +185,7 @@ unsigned int BloomFilter::SDBMHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::DJBHash(char* str, unsigned int len)
+unsigned int BloomFilter::DJBHash(const char* str, unsigned int len) const
 {
 	unsigned int hash = 5381;
 	unsigned int i = 0;
@@ -198,7 +198,7 @@ unsigned int BloomFilter::DJBHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::DEKHash(char* str, unsigned int len)
+unsigned int BloomFilter::DEKHash(const char* str, unsigned int len) const
 {
 	unsigned int hash = len;
 	unsigned int i = 0;
@@ -210,7 +210,7 @@ unsigned int BloomFilter::DEKHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::BPHash(char* str, unsigned int len)
+unsigned int BloomFilter::BPHash(const char* str, unsigned int len) const
 {
 	unsigned int hash = 0;
 	unsigned int i = 0;
@@ -222,7 +222,7 @@ unsigned int BloomFilter::BPHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::FNVHash(char* str, unsigned int len)
+unsigned int BloomFilter::FNVHash(const char* str, unsigned int len) const
 {
 	const unsigned int fnv_prime = 0x811C9DC5;
 	unsigned int hash = 0;
@@ -237,7 +237,7 @@ unsigned int BloomFilter::FNVHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::APHash(char* str, unsigned int len)
+unsigned int BloomFilter::APHash(const char* str, unsigned int len) const
 {
 	unsigned int hash = 0xAAAAAAAA;
 	unsigned int i = 0;
@@ -251,7 +251,7 @@ unsigned int BloomFilter::APHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::HFLPHash(char *str, unsigned int len)
+unsigned int BloomFilter::HFLPHash(const char* str, unsigned int len) const
 {
 	unsigned int n = 0;
 	int i;
@@ -263,13 +263,12 @@ unsigned int BloomFilter::HFLPHash(char *str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::HFHash(char* str, unsigned int len)
+unsigned int BloomFilter::HFHash(const char* str, unsigned int len) const
 {
 	int result = 0;
-	char* ptr = str;
 	int c;
 	int i = 0;
-	for (i = 1; c = *ptr++; i++)
+	for (i = 1; c = *str++; i++)
 		result += c * 3 * i;
 	if (result<0)
 		result = -result;
@@ -277,7 +276,7 @@ unsigned int BloomFilter::HFHash(char* str, unsigned int len)
 }
 
 
-unsigned int BloomFilter::StrHash(char *str, unsigned int len)
+unsigned int BloomFilter::StrHash(const char* str, unsigned int len) const
 {
 	register unsigned int   h;
 	register unsigned char *p;

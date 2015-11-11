@@ -125,7 +125,7 @@ void HandySearch::searchResult(const QList<Html*> &resultList, const QStringList
 * Parameter:
 * 	const QUrl & url - The url user clicked.
 ----------------------------*/
-void HandySearch::anchorClicked(const QUrl& url)
+void HandySearch::anchorClicked(const QUrl &url)
 {
 	QDesktopServices::openUrl(QUrl("file:///" + url.toString()));
 }

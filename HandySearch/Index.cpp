@@ -51,7 +51,7 @@ Index::Index(Html* html, unsigned int firstPos)
 * Parameter:
 * 	Index & other - The other index object.
 ----------------------------*/
-Index & Index::operator= (Index &other)
+Index & Index::operator= (const Index &other)
 {
 	if (this == &other)
 		return *this;
@@ -66,7 +66,7 @@ Index & Index::operator= (Index &other)
 * 	Returns the html object pointer the index posseses.
 * Returns:	Html* - The html pointer.
 ----------------------------*/
-Html* Index::getHtml()
+Html* Index::getHtml() const
 {
 	return html;
 }
@@ -77,7 +77,7 @@ Html* Index::getHtml()
 * 	Returns the frequency the word appears in the html.
 * Returns:	unsigned int - The frequency.
 ----------------------------*/
-unsigned int Index::getFrequency()
+unsigned int Index::getFrequency() const
 {
 	return position.size();
 }

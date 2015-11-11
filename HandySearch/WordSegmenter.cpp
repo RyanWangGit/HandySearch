@@ -262,7 +262,7 @@ void WordSegmenter::sdmfFilter(List<Chunk> &chunks)
 * Parameter:
 * 	QChar & ch - The character
 ----------------------------*/
-bool WordSegmenter::isChineseChar(QChar &ch)
+bool WordSegmenter::isChineseChar(const QChar &ch)
 {
 	return (ch.unicode() >= 0x4e00 && ch.unicode() <= 0x9FA5);
 }
@@ -274,7 +274,7 @@ bool WordSegmenter::isChineseChar(QChar &ch)
 * without pushing the pos indicator.
 * Returns:	QChar - The next character.
 ----------------------------*/
-QChar WordSegmenter::getNextChar()
+QChar WordSegmenter::getNextChar() const
 {
 	return content.data()[pos];
 }
@@ -428,10 +428,10 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 * 	QString & content - The content needed to be segmented.
 * 	Dictionary* dict - Dictionary object pointer.
 ----------------------------*/
-WordSegmenter::WordSegmenter(QString& content, Dictionary* dict)
+WordSegmenter::WordSegmenter(const QString &content, const Dictionary *dict)
+	:dict(dict)
 {
 	this->content = content;
-	this->dict = dict;
 	this->pos = 0;
 }
 
@@ -441,7 +441,7 @@ WordSegmenter::WordSegmenter(QString& content, Dictionary* dict)
 * 	Returns the segmented word list as result.
 * Returns:	QStringList & - Segmented word list.
 ----------------------------*/
-QStringList & WordSegmenter::getResult()
+const QStringList& WordSegmenter::getResult()
 {
 	if (!result.isEmpty())
 		return result;

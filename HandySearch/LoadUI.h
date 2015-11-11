@@ -48,17 +48,17 @@ private:
 	/* For showing current progress */
 	unsigned long currentProgress;
 	unsigned long maximumProgress;
-	static LoadUI* instance;
+	static LoadUI *instance;
 	bool checkDirectory();
 protected:
-	//Override event handler
+	/* Override event handler */
 	void mousePressEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
-	void mouseReleaseEvent(QMouseEvent * event);
+	void mouseReleaseEvent(QMouseEvent *event);
 public:
 	LoadUI();
 	~LoadUI();
-	static LoadUI* getInstance();
+	static LoadUI *getInstance();
 public slots:
 	void loadData();
 	/* UI slots */
@@ -66,13 +66,13 @@ public slots:
 	/* Load slots */
 	void loadStarted();
 	void loadFinished();
-	//Html load slots
+	/* Html load slots */
 	void htmlLoadStarted();
-	void htmlLoaded(const int num);
+	void htmlLoaded(int num);
 	void htmlLoadFinished();
-	//Dictionary load slots
+	/* Dictionary load slots */
 	void dictLoadStarted();
-	void dictLoaded(const int num);
+	void dictLoaded(int num);
 	void dictLoadFinished();
 signals:
 	void start();

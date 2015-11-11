@@ -40,7 +40,7 @@ public:
 	//Empty constructor for list heads
 	Entry(){	void;	}
 	//Constructor
-	Entry(QString key, V value)
+	Entry(const QString &key,const V &value)
 	{
 		this->key = key;
 		this->value = value;
@@ -82,7 +82,7 @@ private:
 public:
 	HashMap();
 	~HashMap();
-	bool put(const QString &key, V &value);
+	bool put(const QString &key,const V &value);
 	V* get(const QString &key);
 	bool resize(int newSize);
 
@@ -110,7 +110,7 @@ HashMap<V>::~HashMap()
 
 
 template < typename V >
-bool HashMap<V>::put(const QString &key, V &value)
+bool HashMap<V>::put(const QString &key,const V &value)
 {
 	QByteArray ba = key.toLocal8Bit();
 	char* str = ba.data();
@@ -171,6 +171,7 @@ V* HashMap<V>::get(const QString &key)
 template < typename V >
 bool HashMap<V>::resize(int newSize)
 {
+	/* Not implemented */
 	return true;
 }
 

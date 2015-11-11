@@ -50,13 +50,13 @@ public slots:
 	void segment();
 	void search();
 	void searchResult(const QList<Html*> &resultList, const QStringList &keyWordList);
-	void anchorClicked(const QUrl& url);
+	void anchorClicked(const QUrl &url);
 	void about();
 public:
 	HandySearch(QWidget *parent = 0);
-	Dictionary* getDictionary();
-	InvertedList* getInvertedList();
-	static HandySearch* getInstance();
+	Dictionary *getDictionary();
+	InvertedList *getInvertedList();
+	static HandySearch *getInstance();
 protected:
 	void resizeEvent(QResizeEvent *event);
 private:

@@ -49,7 +49,7 @@ public:
 		this->next = nullptr;
 		this->prior = nullptr;
 	}
-	ListNode(T& data)
+	ListNode(const T& data)
 	{
 		this->data = data;
 		this->next = nullptr;
@@ -70,7 +70,7 @@ template<typename T>
 class List
 {
 private:
-	long length;
+	unsigned long length;
 	ListNode<T>* head;
 	ListNode<T>* tail;
 	/* Store the last queried pointer to reduce search time when iterating */
@@ -78,23 +78,23 @@ private:
 	int lastIndex;
 
 	ListNode<T>* List<T>::getNode(int i);
-	bool List<T>::removeNode(ListNode<T>* node);
+	bool List<T>::removeNode(const ListNode<T>* node);
 public:
 	List();
 	~List();
 	T& operator[](int i);
-	List<T>& operator=(List<T>& other);
+	List<T>& operator=(const List<T>& other);
 	T& get(int i);
-	List<T>& append(T& data);
-	List<T>& append(List<T>& list);
+	List<T>& append(const T &data);
+	List<T>& append(const List<T> &list);
 	bool clear();
-	bool isEmpty();
+	bool isEmpty() const;
 	bool remove(int i);
-	int indexOf(T& value);
-	bool replace(int i, T& value);
-	long size();
-	bool contains(const T& value);
-	bool insertAfter(int i, T& value);
+	int indexOf(const T &value) const;
+	bool replace(int i, const T& value);
+	unsigned long size() const;
+	bool contains(const T &value) const;
+	bool insertAfter(int i, const T& value);
 };
 
 
@@ -232,7 +232,7 @@ ListNode<T>* List<T>::getNode(int i)
 * 	ListNode<T> * node - The node to remove from the list.
 ----------------------------*/
 template<typename T>
-bool List<T>::removeNode(ListNode<T> *node)
+bool List<T>::removeNode(const ListNode<T> *node)
 {
 	if (node == nullptr)
 		throw QNullPointerException();
@@ -271,7 +271,7 @@ bool List<T>::removeNode(ListNode<T> *node)
 * 	List<T> & other - The other list.
 ----------------------------*/
 template<typename T>
-List<T>& List<T>::operator=(List<T>& other)
+List<T>& List<T>::operator=(const List<T>& other)
 {
 	if (this == &other)
 		return *this;
@@ -303,7 +303,7 @@ T& List<T>::get(int i)
 * 	T & data - The data to append.
 ----------------------------*/
 template<typename T>
-List<T>& List<T>::append(T& data)
+List<T>& List<T>::append(const T& data)
 {
 	ListNode<T>* p = tail;
 
@@ -312,6 +312,7 @@ List<T>& List<T>::append(T& data)
 	p->next->prior = p;
 	tail = p->next;
 	length++;
+
 	return *this;
 }
 
@@ -324,10 +325,11 @@ List<T>& List<T>::append(T& data)
 * 	List<T> & list - The list to append.
 ----------------------------*/
 template<typename T>
-List<T>&  List<T>::append(List<T>& list)
+List<T>& List<T>::append(const List<T> &list)
 {
+	List<T>* ptr = &(List<T>)list;
 	for (int i = 0; i < list.size(); i++)
-		append(list.get(i));
+		append(ptr->get(i));
 
 	return *this;
 }
@@ -362,7 +364,7 @@ bool List<T>::clear()
 * Returns:	bool - The result.
 ----------------------------*/
 template<typename T>
-bool List<T>::isEmpty()
+bool List<T>::isEmpty() const
 {
 	return length == 0 ? true : false;
 }
@@ -390,7 +392,7 @@ bool List<T>::remove(int i)
 * 	T & value - The value to search for.
 ----------------------------*/
 template<typename T>
-int List<T>::indexOf(T &value)
+int List<T>::indexOf(const T &value) const
 {
 	ListNode<T>* p = head->next;
 	int i;
@@ -416,7 +418,7 @@ int List<T>::indexOf(T &value)
 * 	T & value - Data to replace.
 ----------------------------*/
 template<typename T>
-bool List<T>::replace(int i, T& value)
+bool List<T>::replace(int i, const T& value)
 {
 	remove(i);
 	insertAfter(i - 1, value);
@@ -430,7 +432,7 @@ bool List<T>::replace(int i, T& value)
 * Returns:	long - The size of the list.
 ----------------------------*/
 template<typename T>
-long List<T>::size()
+unsigned long List<T>::size() const
 {
 	return length;
 }
@@ -443,7 +445,7 @@ long List<T>::size()
 * 	const T & value - The value to search for.
 ----------------------------*/
 template<typename T>
-bool List<T>::contains(const T &value)
+bool List<T>::contains(const T &value) const
 { 
 	ListNode<T> *p = nullptr;
 	for (int i = 0; i < size(); i++)
@@ -465,7 +467,7 @@ bool List<T>::contains(const T &value)
 * 	T & value - Data to insert after i(t) node.
 ----------------------------*/
 template<typename T>
-bool List<T>::insertAfter(int i, T& value)
+bool List<T>::insertAfter(int i, const T& value)
 {
 	ListNode<T> *p = nullptr;
 	ListNode<T> *temp = nullptr;

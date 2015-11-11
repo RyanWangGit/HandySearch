@@ -37,10 +37,10 @@ private:
 public:
 	Dictionary();
 	void load();
-	void setDictFolder(const QDir& dictFolder);
-	bool hasItem(const QString &key);
+	void setDictFolder(const QDir &dictFolder);
+	bool hasItem(const QString &key) const;
 	bool addItem(const QString &key);
-	unsigned int getMaxLength();
+	unsigned int getMaxLength() const;
 signals:
 	void dictLoadStarted();
 	void dictLoaded(int num);
