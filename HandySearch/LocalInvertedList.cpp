@@ -97,6 +97,7 @@ LocalInvertedList::~LocalInvertedList()
 void LocalInvertedList::localLoadStart()
 {
 	QStringList titleList;
+	const int LOAD_SIGNAL_FREQUENCY = 1;
 #ifdef _DEBUG
 	qDebug() << "[Html Loading Thread #" << QObject::thread()->currentThreadId() << "]" << "Thread Received " << pathList.size() << "Files";
 #endif 
@@ -120,8 +121,8 @@ void LocalInvertedList::localLoadStart()
 #ifdef _DEBUG
 		qDebug() << "[Html Loading Thread # " << QObject::thread()->currentThreadId() << "]" << "Compelete #" << Html::getTotalHtmlCount() << path << pHtml->getTitle();
 #endif
-		if (i % 3 == 0)
-		emit htmlLoaded(3);
+		if (i % LOAD_SIGNAL_FREQUENCY == 0)
+			emit htmlLoaded(LOAD_SIGNAL_FREQUENCY);
 #endif
 	}
 	emit localLoadFinished(QThread::currentThread(), titleList);
