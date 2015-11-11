@@ -85,7 +85,7 @@ public:
 	T& operator[](int i);
 	List<T>& operator=(const List<T>& other);
 	T& get(int i);
-	List<T>& append(const T &data);
+	List<T>& append(T &data);
 	List<T>& append(const List<T> &list);
 	bool clear();
 	bool isEmpty() const;
@@ -303,7 +303,7 @@ T& List<T>::get(int i)
 * 	T & data - The data to append.
 ----------------------------*/
 template<typename T>
-List<T>& List<T>::append(const T& data)
+List<T>& List<T>::append(T& data)
 {
 	ListNode<T>* p = tail;
 
@@ -327,7 +327,7 @@ List<T>& List<T>::append(const T& data)
 template<typename T>
 List<T>& List<T>::append(const List<T> &list)
 {
-	List<T>* ptr = &(List<T>)list;
+	List<T>* ptr = const_cast<List<T>*> (&list);
 	for (int i = 0; i < list.size(); i++)
 		append(ptr->get(i));
 
