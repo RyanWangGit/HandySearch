@@ -22,7 +22,7 @@ Using Visual Studio 2013 + QT 5.5.1.
 ###For Developers
 * This projects includes pure-English notes to every single cornor to make it clear to understand.
 
-* The version of QT is `5.4.1 with OpenGL for MSVC`.
+* The version of QT is `5.5.1 for MSVC`.
 
 * The IDE is `Visual Studio 2013 Community`
      
