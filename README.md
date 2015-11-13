@@ -4,7 +4,7 @@
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project. 
 
-Using Visual Studio 2013 + QT5.4.1 with OpenGL.
+Using Visual Studio 2013 + QT 5.5.1.
 
 ###Features
 * Beautiful GUI design. (Thanks to QT)
@@ -22,7 +22,7 @@ Using Visual Studio 2013 + QT5.4.1 with OpenGL.
 ###For Developers
 * This projects includes pure-English notes to every single cornor to make it clear to understand.
 
-* The version of QT is `5.4.1 with OpenGL for MSVC`.
+* The version of QT is `5.5.1 for MSVC`.
 
 * The IDE is `Visual Studio 2013 Community`
      
