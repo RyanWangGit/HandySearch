@@ -159,6 +159,7 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
 						html->setWeightType(Html::WeightType::InTitle);
 						html->setWeight(html->getWeight() + word.size());
 					}
+					html->setWeight(html->getWeight() / html->getTitle().size());
 				}
 				/* If html's weight type hasn't been set it means it's InContent */
 				if (html->getWeightType() == Html::WeightType::NotAssigned)

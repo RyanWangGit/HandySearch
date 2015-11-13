@@ -204,13 +204,13 @@ void Html::setWeightType(Html::WeightType type)
 	this->type = type;
 }
 
-int Html::getWeight() const
+float Html::getWeight() const
 {
 	return weight;
 }
 
 
-void Html::setWeight(int weight)
+void Html::setWeight(const float weight)
 {
 	this->weight = weight;
 }

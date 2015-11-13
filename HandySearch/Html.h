@@ -57,7 +57,7 @@ private:
 	 * NOTE:Everytime new search begins the weight becomes meaningless
 	 * and will be restored when sorting. 
 	 */
-	int weight;
+	float weight;
 	Html::WeightType type;
 	void extractText(const QString &fileContent);
 	void extractTitle(const QString &fileContent);
@@ -68,8 +68,8 @@ public:
 	Html(const Html &c);
 	Html::WeightType getWeightType() const;
 	void setWeightType(Html::WeightType type);
-	int getWeight() const;
-	void setWeight(const int weight);
+	float getWeight() const;
+	void setWeight(const float weight);
 	void clearWeight();
 	const QString& getText();
 	const QString& getTitle();
