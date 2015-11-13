@@ -57,6 +57,7 @@ public:
 	Dictionary *getDictionary();
 	InvertedList *getInvertedList();
 	static HandySearch *getInstance();
+	bool load();
 protected:
 	void resizeEvent(QResizeEvent *event);
 private:

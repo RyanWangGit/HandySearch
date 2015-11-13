@@ -53,10 +53,6 @@ HandySearch::HandySearch(QWidget *parent)
 	invertedList.moveToThread(&listThread);
 	dictThread.start();
 	listThread.start();
-	/* Connect LoadUI signals/slots */
-	connect(&loadUI, &LoadUI::canceled, this, &HandySearch::loadCanceled);
-	connect(&loadUI, &LoadUI::finished, this, &HandySearch::loadFinished);
-	loadUI.loadData();
 }
 
 
@@ -73,6 +69,14 @@ InvertedList* HandySearch::getInvertedList()
 HandySearch* HandySearch::getInstance()
 {
 	return instance;
+}
+
+bool HandySearch::load()
+{
+	/* Connect LoadUI signals/slots */
+	connect(&loadUI, &LoadUI::canceled, this, &HandySearch::loadCanceled);
+	connect(&loadUI, &LoadUI::finished, this, &HandySearch::loadFinished);
+	return loadUI.loadData();
 }
 
 /*--------------------------

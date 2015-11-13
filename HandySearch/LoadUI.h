@@ -60,7 +60,7 @@ public:
 	~LoadUI();
 	static LoadUI *getInstance();
 public slots:
-	void loadData();
+	bool loadData();
 	/* UI slots */
 	void loadingDots();
 	/* Load slots */

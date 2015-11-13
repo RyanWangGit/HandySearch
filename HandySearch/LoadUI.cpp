@@ -37,6 +37,7 @@ LoadUI::LoadUI()
 
 	setWindowIconText("Handy Search");
 	setWindowFlags(Qt::FramelessWindowHint);
+	setModal(false);
 }
 
 
@@ -64,10 +65,7 @@ bool LoadUI::checkDirectory()
 			{
 				QApplication::beep();
 				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
-				{
-					emit canceled();
 					return false;
-				}
 			}
 		}
 		while (!htmlFolder.exists())
@@ -77,10 +75,7 @@ bool LoadUI::checkDirectory()
 			{
 				QApplication::beep();
 				if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
-				{
-					emit canceled();
 					return false;
-				}
 			}
 		}
 	}
@@ -93,13 +88,13 @@ bool LoadUI::checkDirectory()
 * 	Start loading htmls and dictionary,connect the signals and slots,
 * and start initialization thread.
 ----------------------------*/
-void LoadUI::loadData()
+bool LoadUI::loadData()
 {
 	/* Show up the dialog */
 	show();
 	/* Check the directory is correct or not */
 	if (!checkDirectory())
-		return;
+		return false;
 
 	/* Start the loading clock */
 	clock.start();
@@ -128,7 +123,7 @@ void LoadUI::loadData()
 	/* Start loading */
 	emit start();
 
-	return;
+	return true;
 }
 
 
