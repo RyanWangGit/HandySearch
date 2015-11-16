@@ -56,21 +56,44 @@ HandySearch::HandySearch(QWidget *parent)
 }
 
 
+/*--------------------------
+* HandySearch::getDictionary
+* 	Returns the global dictionary pointer.
+* Returns: Dictionary * - The dictioanry pointer.
+----------------------------*/
 Dictionary* HandySearch::getDictionary()
 {
 	return &dictionary;
 }
 
+
+/*--------------------------
+* HandySearch::getInvertedList
+* 	Returns the global inverted list pointer.
+* Returns: InvertedList * - The inverted list pointer.
+----------------------------*/
 InvertedList* HandySearch::getInvertedList()
 {
 	return &invertedList;
 }
 
+
+/*--------------------------
+* HandySearch::getInstance
+* 	Returns the global instance of HandySearch pointer.
+* Returns: HandySearch * - The HandySearch pointer.
+----------------------------*/
 HandySearch* HandySearch::getInstance()
 {
 	return instance;
 }
 
+
+/*--------------------------
+* HandySearch::getInstance
+* 	connect the signals and slots and start loading the whole system.
+* Returns: bool - The result of load.
+----------------------------*/
 bool HandySearch::load()
 {
 	/* Connect LoadUI signals/slots */
@@ -116,6 +139,14 @@ void HandySearch::search()
 	/* TODO: Start searching animations */
 }
 
+
+/*--------------------------
+* HandySearch::searchResult
+* 	Slot fucntion processes the result return of inverted list and show to the user.
+* Parameter:
+* 	const QList<Html*> & resultList - The query resuly list.
+*	const QStringList & keyWordList - The key word list.
+----------------------------*/
 void HandySearch::searchResult(const QList<Html*> &resultList, const QStringList &keyWordList)
 {
 	ui.resultEdit->clear();

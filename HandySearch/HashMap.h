@@ -37,21 +37,21 @@ class Entry
 public:
 	QString key;
 	V value;
-	//Empty constructor for list heads
+	/* Empty constructor for list heads */
 	Entry(){	void;	}
-	//Constructor
+	/* Constructor */
 	Entry(const QString &key,const V &value)
 	{
 		this->key = key;
 		this->value = value;
 	}
-	//Copy constructor
+	/* Copy constructor */
 	Entry(const Entry<V> &c)
 	{
 		this->key = c.key;
 		this->value = c.value;
 	}
-	//Operator =
+	/* Operator = */
 	Entry<V> &operator=(const Entry<V> &other)
 	{
 		if (this == &other)
@@ -115,7 +115,7 @@ bool HashMap<V>::put(const QString &key,const V &value)
 	QByteArray ba = key.toLocal8Bit();
 	char* str = ba.data();
 
-	//Lock up to prevent from other thread to write
+	/* Lock up to prevent from other thread to write */
 	unsigned int i = HashMap::hashCode(str, ba.size()) % INDEX_SIZE;
 
 	if (index[i] == nullptr)

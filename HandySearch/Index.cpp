@@ -21,7 +21,7 @@
 
 /*--------------------------
 * Index::Index
-* 	To make data invalid,this empty constructor is for the head node
+* 	To make data invalid,this empty constructor is for the head node.
 ----------------------------*/
 Index::Index()
 {

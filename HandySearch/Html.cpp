@@ -92,16 +92,34 @@ const QString Html::getFilePath()
 }
 
 
+/*--------------------------
+* Html::getBrief
+* 	Returns the path of the html file, it is only available if the html is weighted.
+* Returns:	const QString & - The brief of the html.
+----------------------------*/
 const QString& Html::getBrief()
 {
 	return brief;
 }
 
+
+/*--------------------------
+* Html::setBrief
+* 	Set the current html's brief.
+* Parameter:
+* 	const QString& brief - The brief to be set.
+----------------------------*/
 void Html::setBrief(const QString& brief)
 {
 	this->brief = brief;
 }
 
+
+/*--------------------------
+* Html::getTotalHtmlCount
+* 	Return the total number count of htmls loaded in the system.
+* Returns:	unsigned int - The total count.
+----------------------------*/
 unsigned int Html::getTotalHtmlCount()
 {
 	return Html::totalNum;
@@ -182,40 +200,82 @@ void Html::extractTitle(const QString &fileContent)
 }
 
 
+
+/*--------------------------
+* Html::hasAnalyzed
+* 	Rerurn whether this html is analyzed or not.
+* Returns:	bool - Result of html's analyse status.
+----------------------------*/
 bool Html::hasAnalyzed() const
 {
 	return analyzed;
 }
 
 
+
+/*--------------------------
+* Html::setAnalyzed
+* 	Set current html's analyse status.
+* Parameter:
+* 	const bool analyzed - The status to be set.
+----------------------------*/
 void Html::setAnalyzed(bool analyzed)
 {
 	this->analyzed = analyzed;
 }
 
 
+/*--------------------------
+* Html::getWeightType
+* 	Return the weight type of the html.
+* Returns:	Html::WeightType - The weight type.
+----------------------------*/
 Html::WeightType Html::getWeightType() const
 {
 	return type;
 }
 
+
+/*--------------------------
+* Html::setWeightType
+* 	Set the weight type of the html.
+* Parameter:
+* 	Html::WeightType type - The type to be set.
+----------------------------*/
 void Html::setWeightType(Html::WeightType type)
 {
 	this->type = type;
 }
 
+
+/*--------------------------
+* Html::getWeight
+* 	Return the weight value of the html.
+* Returns:	float - The weight value.
+----------------------------*/
 float Html::getWeight() const
 {
 	return weight;
 }
 
 
+/*--------------------------
+* Html::setWeight
+* 	Set the weight value of the html.
+* Parameter:
+* 	const float weight - The value to be set.
+----------------------------*/
 void Html::setWeight(const float weight)
 {
 	this->weight = weight;
 }
 
 
+/*--------------------------
+* Html::clearWeight
+* 	Clear all the info associated with the weight info, which is 
+* weight type, weight value and brief.
+----------------------------*/
 void Html::clearWeight()
 {
 	brief.clear();

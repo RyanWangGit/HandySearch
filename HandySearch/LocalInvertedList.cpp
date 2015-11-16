@@ -81,6 +81,10 @@ LocalInvertedList::LocalInvertedList(const QStringList& pathList)
 }
 
 
+/*--------------------------
+* LocalInvertedList::~LocalInvertedList
+* 	Local inverted list destructor, delet the local hashmap and the index list it contains.
+----------------------------*/
 LocalInvertedList::~LocalInvertedList()
 {
 	/* Delete the content of hashmap */
@@ -128,6 +132,14 @@ void LocalInvertedList::localLoadStart()
 	emit localLoadFinished(QThread::currentThread(), titleList);
 }
 
+
+/*--------------------------
+* InvertedList::localQuery
+* 	Receive signals from InvertedList, start searching in the local hashmap,
+* and emit a signal of result back.
+* Parameter:
+* 	const QStringList& keyWordList - The key word list.
+----------------------------*/
 void LocalInvertedList::localQuery(const QStringList& keyWordList)
 {
 	QList<Html*> resultList;

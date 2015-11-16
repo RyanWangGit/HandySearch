@@ -14,7 +14,7 @@ Dictionary::Dictionary()
 
 /*--------------------------
 * Dictionary::hasItem
-* 	Override function,provides support for QString.
+* 	Interface to BloomFilter, provides support for QString.
 * Returns:	bool - Result.
 * Parameter:
 *	const QString & key - The key to search.
@@ -31,7 +31,7 @@ bool Dictionary::hasItem(const QString &key) const
 
 /*--------------------------
 * Dictionary::addItem
-* 	Override function,provides support for QString.
+* 	Interface to BloomFilter, provides support for QString.
 * Returns:	bool - Operation result.
 * Parameter:
 * 	const QString & key - The key to add.
@@ -106,6 +106,14 @@ void Dictionary::load()
 	emit dictLoadFinished();
 }
 
+
+/*--------------------------
+* Dictionary::setDictFolder
+* 	Set the dictionary loading folder, loading process won't work
+* if the directory is not correctly set.
+* Parameter:
+* 	const QDir & dictFolder - The folder to set.
+----------------------------*/
 void Dictionary::setDictFolder(const QDir& dictFolder)
 {
 	this->dictFolder = dictFolder;

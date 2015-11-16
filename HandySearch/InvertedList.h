@@ -26,6 +26,15 @@
 #include "stdafx.h"
 #include "Html.h"
 
+
+/**
+* Class:	InvertedList
+*
+* Brief:	This class controls several local inverted lists, send requery and load signals£¬
+* receive signals from local inverted lists, in order to do multi-thread trick.
+*
+* Date:	Nov. 2015
+*/
 class InvertedList : public QObject
 {
 	Q_OBJECT

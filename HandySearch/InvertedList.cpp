@@ -18,11 +18,21 @@
 #include "LoadUI.h"
 
 
+/*--------------------------
+* InvertedList::InvertedList
+* 	The common-used constructor.
+----------------------------*/
 InvertedList::InvertedList()
 {
 	this->hasLoaded = false;
 }
 
+
+/*--------------------------
+* InvertedList::~InvertedList
+* 	The default destructor which quit all threads and kills all 
+* local inverted lists.
+----------------------------*/
 InvertedList::~InvertedList()
 {
 	for (QThread* thread : threadList)
@@ -33,10 +43,18 @@ InvertedList::~InvertedList()
 	}
 }
 
+
+/*--------------------------
+* InvertedList::setHtmlFolder
+* 	Set the html loading directory.
+* Parameter:
+* 	const QDir & htmlFolder - The html folder.
+----------------------------*/
 void InvertedList::setHtmlFolder(const QDir &htmlFolder)
 {
 	this->htmlFolder = htmlFolder;
 }
+
 
 /*--------------------------
 * InvertedList::load
@@ -76,11 +94,25 @@ void InvertedList::load()
 	emit localLoadStart();
 }
 
+
+/*--------------------------
+* Index::getTitleList
+* 	Return the list of current loaded html titles.
+* Returns:	const QStringList & - The list of html titles.
+----------------------------*/
 const QStringList & InvertedList::getTitleList() const
 {
 	return titleList;
 }
 
+
+/*--------------------------
+* InvertedList::localQueryResult
+* 	Receives every result return of local inverted lists.
+* Parameter:
+* 	QThread * thread - The thread pointer of the local inverted list.
+*	const QList<Html*> & resultList - The result of local query.
+----------------------------*/
 void InvertedList::localQueryResult(QThread *thread, const QList<Html*> &resultList)
 {
 	activeThreadList.removeOne(thread);
@@ -95,6 +127,14 @@ void InvertedList::localQueryResult(QThread *thread, const QList<Html*> &resultL
 	}
 }
 
+
+/*--------------------------
+* InvertedList::localLoadFinished
+* 	Receives the load finish signal from local inverted lists.
+* Parameter:
+* 	QThread * thread - The thread pointer of the local inverted list.
+*	const QStringList & titleList - The title list of loaded htmls.
+----------------------------*/
 void InvertedList::localLoadFinished(QThread *thread, const QStringList &titleList)
 {
 	activeThreadList.removeOne(thread);
@@ -110,6 +150,13 @@ void InvertedList::localLoadFinished(QThread *thread, const QStringList &titleLi
 	}
 }
 
+
+/*--------------------------
+* InvertedList::query
+* 	Query the inverted list, signal all local inverted lists to start working.
+* Parameter:
+* 	const QStringList & keyWordList - The key word list.
+----------------------------*/
 void InvertedList::query(const QStringList& keyWordList)
 {
 	resultList.clear();

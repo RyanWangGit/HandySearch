@@ -29,9 +29,10 @@
 #include "Html.h"
 
 /**
-* Class:	LocalHtmlCache
+* Class:	LocalInvertedList
 *
-* Brief:	Html load sub-task class.
+* Brief:	Local invertedList consists of several html tasks and a local hashmap
+* which contains the index of htmls.
 *
 * Date:	Nov. 2015
 */

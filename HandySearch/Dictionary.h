@@ -26,6 +26,15 @@
 #include "stdafx.h"
 #include "BloomFilter.h"
 
+
+/**
+* Class:	Dictionary
+*
+* Brief:	This class is implemented as a interface to control the dictionary,
+* which is the wrapper of BloomFilter.
+*
+* Date:	Oct. 2015
+*/
 class Dictionary : public QObject
 {
 	Q_OBJECT
