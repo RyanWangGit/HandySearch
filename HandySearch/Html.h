@@ -47,7 +47,7 @@ private:
 	/* The file name */
 	QString fileName;
 	/* Pure text content extracted from file content */
-	QString textContent;
+	QStringList textContent;
 	/* Title extracted from file content*/
 	QString title;
 	QString brief;
@@ -71,7 +71,7 @@ public:
 	float getWeight() const;
 	void setWeight(const float weight);
 	void clearWeight();
-	const QString& getText();
+	const QStringList& getText();
 	const QString& getTitle();
 	const QString getFilePath();
 	const QString& getBrief();

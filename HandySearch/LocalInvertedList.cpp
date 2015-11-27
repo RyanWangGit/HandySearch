@@ -20,11 +20,8 @@ void LocalInvertedList::putInLocalList(Html* html)
 		html->setAnalyzed(true);
 
 	unsigned int pos = 0;
-	QString content = html->getText();
-	content.append(" " + html->getTitle());
-	WordSegmenter ws(content, HandySearch::getInstance()->getDictionary());
-
-	QStringList wordList = ws.getResult();
+	
+	QStringList wordList = html->getText();
 
 	for (QString word : wordList)
 	{
@@ -179,7 +176,34 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
 
 				/* Set brief for html */
 				if (html->getBrief().isEmpty())
-					html->setBrief(html->getText().mid(index->getPosition().get(0) - HandySearch::getInstance()->getDictionary()->getMaxLength(), 200));
+				{
+					/* Find and pick out a 100 word list that contains most keywords */
+					const QStringList &textContent = html->getText();
+					/* List that determines whether the word is keyword or not */
+					QList<int> textFlags;
+					/* Fills the textFlags list */
+					for (const QString &word : textContent)
+						if (keyWordList.contains(word))
+							textFlags.append(1);
+						else
+							textFlags.append(0);
+					/* Judge and pick out */
+					int maxIndex = 0, maxCount = 0;
+					for (int i = 0; i < textFlags.size() - 100; i++)
+					{
+						int count = 0;
+						for (int j = 0; j < 100; j++)
+							count += textFlags[i + j];
+
+						if (count > maxCount)
+						{
+							maxCount = count;
+							maxIndex = i;
+						}
+					}
+					/* Set the brief */
+					html->setBrief(textContent.mid(maxIndex, 100).join(""));
+				}
 
 				resultList.append(html);
 				break;

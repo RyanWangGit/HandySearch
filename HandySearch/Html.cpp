@@ -15,6 +15,8 @@
 *************************************/
 #include "stdafx.h"
 #include "Html.h"
+#include "WordSegmenter.h"
+#include "HandySearch.h"
 
 /* Initialize the static member */
 unsigned int Html::totalNum = 0;
@@ -62,9 +64,9 @@ Html::Html(const Html &c)
 /*--------------------------
 * Html::getText
 * 	Returns the pure text of the html file.
-* Returns:	QString& - Pure text of html.
+* Returns:	QStringList& - Pure segmented text of html.
 ----------------------------*/
-const QString& Html::getText()
+const QStringList& Html::getText()
 {
 	return textContent;
 }
@@ -137,52 +139,58 @@ void Html::extractText(const QString &fileContent)
 	if (!textContent.isEmpty())
 		return;
 
+	QString text;
 	if (file.isOpen())
 	{
 		/* Copy */
-		textContent = fileContent;
+		text = fileContent;
 
 		/* Remove line breaks and tabs */
-		textContent.replace(QRegularExpression("[\r|\n|\t]"), "");
+		text.replace(QRegularExpression("[\r|\n|\t]"), "");
 
 		/* Remove notes */
-		textContent.replace(QRegularExpression("<!--.[^-]*(?=-->)-->"), "");
+		text.replace(QRegularExpression("<!--.[^-]*(?=-->)-->"), "");
 
 		/* Remove header */
-		textContent.replace(QRegularExpression("<head>.*</head>"), "");
+		text.replace(QRegularExpression("<head>.*</head>"), "");
 
 		/*Remove scripts */
-		textContent.replace(QRegularExpression("<( )*script([^>])*>"), "<script>");
-		textContent.replace(QRegularExpression("<script>.*</script>"), "");
+		text.replace(QRegularExpression("<( )*script([^>])*>"), "<script>");
+		text.replace(QRegularExpression("<script>.*</script>"), "");
 
 		/* Remove all styles */
-		textContent.replace(QRegularExpression("<( )*style([^>])*>"), "<style>");
-		textContent.replace(QRegularExpression("<style>.*</style>"), "");
+		text.replace(QRegularExpression("<( )*style([^>])*>"), "<style>");
+		text.replace(QRegularExpression("<style>.*</style>"), "");
 
 		/* Remove td tags */
-		textContent.replace(QRegularExpression("<( )*td([^>])*>"), "");
+		text.replace(QRegularExpression("<( )*td([^>])*>"), "");
 
 		/* Insert line breaks in <br> and <li> tags */
-		textContent.replace(QRegularExpression("<( )*br( )*>"), " ");
-		textContent.replace(QRegularExpression("<( )*li( )*>"), " ");
+		text.replace(QRegularExpression("<( )*br( )*>"), " ");
+		text.replace(QRegularExpression("<( )*li( )*>"), " ");
 
 		/* Insert line paragraphs in <tr> and <p> tags */
-		textContent.replace(QRegularExpression("<( )*tr( )*>"), " ");
-		textContent.replace(QRegularExpression("<( )*p( )*>"), " ");
+		text.replace(QRegularExpression("<( )*tr( )*>"), " ");
+		text.replace(QRegularExpression("<( )*p( )*>"), " ");
 
 		/* Remove anything that's enclosed inside < > */
-		textContent.replace(QRegularExpression("<[^>]*>"), "");
+		text.replace(QRegularExpression("<[^>]*>"), "");
 
 		/* Replace special characters */
-		textContent.replace(QRegularExpression("&amp;"), "&");
-		textContent.replace(QRegularExpression("&nbsp;"), " ");
-		textContent.replace(QRegularExpression("&lt;"), "<");
-		textContent.replace(QRegularExpression("&gt;"), ">");
-		textContent.replace(QRegularExpression("&(.{2,6});"), "");
+		text.replace(QRegularExpression("&amp;"), "&");
+		text.replace(QRegularExpression("&nbsp;"), " ");
+		text.replace(QRegularExpression("&lt;"), "<");
+		text.replace(QRegularExpression("&gt;"), ">");
+		text.replace(QRegularExpression("&(.{2,6});"), "");
 
 		/* Remove line breaks and tabs */
-		textContent.replace(QRegularExpression("[ ]+"), " ");
+		text.replace(QRegularExpression("[ ]+"), " ");
 	}
+	/* Do word segmentation and set the member */
+	text.append(" " + title);
+
+	WordSegmenter ws(text, HandySearch::getInstance()->getDictionary());
+	textContent = ws.getResult();
 }
 
 
