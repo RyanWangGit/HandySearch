@@ -1,3 +1,17 @@
+/*************************************
+* Copyright(C),2015-2016,Ryan Wang
+*
+* File:	LocalInvertedList.cpp
+*
+* Version: V1.0
+*
+* Brief:	Local invertedList consists of several html tasks and a local hashmap
+* which contains the index of htmls.
+*
+* Author:	Ryan
+*
+* Date:	Nov. 2015
+*************************************/
 #include "stdafx.h"
 #include "LocalInvertedList.h"
 #include "WordSegmenter.h"

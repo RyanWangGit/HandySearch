@@ -1,15 +1,15 @@
 /*************************************
 * Copyright(C),2015-2016,Ryan Wang
 *
-* File:	ThreadManager.cpp
+* File:	InvertedList.cpp
 *
 * Version: V1.0
 *
-* Brief:	This is for managing threads,monitoring several threads
-* and sends out signals for outer objects to process.
+* Brief:	This controls several local inverted lists, send requery and load signals£¬
+* receive signals from local inverted lists, in order to do multi-thread trick.
 *
 * Author:	Ryan
-
+*
 * Date:	Nov. 2015
 *************************************/
 #include "stdafx.h"
