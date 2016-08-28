@@ -25,58 +25,58 @@
 #pragma once
 
 /**
- * Class:	QNullPointerException
+ * Class:    QNullPointerException
  *
- * Brief:	An exception thrown when encountered null pointer.
+ * Brief:    An exception thrown when encountered null pointer.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 class QNullPointerException : private QException
 {
 private :
-	QString errorMsg;
+    QString errorMsg;
 public:
-	QNullPointerException()
-	{
-		this->errorMsg = "QNullPointerException";
-	}
+    QNullPointerException()
+    {
+        this->errorMsg = "QNullPointerException";
+    }
 
-	QNullPointerException(const QString &errorMsg)
-	{
-		this->errorMsg = errorMsg;
-	}
+    QNullPointerException(const QString &errorMsg)
+    {
+        this->errorMsg = errorMsg;
+    }
 
-	const QString &getErrorMsg()
-	{
-		return errorMsg;
-	} 
+    const QString &getErrorMsg()
+    {
+        return errorMsg;
+    } 
 };
 
 
 /**
- * Class:	QOutOfBoundaryException
+ * Class:    QOutOfBoundaryException
  *
- * Brief:	An exception thrown when visit is out of boudary.
+ * Brief:    An exception thrown when visit is out of boudary.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 class QOutOfBoundaryException : private QException
 {
 private:
-	QString errorMsg;
+    QString errorMsg;
 public:
-	QOutOfBoundaryException()
-	{
-		this->errorMsg = "QOutOfBoundaryException";
-	}
+    QOutOfBoundaryException()
+    {
+        this->errorMsg = "QOutOfBoundaryException";
+    }
 
-	QOutOfBoundaryException(const QString &errorMsg)
-	{
-		this->errorMsg = errorMsg;
-	}
+    QOutOfBoundaryException(const QString &errorMsg)
+    {
+        this->errorMsg = errorMsg;
+    }
 
-	const QString &getErrorMsg()
-	{
-		return errorMsg;
-	}
+    const QString &getErrorMsg()
+    {
+        return errorMsg;
+    }
 };

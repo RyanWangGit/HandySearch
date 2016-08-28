@@ -25,63 +25,63 @@
 #pragma once
 
 /**
- * Class:	Html
+ * Class:    Html
  *
- * Brief:	This class first tries to open the file the path indicates,
+ * Brief:    This class first tries to open the file the path indicates,
  * and uses some methods to return different kinds of data.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 class Html 
 {
 public:
-	enum class WeightType
-	{
-		NotAssigned,
-		InContent,
-		InTitle,
-	};
+    enum class WeightType
+    {
+        NotAssigned,
+        InContent,
+        InTitle,
+    };
 private:
-	/* The html file */
-	QFile file;
-	/* The file name */
-	QString fileName;
-	/* Pure text content extracted from file content */
-	QStringList textContent;
-	/* Title extracted from file content*/
-	QString title;
-	QString brief;
-	static unsigned int totalNum;
-	bool analyzed;
-	/* The weight member is for sorting  when displaying the results
-	 * NOTE:Everytime new search begins the weight becomes meaningless
-	 * and will be restored when sorting. 
-	 */
-	float weight;
-	Html::WeightType type;
-	void extractText(const QString &fileContent);
-	void extractTitle(const QString &fileContent);
-	bool load();
+    /* The html file */
+    QFile file;
+    /* The file name */
+    QString fileName;
+    /* Pure text content extracted from file content */
+    QStringList textContent;
+    /* Title extracted from file content*/
+    QString title;
+    QString brief;
+    static unsigned int totalNum;
+    bool analyzed;
+    /* The weight member is for sorting  when displaying the results
+     * NOTE:Everytime new search begins the weight becomes meaningless
+     * and will be restored when sorting. 
+     */
+    float weight;
+    Html::WeightType type;
+    void extractText(const QString &fileContent);
+    void extractTitle(const QString &fileContent);
+    bool load();
 public:
-	Html();
-	Html(const QString &filePath);
-	Html(const Html &c);
-	Html::WeightType getWeightType() const;
-	void setWeightType(Html::WeightType type);
-	float getWeight() const;
-	void setWeight(const float weight);
-	void clearWeight();
-	const QStringList& getText();
-	const QString& getTitle();
-	const QString getFilePath();
-	const QString& getBrief();
-	void setBrief(const QString& brief);
-	static unsigned int getTotalHtmlCount();
-	bool hasAnalyzed() const;
-	void setAnalyzed(const bool analyzed);
-	bool loadFrom(const QString& filePath);
-	bool operator== (const Html& other);
-	bool operator< (const Html& other);
-	Html& operator= (const Html &other);
+    Html();
+    Html(const QString &filePath);
+    Html(const Html &c);
+    Html::WeightType getWeightType() const;
+    void setWeightType(Html::WeightType type);
+    float getWeight() const;
+    void setWeight(const float weight);
+    void clearWeight();
+    const QStringList& getText();
+    const QString& getTitle();
+    const QString getFilePath();
+    const QString& getBrief();
+    void setBrief(const QString& brief);
+    static unsigned int getTotalHtmlCount();
+    bool hasAnalyzed() const;
+    void setAnalyzed(const bool analyzed);
+    bool loadFrom(const QString& filePath);
+    bool operator== (const Html& other);
+    bool operator< (const Html& other);
+    Html& operator= (const Html &other);
 };
 

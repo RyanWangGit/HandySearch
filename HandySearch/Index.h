@@ -26,25 +26,25 @@
 #include "Html.h"
 
 /**
- * Class:	Index
+ * Class:    Index
  *
- * Brief:	An index item of requested word,include the html pointer
+ * Brief:    An index item of requested word,include the html pointer
  * and list of positions.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 class Index
 {
 private:
-	List<unsigned int> position;
-	Html* html;
+    List<unsigned int> position;
+    Html* html;
 public:
-	Html* getHtml() const;
-	unsigned int getFrequency() const;
-	List<unsigned int> &getPosition();
-	Index();
-	Index(Html *html, unsigned int firstPos);  
-	Index &operator= (const Index &other);
+    Html* getHtml() const;
+    unsigned int getFrequency() const;
+    List<unsigned int> &getPosition();
+    Index();
+    Index(Html *html, unsigned int firstPos);  
+    Index &operator= (const Index &other);
 };
 
 

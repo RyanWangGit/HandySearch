@@ -29,61 +29,61 @@
 
 
 /**
- * Class:	Chunk
+ * Class:    Chunk
  *
- * Brief:	A chunk consists of at most three word,it represents 
+ * Brief:    A chunk consists of at most three word,it represents 
  * one possible segmentation.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 class Chunk
 {
 private:
-	QStringList words;
-	int wordCount;
-	int totalLen;
-	double avgLen;
-	double variance;
+    QStringList words;
+    int wordCount;
+    int totalLen;
+    double avgLen;
+    double variance;
 public:
-	Chunk();
-	Chunk(const Chunk & other);
-	Chunk(QString fWord, QString sWord, QString tWord);
-	int getCount();
-	int getLength();
-	double getAvgLen();
-	double getVariance();
-	QStringList &getWords();
-	Chunk &operator=(const Chunk &other);
+    Chunk();
+    Chunk(const Chunk & other);
+    Chunk(QString fWord, QString sWord, QString tWord);
+    int getCount();
+    int getLength();
+    double getAvgLen();
+    double getVariance();
+    QStringList &getWords();
+    Chunk &operator=(const Chunk &other);
 };
 
 
 /**
- * Class:	WordSegmenter
+ * Class:    WordSegmenter
  *
- * Brief:	Using MMSeg algorithm,thi class is implemented to 
+ * Brief:    Using MMSeg algorithm,thi class is implemented to 
  * do word segmentation.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 class WordSegmenter
 {
 private:
-	QString content;
-	QStringList result;
-	const Dictionary *dict;
-	unsigned int pos;
-	void mmFilter(List<Chunk> &chunks);
-	void lawlFilter(List<Chunk> &chunks);
-	void svwlFilter(List<Chunk> &chunks);
-	void sdmfFilter(List<Chunk> &chunks);
-	bool isChineseChar(const QChar &ch);
-	QChar getNextChar() const;
-	QStringList getMaxMatchingWord();
-	QStringList getChineseWords();
-	QString getASCIIWords();
-	void createChunks(List<Chunk> &chunks);
+    QString content;
+    QStringList result;
+    const Dictionary *dict;
+    unsigned int pos;
+    void mmFilter(List<Chunk> &chunks);
+    void lawlFilter(List<Chunk> &chunks);
+    void svwlFilter(List<Chunk> &chunks);
+    void sdmfFilter(List<Chunk> &chunks);
+    bool isChineseChar(const QChar &ch);
+    QChar getNextChar() const;
+    QStringList getMaxMatchingWord();
+    QStringList getChineseWords();
+    QString getASCIIWords();
+    void createChunks(List<Chunk> &chunks);
 public:
-	WordSegmenter(const QString &content, const Dictionary *dict);
-	const QStringList &getResult();
+    WordSegmenter(const QString &content, const Dictionary *dict);
+    const QStringList &getResult();
 };
 

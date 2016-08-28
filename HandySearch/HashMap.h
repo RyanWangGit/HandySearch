@@ -25,168 +25,168 @@
 #pragma once
 
 /**
- * Class:	Entry
+ * Class:    Entry
  *
- * Brief:	An entry of HashMap,Key should always be QString.
+ * Brief:    An entry of HashMap,Key should always be QString.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 template <typename V >
 class Entry
 {
 public:
-	QString key;
-	V value;
-	/* Empty constructor for list heads */
-	Entry(){	void;	}
-	/* Constructor */
-	Entry(const QString &key,const V &value)
-	{
-		this->key = key;
-		this->value = value;
-	}
-	/* Copy constructor */
-	Entry(const Entry<V> &c)
-	{
-		this->key = c.key;
-		this->value = c.value;
-	}
-	/* Operator = */
-	Entry<V> &operator=(const Entry<V> &other)
-	{
-		if (this == &other)
-			return *this;
-		this->key = other.key;
-		this->value = other.value;
-		return *this;
-	}
+    QString key;
+    V value;
+    /* Empty constructor for list heads */
+    Entry(){    void;    }
+    /* Constructor */
+    Entry(const QString &key,const V &value)
+    {
+        this->key = key;
+        this->value = value;
+    }
+    /* Copy constructor */
+    Entry(const Entry<V> &c)
+    {
+        this->key = c.key;
+        this->value = c.value;
+    }
+    /* Operator = */
+    Entry<V> &operator=(const Entry<V> &other)
+    {
+        if (this == &other)
+            return *this;
+        this->key = other.key;
+        this->value = other.value;
+        return *this;
+    }
 };
 
 /**
- * Class:	HashMap
+ * Class:    HashMap
  *
- * Brief:	HashMap is used as inverted list,provides mainly put and get method,
+ * Brief:    HashMap is used as inverted list,provides mainly put and get method,
  * provides thread-safe read-write.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 template <typename V >
 class HashMap
 {
 #define INDEX_SIZE (256) //2^20
 private:
-	List<Entry<V>> *index[INDEX_SIZE];
-	float loadFactor;
-	int loadNum;
+    List<Entry<V>> *index[INDEX_SIZE];
+    float loadFactor;
+    int loadNum;
 
 public:
-	HashMap();
-	~HashMap();
-	bool put(const QString &key,const V &value);
-	V* get(const QString &key);
-	bool resize(int newSize);
+    HashMap();
+    ~HashMap();
+    bool put(const QString &key,const V &value);
+    V* get(const QString &key);
+    bool resize(int newSize);
 
-	/* Static methods */
-	static unsigned int hashCode(char *key, int len);
+    /* Static methods */
+    static unsigned int hashCode(char *key, int len);
 };
 
 
 template < typename V >
 HashMap<V>::HashMap()
 {
-	loadFactor = 0;
-	loadNum = 0;
-	for (int i = 0; i < INDEX_SIZE; i++)
-		index[i] = nullptr;
+    loadFactor = 0;
+    loadNum = 0;
+    for (int i = 0; i < INDEX_SIZE; i++)
+        index[i] = nullptr;
 }
 
 
 template < typename V >
 HashMap<V>::~HashMap()
 {
-	for (int i = 0; i < INDEX_SIZE; i++)
-		delete index[i];
+    for (int i = 0; i < INDEX_SIZE; i++)
+        delete index[i];
 }
 
 
 template < typename V >
 bool HashMap<V>::put(const QString &key,const V &value)
 {
-	QByteArray ba = key.toLocal8Bit();
-	char* str = ba.data();
+    QByteArray ba = key.toLocal8Bit();
+    char* str = ba.data();
 
-	/* Lock up to prevent from other thread to write */
-	unsigned int i = HashMap::hashCode(str, ba.size()) % INDEX_SIZE;
+    /* Lock up to prevent from other thread to write */
+    unsigned int i = HashMap::hashCode(str, ba.size()) % INDEX_SIZE;
 
-	if (index[i] == nullptr)
-	{
-		index[i] = new List<Entry<V>>();
-		loadNum++;
-		loadFactor = (float)loadNum / INDEX_SIZE;
-	}
+    if (index[i] == nullptr)
+    {
+        index[i] = new List<Entry<V>>();
+        loadNum++;
+        loadFactor = (float)loadNum / INDEX_SIZE;
+    }
 
-	bool hasFound = false;
-	List<Entry<V>>* bucket = index[i];
-	for (int k = 0; k < bucket->size(); k++)
-	{
-		Entry<V> *temp = &bucket->get(k);
-		if (temp->key == key)
-		{
-			temp->value = value;
-			hasFound = true;
-		}
-	}
-	if (!hasFound)
-	{
-		Entry<V> temp(key, value);
-		bucket->append(temp);
-	}
+    bool hasFound = false;
+    List<Entry<V>>* bucket = index[i];
+    for (int k = 0; k < bucket->size(); k++)
+    {
+        Entry<V> *temp = &bucket->get(k);
+        if (temp->key == key)
+        {
+            temp->value = value;
+            hasFound = true;
+        }
+    }
+    if (!hasFound)
+    {
+        Entry<V> temp(key, value);
+        bucket->append(temp);
+    }
 
-	return true;
+    return true;
 }
 
 
 template < typename V >
 V* HashMap<V>::get(const QString &key)
 {
-	QByteArray ba = key.toLocal8Bit();
-	char* str = ba.data();
+    QByteArray ba = key.toLocal8Bit();
+    char* str = ba.data();
 
-	unsigned int i = HashMap::hashCode(str, ba.size()) % INDEX_SIZE;
+    unsigned int i = HashMap::hashCode(str, ba.size()) % INDEX_SIZE;
 
-	if (index[i] == nullptr)
-		return nullptr;
+    if (index[i] == nullptr)
+        return nullptr;
 
-	List<Entry<V>>* bucket = index[i];
-	for (int k = 0; k < bucket->size(); k++)
-	{
-		Entry<V> *temp = &bucket->get(k);
-		if (temp->key == key)
-			return &temp->value;
-	}
+    List<Entry<V>>* bucket = index[i];
+    for (int k = 0; k < bucket->size(); k++)
+    {
+        Entry<V> *temp = &bucket->get(k);
+        if (temp->key == key)
+            return &temp->value;
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 template < typename V >
 bool HashMap<V>::resize(int newSize)
 {
-	/* Not implemented */
-	return true;
+    /* Not implemented */
+    return true;
 }
 
 /* BKDRHash function */
 template < typename V >
 unsigned int HashMap<V>::hashCode(char * str, int len)
 {
-	unsigned int seed = 131; /* 31 131 1313 13131 131313 etc.. */
-	unsigned int hash = 0;
-	unsigned int i = 0;
+    unsigned int seed = 131; /* 31 131 1313 13131 131313 etc.. */
+    unsigned int hash = 0;
+    unsigned int i = 0;
 
-	for (i = 0; i < len; str++, i++)
-	{
-		hash = (hash * seed) + (*str);
-	}
+    for (i = 0; i < len; str++, i++)
+    {
+        hash = (hash * seed) + (*str);
+    }
 
-	return hash;
+    return hash;
 }
