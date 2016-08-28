@@ -28,30 +28,30 @@
 
 
 /**
-* Class:	Dictionary
+* Class:    Dictionary
 *
-* Brief:	This class is implemented as a interface to control the dictionary,
+* Brief:    This class is implemented as a interface to control the dictionary,
 * which is the wrapper of BloomFilter.
 *
-* Date:	Oct. 2015
+* Date:    Oct. 2015
 */
 class Dictionary : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 private:
-	BloomFilter bf;
-	QDir dictFolder;
-	unsigned int maxLength;
-	bool hasLoaded;
+    BloomFilter bf;
+    QDir dictFolder;
+    unsigned int maxLength;
+    bool hasLoaded;
 public:
-	Dictionary();
-	void load();
-	void setDictFolder(const QDir &dictFolder);
-	bool hasItem(const QString &key) const;
-	bool addItem(const QString &key);
-	unsigned int getMaxLength() const;
+    Dictionary();
+    void load();
+    void setDictFolder(const QDir &dictFolder);
+    bool hasItem(const QString &key) const;
+    bool addItem(const QString &key);
+    unsigned int getMaxLength() const;
 signals:
-	void dictLoadStarted();
-	void dictLoaded(int num);
-	void dictLoadFinished();
+    void dictLoadStarted();
+    void dictLoaded(int num);
+    void dictLoadFinished();
 };

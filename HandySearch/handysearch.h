@@ -34,48 +34,48 @@
 #include "Dictionary.h"
 
 /**
- * Class:	HandySearch
+ * Class:    HandySearch
  *
- * Brief:	Main QT class,manages all threads and global variables,posseses UI thread.
+ * Brief:    Main QT class,manages all threads and global variables,posseses UI thread.
  *
- * Date:	Oct. 2015
+ * Date:    Oct. 2015
  */
 class HandySearch : public QMainWindow
 {
-	Q_OBJECT
+    Q_OBJECT
 public slots:
-	void loadCanceled();
-	void loadFinished();
-	/* UI slots */
-	void segment();
-	void search();
-	void searchResult(const QList<Html*> &resultList, const QStringList &keyWordList);
-	void anchorClicked(const QUrl &url);
-	void about();
+    void loadCanceled();
+    void loadFinished();
+    /* UI slots */
+    void segment();
+    void search();
+    void searchResult(const QList<Html*> &resultList, const QStringList &keyWordList);
+    void anchorClicked(const QUrl &url);
+    void about();
 public:
-	HandySearch(QWidget *parent = 0);
-	Dictionary *getDictionary();
-	InvertedList *getInvertedList();
-	static HandySearch *getInstance();
-	bool load();
+    HandySearch(QWidget *parent = 0);
+    Dictionary *getDictionary();
+    InvertedList *getInvertedList();
+    static HandySearch *getInstance();
+    bool load();
 protected:
-	void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event);
 private:
-	QTime clock;
-	bool isResultShown;
-	void setDefaultUILayout();
-	void setResultUILayout();
-	void showResult(const QList<Html*> &resultList, const QStringList &wordList);
-	QCompleter* completer;
-	static HandySearch* instance;
-	Dictionary dictionary;
-	InvertedList invertedList;
-	QThread dictThread;
-	QThread listThread;
-	LoadUI loadUI;
-	Ui::HandySearchClass ui;
-	/* Constants */
-	const int MINWIDTH;
-	const int MINHEIGHT;
+    QTime clock;
+    bool isResultShown;
+    void setDefaultUILayout();
+    void setResultUILayout();
+    void showResult(const QList<Html*> &resultList, const QStringList &wordList);
+    QCompleter* completer;
+    static HandySearch* instance;
+    Dictionary dictionary;
+    InvertedList invertedList;
+    QThread dictThread;
+    QThread listThread;
+    LoadUI loadUI;
+    Ui::HandySearchClass ui;
+    /* Constants */
+    const int MINWIDTH;
+    const int MINHEIGHT;
 };
 

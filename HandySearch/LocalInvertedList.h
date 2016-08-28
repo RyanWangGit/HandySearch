@@ -29,30 +29,30 @@
 #include "Html.h"
 
 /**
-* Class:	LocalInvertedList
+* Class:    LocalInvertedList
 *
-* Brief:	Local invertedList consists of several html tasks and a local hashmap
+* Brief:    Local invertedList consists of several html tasks and a local hashmap
 * which contains the index of htmls.
 *
-* Date:	Nov. 2015
+* Date:    Nov. 2015
 */
 class LocalInvertedList : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 private:
-	HashMap<List<Index>*> *localHashMap;
-	QList<List<Index>*> hashMapContent;
-	QStringList pathList;
-	/* Segment the content and save it to the inverted list */
-	void putInLocalList(Html *html);
+    HashMap<List<Index>*> *localHashMap;
+    QList<List<Index>*> hashMapContent;
+    QStringList pathList;
+    /* Segment the content and save it to the inverted list */
+    void putInLocalList(Html *html);
 public:
-	LocalInvertedList(const QStringList &pathList);
-	~LocalInvertedList();
+    LocalInvertedList(const QStringList &pathList);
+    ~LocalInvertedList();
 public slots:
-	void localLoadStart();
-	void localQuery(const QStringList &keyWordList);
+    void localLoadStart();
+    void localQuery(const QStringList &keyWordList);
 signals:
-	void htmlLoaded(int num);
-	void localLoadFinished(QThread *, const QStringList &);
-	void localQueryResult(QThread *, const QList<Html*> &);
+    void htmlLoaded(int num);
+    void localLoadFinished(QThread *, const QStringList &);
+    void localQueryResult(QThread *, const QList<Html*> &);
 };
