@@ -17,7 +17,6 @@ HEADERS += ./stdafx.h \
     ./LocalInvertedList.h
 SOURCES += ./HandySearch.cpp \
     ./main.cpp \
-    ./stdafx.cpp \
     ./BloomFilter.cpp \
     ./Dictionary.cpp \
     ./LoadUI.cpp \
