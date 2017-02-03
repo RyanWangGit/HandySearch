@@ -74,7 +74,7 @@ void LocalInvertedList::putInLocalList(Html* html)
         if (!hasFound)
         {
             Html* temp = html;
-            indexList->append(Index(temp, pos));
+            indexList->append(*(new Index(temp, pos)));
         }
     }
 }
