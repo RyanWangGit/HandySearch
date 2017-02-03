@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/Resources">
-        <file>Loading/Loading.png</file>
-        <file>HandySearch.ico</file>
-        <file>Logo.png</file>
-    </qresource>
-</RCC>
