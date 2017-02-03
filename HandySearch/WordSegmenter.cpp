@@ -390,7 +390,7 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 
             //If there are no words found
             if (words2.isEmpty())
-                chunks.append(Chunk(word1, QString::null, QString::null));
+                chunks.append(*(new Chunk(word1, QString::null, QString::null)));
 
             for (QString word2 : words2)
             {
@@ -401,19 +401,19 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 
                     //If there are no words found
                     if (words3.isEmpty())
-                        chunks.append(Chunk(word1, word2, QString::null));
+                        chunks.append(*(new Chunk(word1, word2, QString::null)));
 
                     for (QString word3 : words3)
-                        chunks.append(Chunk(word1, word2, word3));
+                        chunks.append(*(new Chunk(word1, word2, word3)));
                 }
                 else if (pos == content.size())
-                    chunks.append(Chunk(word1, word2, QString::null));
+                    chunks.append(*(new Chunk(word1, word2, QString::null)));
 
                 pos -= word2.size();
             }
         }
         else if (pos == content.size())
-            chunks.append(Chunk(word1, QString::null, QString::null));
+            chunks.append(*(new Chunk(word1, QString::null, QString::null)));
 
         pos -= word1.size();
     }
