@@ -1,4 +1,5 @@
-#pragma execution_character_set("utf-8")
+#include <QtCore>
+#include <QtGui>
 #include <QtWidgets>
-#include <QDebug>
-#include <QObject>
+#include <QException>
+#include <limits>
