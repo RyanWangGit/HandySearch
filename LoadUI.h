@@ -24,34 +24,61 @@
 *****************************************/
 #pragma once
 #include "stdafx.h"
-#include "BloomFilter.h"
-
+#include "ui_LoadUI.h"
 
 /**
-* Class:    Dictionary
-*
-* Brief:    This class is implemented as a interface to control the dictionary,
-* which is the wrapper of BloomFilter.
-*
-* Date:    Oct. 2015
-*/
-class Dictionary : public QObject
+ * Class:    LoadUI
+ *
+ * Brief:    The loading dialog class.
+ *
+ * Date:    Oct. 2015
+ */
+class LoadUI : public QDialog
 {
     Q_OBJECT
 private:
-    BloomFilter bf;
+    QDir htmlFolder;
     QDir dictFolder;
-    unsigned int maxLength;
-    bool hasLoaded;
+    /* Loading clock */
+    QTime clock;
+    QTimer timer;
+    /* For dragging the window */
+    QPoint origin;
+    bool isPressed;
+    /* For showing current progress */
+    unsigned long currentProgress;
+    unsigned long maximumProgress;
+    static LoadUI *instance;
+    bool checkDirectory();
+protected:
+    /* Override event handler */
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 public:
-    Dictionary();
-    void load();
-    void setDictFolder(const QDir &dictFolder);
-    bool hasItem(const QString &key) const;
-    bool addItem(const QString &key);
-    unsigned int getMaxLength() const;
-signals:
+    LoadUI();
+    ~LoadUI();
+    static LoadUI *getInstance();
+public slots:
+    bool loadData();
+    /* UI slots */
+    void loadingDots();
+    /* Load slots */
+    void loadStarted();
+    void loadFinished();
+    /* Html load slots */
+    void htmlLoadStarted();
+    void htmlLoaded(int num);
+    void htmlLoadFinished();
+    /* Dictionary load slots */
     void dictLoadStarted();
     void dictLoaded(int num);
     void dictLoadFinished();
+signals:
+    void start();
+    void canceled();
+    void finished();
+private:
+    Ui::LoadUI ui;
 };
+

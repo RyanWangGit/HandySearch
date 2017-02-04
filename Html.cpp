@@ -26,7 +26,7 @@ unsigned int Html::totalNum = 0;
 * Html::Html
 *     Default void constructor,created for list's head node.
 ----------------------------*/
-Html::Html() { void; }
+Html::Html() {  }
 
 
 /*--------------------------

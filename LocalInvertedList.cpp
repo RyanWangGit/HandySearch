@@ -74,7 +74,7 @@ void LocalInvertedList::putInLocalList(Html* html)
         if (!hasFound)
         {
             Html* temp = html;
-            indexList->append(Index(temp, pos));
+            indexList->append(*(new Index(temp, pos)));
         }
     }
 }
@@ -216,7 +216,7 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
                         }
                     }
                     /* Set the brief */
-                    html->setBrief(textContent.mid(maxIndex, 100).join(""));
+                    html->setBrief(QStringList(textContent.mid(maxIndex, 100)).join(QString("")));
                 }
 
                 resultList.append(html);
