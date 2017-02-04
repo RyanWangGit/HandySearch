@@ -23,6 +23,7 @@
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
 #pragma  once
+#include <QStringList>
 #include "List.h"
 #include "HashMap.h"
 #include "Index.h"
