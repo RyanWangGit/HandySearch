@@ -216,7 +216,7 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
                         }
                     }
                     /* Set the brief */
-                    html->setBrief(textContent.mid(maxIndex, 100).join(QString("")));
+                    html->setBrief(QStringList(textContent.mid(maxIndex, 100)).join(QString("")));
                 }
 
                 resultList.append(html);
