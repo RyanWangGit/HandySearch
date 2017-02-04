@@ -24,6 +24,7 @@
 *****************************************/
 #pragma once
 #include "Exceptions.h"
+#include <limits.h>
 
 //Declaration of List class
 template<typename T>
@@ -77,8 +78,8 @@ private:
     ListNode<T>* last;
     int lastIndex;
 
-    ListNode<T>* List<T>::getNode(int i);
-    bool List<T>::removeNode(const ListNode<T>* node);
+    ListNode<T>* getNode(int i);
+    bool removeNode(const ListNode<T>* node);
 public:
     List();
     ~List();
@@ -109,7 +110,7 @@ List<T>::List()
     tail = head;
     length = 0;
     last = nullptr;
-    lastIndex = -MAXSHORT;
+    lastIndex = -SHRT_MAX;
 }
 
 
@@ -152,7 +153,7 @@ ListNode<T>* List<T>::getNode(int i)
     if (i == -1)
     {
         last = nullptr;
-        lastIndex = -MAXSHORT;
+        lastIndex = -SHRT_MAX;
         return head;
     }
     if (i >= size())
@@ -162,8 +163,8 @@ ListNode<T>* List<T>::getNode(int i)
     //by finding the shortest path to the index queried
 
     //The distance between target and last queried pointer
-    int distances[3] = { i, abs(lastIndex - i), size() - 1 - i };
-    int minDistance = MAXINT;
+    int distances[3] = { i, abs(lastIndex - i), (int)this->size() - 1 - i };
+    int minDistance = INT_MAX;
     int minIndex;
     for (int j = 0; j < 3; j++)
     {
@@ -242,7 +243,7 @@ bool List<T>::removeNode(const ListNode<T> *node)
         if (node->prior == head)
         {
             last = nullptr;
-            lastIndex = -MAXSHORT;
+            lastIndex = -SHRT_MAX;
         }
         else
         {
@@ -352,7 +353,7 @@ bool List<T>::clear()
         delete temp;
     }
     last = nullptr;
-    lastIndex = -MAXSHORT;
+    lastIndex = -SHRT_MAX;
 
     return true;
 }
