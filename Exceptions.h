@@ -24,6 +24,7 @@
 *****************************************/
 #pragma once
 #include <QException>
+#include <QString>
 /**
  * Class:    QNullPointerException
  *
