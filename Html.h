@@ -24,6 +24,7 @@
 *****************************************/
 #pragma once
 #include <QFile>
+#include <QStringList>
 
 /**
  * Class:    Html
