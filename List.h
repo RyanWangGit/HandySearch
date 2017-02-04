@@ -24,7 +24,7 @@
 *****************************************/
 #pragma once
 #include "Exceptions.h"
-#include <limits>
+#include <limits.h>
 
 //Declaration of List class
 template<typename T>
