@@ -24,7 +24,7 @@
 *****************************************/
 #pragma once
 
-#include "ui_handysearch.h"
+#include "ui_HandySearch.h"
 #include "List.h"
 #include "BloomFilter.h"
 #include "HashMap.h"
