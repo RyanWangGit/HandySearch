@@ -38,7 +38,7 @@ public:
     QString key;
     V value;
     /* Empty constructor for list heads */
-    Entry(){    void;    }
+    Entry(){   }
     /* Constructor */
     Entry(const QString &key,const V &value)
     {
