@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Dictionary.h"
-#include "HandySearch.h"
 
 
 /*--------------------------
