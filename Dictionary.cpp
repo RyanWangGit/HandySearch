@@ -42,7 +42,8 @@ bool Dictionary::addItem(const QString &key)
     QByteArray ba = key.toLocal8Bit();
     unsigned int len = ba.size();
     char* str = ba.data();
-    //Update maxWordLength
+
+    /* Update maxWordLength */
     if (len / 2 > maxLength)
         maxLength = len / 2;
 
