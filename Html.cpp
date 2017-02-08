@@ -189,8 +189,8 @@ void Html::extractText(const QString &fileContent)
     /* Do word segmentation and set the member */
     text.append(" " + title);
 
-    WordSegmenter ws(text, HandySearch::getInstance()->getDictionary());
-    textContent = ws.getResult();
+    WordSegmenter ws(HandySearch::getInstance()->getDictionary());
+    textContent = ws.segment(text);
 }
 
 
