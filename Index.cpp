@@ -14,7 +14,6 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "List.h"
 #include "Html.h"
 #include "Index.h"
 
@@ -88,7 +87,7 @@ unsigned int Index::getFrequency() const
 *     Returns a list of positions the word appears in the html.
 * Returns:    List<unsigned int> & - List of positions.
 ----------------------------*/
-List<unsigned int> &Index::getPosition()
+QList<unsigned int> &Index::getPosition()
 {
     return position;
 }
