@@ -25,9 +25,7 @@
 #pragma once
 
 #include "ui_HandySearch.h"
-#include "List.h"
 #include "BloomFilter.h"
-#include "HashMap.h"
 #include "Index.h"
 #include "LoadUI.h"
 #include "InvertedList.h"
