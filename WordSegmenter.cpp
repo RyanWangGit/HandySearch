@@ -13,9 +13,8 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "BloomFilter.h"
 #include "WordSegmenter.h"
-#include "List.h"
+#include "BloomFilter.h"
 
 
 /*--------------------------
@@ -175,20 +174,21 @@ Chunk & Chunk::operator=(const Chunk &other)
 * WordSegmenter::mmFilter
 *     Filter the chunk list with Max-Matching rule.
 * Parameter:
-*     List<Chunk> & chunks - Chunk list to be filtered.
+*     QList<Chunk *> & chunks - Chunk list to be filtered.
 ----------------------------*/
-void WordSegmenter::mmFilter(List<Chunk> &chunks)
+void WordSegmenter::mmFilter(QList<Chunk *> &chunks)
 {
     //Filter with segmentation length
     int maxLength = 0;
-    for (int i = 0; i < chunks.size(); i++)
-        if (chunks.get(i).getLength() > maxLength)
-            maxLength = chunks.get(i).getLength();
+    for(Chunk * chunk : chunks)
+        if(chunk->getLength() > maxLength)
+            maxLength = chunk->getLength();
+
     //Remove those don't fit 
     for (int i = 0; i < chunks.size(); i++)
-        if (chunks.get(i).getLength() < maxLength)
+        if (chunks.at(i)->getLength() < maxLength)
         {
-            chunks.remove(i);
+            delete chunks.takeAt(i);
             i--;
         }
 }
@@ -198,20 +198,21 @@ void WordSegmenter::mmFilter(List<Chunk> &chunks)
 * WordSegmenter::lawlFilter
 *     Filter the chunk list with Largest-Average-Word-Length rule.
 * Parameter:
-*     List<Chunk> & chunks - Chunk list to be filtered.
+*     QList<Chunk *> & chunks - Chunk list to be filtered.
 ----------------------------*/
-void WordSegmenter::lawlFilter(List<Chunk> &chunks)
+void WordSegmenter::lawlFilter(QList<Chunk *> &chunks)
 {
     //Filter with average word length
     double maxLength = 0;
-    for (int i = 0; i < chunks.size(); i++)
-        if (chunks.get(i).getAvgLen() > maxLength)
-            maxLength = chunks.get(i).getAvgLen();
+    for (Chunk * chunk : chunks)
+        if (chunk->getAvgLen() > maxLength)
+            maxLength = chunk->getAvgLen();
+
     //Remove those don't fit 
     for (int i = 0; i < chunks.size(); i++)
-        if (chunks.get(i).getAvgLen() < maxLength)
+        if (chunks.at(i)->getAvgLen() < maxLength)
         {
-            chunks.remove(i);
+            delete chunks.takeAt(i);
             i--;
         }
 }
@@ -221,20 +222,20 @@ void WordSegmenter::lawlFilter(List<Chunk> &chunks)
 * WordSegmenter::svwlFilter
 *     Filter the chunk list with Smallest-Variance-of-Word-Length rule.
 * Parameter:
-*     List<Chunk> & chunks - Chunk list to be filtered.
+*     QList<Chunk *> & chunks - Chunk list to be filtered.
 ----------------------------*/
-void WordSegmenter::svwlFilter(List<Chunk> &chunks)
+void WordSegmenter::svwlFilter(QList<Chunk *> &chunks)
 {
     //Fiter with variance of word length
     double minVariance = 10000.0;
-    for (int i = 0; i < chunks.size(); i++)
-        if (chunks.get(i).getVariance() < minVariance)
-            minVariance = chunks.get(i).getVariance();
+    for (Chunk * chunk : chunks)
+        if (chunk->getVariance() < minVariance)
+            minVariance = chunk->getVariance();
     //Remove those don't fit 
     for (int i = 0; i < chunks.size(); i++)
-        if (chunks.get(i).getVariance() > minVariance)
+        if (chunks.at(i)->getVariance() > minVariance)
         {
-            chunks.remove(i);
+            delete chunks.takeAt(i);
             i--;
         }
 }
@@ -245,9 +246,9 @@ void WordSegmenter::svwlFilter(List<Chunk> &chunks)
 *     Filter the chunk list with largest-Sum-of-Degree-of-Morphemic
 * -Freedom-of-one-character-words rule.
 * Parameter:
-*     List<Chunk> & chunks - Chunk list to be filtered.
+*     QList<Chunk *> & chunks - Chunk list to be filtered.
 ----------------------------*/
-void WordSegmenter::sdmfFilter(List<Chunk> &chunks)
+void WordSegmenter::sdmfFilter(QList<Chunk *> &chunks)
 {
     //Due to lack of information
     //I didn't implement this method
@@ -269,12 +270,12 @@ bool WordSegmenter::isChineseChar(const QChar &ch)
 
 
 /*--------------------------
-* WordSegmenter::getNextChar
+* WordSegmenter::peekNextChar
 *     Return the next character of the current position of the content
 * without pushing the pos indicator.
 * Returns:    QChar - The next character.
 ----------------------------*/
-QChar WordSegmenter::getNextChar() const
+QChar WordSegmenter::peekNextChar() const
 {
     return content.data()[pos];
 }
@@ -294,7 +295,7 @@ QStringList WordSegmenter::getMaxMatchingWord()
     {
         if (pos - originalPos > dict->getMaxLength())
             break;
-        if (!isChineseChar(getNextChar()))
+        if (!isChineseChar(peekNextChar()))
             break;
         pos++;
         
@@ -315,7 +316,7 @@ QStringList WordSegmenter::getMaxMatchingWord()
 QStringList WordSegmenter::getChineseWords()
 {
     //Find all possible chunks
-    List<Chunk> chunks;
+    QList<Chunk *> chunks;
     createChunks(chunks);
     if (chunks.size() > 1)
         mmFilter(chunks);
@@ -326,13 +327,19 @@ QStringList WordSegmenter::getChineseWords()
     if (chunks.size() > 1)
         sdmfFilter(chunks);
     
-    //There should be only one chunk remaining
+    // There should be only one chunk remaining
     //after the four filters
     if (chunks.size() == 0)
         return QStringList();
 
-    pos += chunks.get(0).getLength();
-    return chunks.get(0).getWords();
+    pos += chunks.at(0)->getLength();
+    QStringList result = chunks.at(0)->getWords();
+
+    // release memory
+    for(Chunk * chunk : chunks)
+        delete chunk;
+
+    return result;
 }
 
 
@@ -345,10 +352,10 @@ QString WordSegmenter::getASCIIWords()
 {
     unsigned int start = pos;
 
-    if (getNextChar().isLetterOrNumber())
+    if (peekNextChar().isLetterOrNumber())
         while (pos < content.size())
         {
-            QChar ch = getNextChar();
+            QChar ch = peekNextChar();
             if (ch.isPunct() || ch.isSpace() || isChineseChar(ch))
                 break;
             else
@@ -358,7 +365,7 @@ QString WordSegmenter::getASCIIWords()
     else
         while (pos < content.size())
         {
-            QChar ch = getNextChar();
+            QChar ch = peekNextChar();
             if (isChineseChar(ch) || ch.isLetterOrNumber())
                 break;
             else
@@ -374,9 +381,9 @@ QString WordSegmenter::getASCIIWords()
 * WordSegmenter::createChunks
 *     Create multiple possible chunks.
 * Parameter:
-*     List<Chunk> & chunks - List of possible chunks.
+*     QList<Chunk> & chunks - List of possible chunks.
 ----------------------------*/
-void WordSegmenter::createChunks(List<Chunk> &chunks)
+void WordSegmenter::createChunks(QList<Chunk *> &chunks)
 {
     unsigned int originalPos = pos;
     QStringList words1 = getMaxMatchingWord();
@@ -390,7 +397,7 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 
             //If there are no words found
             if (words2.isEmpty())
-                chunks.append(*(new Chunk(word1, QString::null, QString::null)));
+                chunks.append(new Chunk(word1, QString::null, QString::null));
 
             for (QString word2 : words2)
             {
@@ -401,19 +408,19 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 
                     //If there are no words found
                     if (words3.isEmpty())
-                        chunks.append(*(new Chunk(word1, word2, QString::null)));
+                        chunks.append(new Chunk(word1, word2, QString::null));
 
                     for (QString word3 : words3)
-                        chunks.append(*(new Chunk(word1, word2, word3)));
+                        chunks.append(new Chunk(word1, word2, word3));
                 }
                 else if (pos == content.size())
-                    chunks.append(*(new Chunk(word1, word2, QString::null)));
+                    chunks.append(new Chunk(word1, word2, QString::null));
 
                 pos -= word2.size();
             }
         }
         else if (pos == content.size())
-            chunks.append(*(new Chunk(word1, QString::null, QString::null)));
+            chunks.append(new Chunk(word1, QString::null, QString::null));
 
         pos -= word1.size();
     }
@@ -428,28 +435,28 @@ void WordSegmenter::createChunks(List<Chunk> &chunks)
 *     QString & content - The content needed to be segmented.
 *     Dictionary* dict - Dictionary object pointer.
 ----------------------------*/
-WordSegmenter::WordSegmenter(const QString &content, const Dictionary *dict)
+WordSegmenter::WordSegmenter(const Dictionary *dict)
     :dict(dict)
 {
-    this->content = content;
     this->pos = 0;
 }
 
 
 /*--------------------------
-* WordSegmenter::getResult
+* WordSegmenter::segment
 *     Returns the segmented word list as result.
-* Returns:    QStringList & - Segmented word list.
+* Returns:    QStringList - Segmented word list.
 ----------------------------*/
-const QStringList& WordSegmenter::getResult()
+QStringList WordSegmenter::segment(const QString &content)
 {
-    if (!result.isEmpty())
-        return result;
+    QStringList result;
+    this->content = content;
+    this->pos = 0;
 
     while (pos < content.size())
     {
         //If it is a chinese charactor
-        if (isChineseChar(getNextChar()))
+        if (isChineseChar(peekNextChar()))
             result.append(getChineseWords());
         else
             result.append(getASCIIWords());

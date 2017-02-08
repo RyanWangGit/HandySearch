@@ -23,7 +23,6 @@
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
 #pragma once
-#include "List.h"
 #include "Dictionary.h"
 #include "Html.h"
 
@@ -69,21 +68,20 @@ class WordSegmenter
 {
 private:
     QString content;
-    QStringList result;
-    const Dictionary *dict;
     unsigned int pos;
-    void mmFilter(List<Chunk> &chunks);
-    void lawlFilter(List<Chunk> &chunks);
-    void svwlFilter(List<Chunk> &chunks);
-    void sdmfFilter(List<Chunk> &chunks);
+    const Dictionary *dict;
+    void mmFilter(QList<Chunk *> &chunks);
+    void lawlFilter(QList<Chunk *> &chunks);
+    void svwlFilter(QList<Chunk *> &chunks);
+    void sdmfFilter(QList<Chunk *> &chunks);
     bool isChineseChar(const QChar &ch);
-    QChar getNextChar() const;
+    QChar peekNextChar() const;
     QStringList getMaxMatchingWord();
     QStringList getChineseWords();
     QString getASCIIWords();
-    void createChunks(List<Chunk> &chunks);
+    void createChunks(QList<Chunk *> &chunks);
 public:
-    WordSegmenter(const QString &content, const Dictionary *dict);
-    const QStringList &getResult();
+    WordSegmenter(const Dictionary *dict);
+    QStringList segment(const QString &content);
 };
 
