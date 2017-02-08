@@ -36,12 +36,12 @@
 class Index
 {
 private:
-    List<unsigned int> position;
+    QList<unsigned int> position;
     Html* html;
 public:
     Html* getHtml() const;
     unsigned int getFrequency() const;
-    List<unsigned int> &getPosition();
+    QList<unsigned int> &getPosition();
     Index();
     Index(Html *html, unsigned int firstPos);  
     Index &operator= (const Index &other);
