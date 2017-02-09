@@ -68,7 +68,7 @@ class WordSegmenter
 {
 private:
     QString content;
-    unsigned int pos;
+    int pos;
     const Dictionary *dict;
     void mmFilter(QList<Chunk *> &chunks);
     void lawlFilter(QList<Chunk *> &chunks);
