@@ -40,42 +40,26 @@ void LocalInvertedList::putInLocalList(Html* html)
     for (QString word : wordList)
     {
         pos += word.size();
-        /* If the first character isn't chinese */
-        QChar ch = word.at(0);
-        if (!(ch.unicode() >= 0x4e00 && ch.unicode() <= 0x9FA5))
-            continue;
-
-        /* Find if there's a list existed */
-        List<Index>* indexList = nullptr;
-        List<Index>** pIndexList = localHashMap->get(word);
-        if (pIndexList == nullptr)
-        {
-            indexList = new List<Index>();
-            localHashMap->put(word, indexList);
-            hashMapContent.append(indexList);
-        }
-        else
-            indexList = *pIndexList;
 
         /* Find if the word belongs to an existed index */
         bool hasFound = false;
-        for (int i = 0; i < indexList->size(); i++)
+        if(localHash.contains(word))
         {
-            Index* index = &indexList->get(i);
-            /* Yes */
-            if (index->getHtml() == html)
+            for (Index * index : localHash.values(word))
             {
-                index->getPosition().append(pos);
-                hasFound = true;
-                break;
+                /* Yes */
+                if (index->getHtml() == html)
+                {
+                    index->getPosition().append(pos);
+                    hasFound = true;
+                    break;
+                }
             }
         }
+
         /* No */
         if (!hasFound)
-        {
-            Html* temp = html;
-            indexList->append(*(new Index(temp, pos)));
-        }
+            localHash.insert(word, new Index(html, pos));
     }
 }
 
@@ -87,22 +71,18 @@ void LocalInvertedList::putInLocalList(Html* html)
 ----------------------------*/
 LocalInvertedList::LocalInvertedList(const QStringList& pathList)
 {
-    this->localHashMap = new HashMap<List<Index>*>();
     this->pathList = pathList;
 }
 
 
 /*--------------------------
 * LocalInvertedList::~LocalInvertedList
-*     Local inverted list destructor, delet the local hashmap and the index list it contains.
+*     Local inverted list destructor, delete the local hashmap and the index list it contains.
 ----------------------------*/
 LocalInvertedList::~LocalInvertedList()
 {
-    /* Delete the content of hashmap */
-    for (List<Index>* indexList : hashMapContent)
-        delete indexList;
-
-    delete localHashMap;
+    for(Index * index : localHash)
+        delete index;
 }
 
 /*--------------------------
@@ -156,18 +136,12 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
     QList<Html*> resultList;
     for (QString word : keyWordList)
     {
-        /* Get the indexList from inverted list */
-        List<Index>* indexList = nullptr;
-        List<Index>** pIndexList = localHashMap->get(word);
-        if (pIndexList == nullptr)
+        if(!localHash.contains(word))
             continue;
-        else
-            indexList = *pIndexList;
 
         /* Traverse all index and put them into sorted list */
-        for (int i = 0; i < indexList->size(); i++)
+        for (Index * index : localHash.values(word))
         {
-            Index* index = &indexList->get(i);
             Html* html = index->getHtml();
 
             switch (html->getWeightType())

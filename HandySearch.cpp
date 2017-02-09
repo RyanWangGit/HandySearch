@@ -14,7 +14,6 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "List.h"
 #include "Html.h"
 #include "Index.h"
 #include "HandySearch.h"
@@ -109,8 +108,8 @@ bool HandySearch::load()
 ----------------------------*/
 void HandySearch::segment()
 {
-    WordSegmenter ws(ui.searchEdit->text(), &dictionary);
-    QStringList wordList = ws.getResult();
+    WordSegmenter ws(&dictionary);
+    QStringList wordList = ws.segment(ui.searchEdit->text());
     ui.searchEdit->setText(wordList.join("\\"));
 }
 
@@ -130,8 +129,8 @@ void HandySearch::search()
     }
 
     QString searchContent = ui.searchEdit->text().mid(0, 20);
-    WordSegmenter ws(searchContent, &dictionary);
-    QStringList wordList = ws.getResult();
+    WordSegmenter ws(&dictionary);
+    QStringList wordList = ws.segment(searchContent);
     wordList.removeDuplicates();
     wordList.removeAll(" ");
     invertedList.query(wordList);
