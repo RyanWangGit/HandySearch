@@ -24,8 +24,8 @@
 *****************************************/
 #pragma  once
 #include <QStringList>
-#include "List.h"
-#include "HashMap.h"
+#include <QMultiHash>
+#include <QList>
 #include "Index.h"
 #include "Html.h"
 
@@ -41,8 +41,7 @@ class LocalInvertedList : public QObject
 {
     Q_OBJECT
 private:
-    HashMap<List<Index>*> *localHashMap;
-    QList<List<Index>*> hashMapContent;
+    QMultiHash<QString, Index *> localHash;
     QStringList pathList;
     /* Segment the content and save it to the inverted list */
     void putInLocalList(Html *html);
