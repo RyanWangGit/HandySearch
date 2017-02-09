@@ -1,15 +1,17 @@
-#HandySearch
-######By : Ryan Wang @ HUST
-######Email : wangyuxin@hust.edu.cn
+# HandySearch ![](https://travis-ci.org/RyanWangGit/HandySearch.svg?branch=master)
+###### By : Ryan Wang @ HUST
+###### Email : wangyuxin@hust.edu.cn
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project. 
 
-Using Visual Studio 2013 + QT 5.5.1.
+Using QMake + QT Designer.
 
-###Features
+Tested on `QT 5.2 - 5.7 on linux`, `QT 5.5 5.7 on MacOS`. 
+
+### Features
 * Beautiful GUI design. (Thanks to QT)
 
-* Load directly from html files and automatically analyzes them. (in multi-thread)
+* Load directly from HTML files and automatically analyzes them. (in multi-thread)
 
 * Multi-Thread optimizations make it load faster and process better.
 
@@ -19,20 +21,17 @@ Using Visual Studio 2013 + QT 5.5.1.
 
 * Auto-completer supported.
 
-###For Developers
+### For Developers
 * This projects includes pure-English notes to every single cornor to make it clear to understand.
-
-* The version of QT is `5.5.1 for MSVC`.
-
-* The IDE is `Visual Studio 2013 Community`
      
 * UI and process threads are completely separeted in order not to cause mess.
 
 * Most of the UI Design copies from Baidu and Google.(lol)
 
-* Release version provides around 400 sample webpages randomly collected by a python script , in total , i collected 7000 webpages and filtered them down to around 4000.
+* Release version provides around 400 sample webpages randomly collected by a python script. I collected 7000 webpages in total and filtered them down to around 4000.
 
-###Screenshots
+### Screenshots
+
 ![#1](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/1.png)
 
 ![#2](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/2.png)
