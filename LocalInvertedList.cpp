@@ -40,10 +40,6 @@ void LocalInvertedList::putInLocalList(Html* html)
     for (QString word : wordList)
     {
         pos += word.size();
-        /* If the first character isn't chinese */
-        QChar ch = word.at(0);
-        if (!(ch.unicode() >= 0x4e00 && ch.unicode() <= 0x9FA5))
-            continue;
 
         /* Find if the word belongs to an existed index */
         bool hasFound = false;
