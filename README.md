@@ -1,6 +1,4 @@
 # HandySearch ![](https://travis-ci.org/RyanWangGit/HandySearch.svg?branch=master)
-###### By : Ryan Wang @ HUST
-###### Email : wangyuxin@hust.edu.cn
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project. 
 
