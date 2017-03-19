@@ -6,7 +6,7 @@ Using QMake + QT Designer.
 
 Tested on `QT 5.2 - 5.7 on linux`, `QT 5.5 5.7 on MacOS`. 
 
-### Features
+## Features
 * Beautiful GUI design. (Thanks to QT)
 
 * Load directly from HTML files and automatically analyzes them. (in multi-thread)
@@ -19,7 +19,7 @@ Tested on `QT 5.2 - 5.7 on linux`, `QT 5.5 5.7 on MacOS`.
 
 * Auto-completer supported.
 
-### For Developers
+## For Developers
 * This projects includes pure-English notes to every single cornor to make it clear to understand.
      
 * UI and process threads are completely separeted in order not to cause mess.
@@ -28,7 +28,7 @@ Tested on `QT 5.2 - 5.7 on linux`, `QT 5.5 5.7 on MacOS`.
 
 * Release version provides around 400 sample webpages randomly collected by a python script. I collected 7000 webpages in total and filtered them down to around 4000.
 
-### Screenshots
+## Screenshots
 
 ![#1](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/1.png)
 
@@ -37,3 +37,6 @@ Tested on `QT 5.2 - 5.7 on linux`, `QT 5.5 5.7 on MacOS`.
 ![#3](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/3.png)
 
 ![#4](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/4.png)
+
+## License
+[GPLv3](https://github.com/RyanWangGit/HandySearch/blob/master/LICENSE)
