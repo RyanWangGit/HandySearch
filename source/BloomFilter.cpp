@@ -254,7 +254,7 @@ unsigned int BloomFilter::APHash(const char* str, unsigned int len) const
 unsigned int BloomFilter::HFLPHash(const char* str, unsigned int len) const
 {
     unsigned int n = 0;
-    int i;
+    size_t i;
     char* b = (char *)&n;
     for (i = 0; i<strlen(str); ++i) {
         b[i % 4] ^= str[i];
@@ -268,7 +268,7 @@ unsigned int BloomFilter::HFHash(const char* str, unsigned int len) const
     int result = 0;
     int c;
     int i = 0;
-    for (i = 1; c = *str++; i++)
+    for (i = 1; (c = *str++); i++)
         result += c * 3 * i;
     if (result<0)
         result = -result;
@@ -276,10 +276,10 @@ unsigned int BloomFilter::HFHash(const char* str, unsigned int len) const
 }
 
 
-unsigned int BloomFilter::StrHash(const char* str, unsigned int len) const
+unsigned int BloomFilter::StrHash(const char* str, unsigned int) const
 {
-    register unsigned int   h;
-    register unsigned char *p;
+    unsigned int   h;
+    unsigned char *p;
     for (h = 0, p = (unsigned char *)str; *p; p++) {
         h = 31 * h + *p;
     }
