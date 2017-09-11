@@ -17,7 +17,7 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-image: url(:/Resources/Loading/Loading.png);</string>
+   <string notr="true">background-image: url(:/assets/Loading.png);</string>
   </property>
   <widget class="QLabel" name="statusBar">
    <property name="enabled">

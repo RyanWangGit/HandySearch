@@ -1,30 +1,28 @@
 TARGET = HandySearch
 QT += core gui widgets
 CONFIG += c++11
-PRECOMPILED_HEADER = stdafx.h
-HEADERS += ./stdafx.h \
-    ./HandySearch.h \
-    ./Exceptions.h \
-    ./HashMap.h \
-    ./List.h \
-    ./BloomFilter.h \
-    ./Dictionary.h \
-    ./LoadUI.h \
-    ./WordSegmenter.h \
-    ./Index.h \
-    ./Html.h \
-    ./InvertedList.h \
-    ./LocalInvertedList.h
-SOURCES += ./HandySearch.cpp \
-    ./main.cpp \
-    ./BloomFilter.cpp \
-    ./Dictionary.cpp \
-    ./LoadUI.cpp \
-    ./Html.cpp \
-    ./Index.cpp \
-    ./LocalInvertedList.cpp \
-    ./InvertedList.cpp \
-    ./WordSegmenter.cpp
-FORMS += ./HandySearch.ui \
-    ./LoadUI.ui
+PRECOMPILED_HEADER = ./include/stdafx.h
+INCLUDEPATH += ./include
+HEADERS += ./include/stdafx.h \
+    ./include/HandySearch.h \
+    ./include/BloomFilter.h \
+    ./include/Dictionary.h \
+    ./include/LoadUI.h \
+    ./include/WordSegmenter.h \
+    ./include/Index.h \
+    ./include/Html.h \
+    ./include/InvertedList.h \
+    ./include/LocalInvertedList.h
+SOURCES += ./source/HandySearch.cpp \
+    ./source/main.cpp \
+    ./source/BloomFilter.cpp \
+    ./source/Dictionary.cpp \
+    ./source/LoadUI.cpp \
+    ./source/Html.cpp \
+    ./source/Index.cpp \
+    ./source/LocalInvertedList.cpp \
+    ./source/InvertedList.cpp \
+    ./source/WordSegmenter.cpp
+FORMS += ./forms/HandySearch.ui \
+    ./forms/LoadUI.ui
 RESOURCES += HandySearch.qrc
