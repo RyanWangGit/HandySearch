@@ -3,6 +3,10 @@
 # macOS files
 .DS_Store
 
+# Python cache
+__pycache__/
+.pyc
+
 # User-specific files
 *.suo
 *.user
@@ -17,6 +21,9 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+
+# Intellij generated files
+.idea/
 
 # Roslyn cache directories
 *.ide/
