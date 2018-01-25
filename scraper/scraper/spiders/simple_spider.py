@@ -35,13 +35,12 @@ class SimpleSpider(scrapy.Spider):
 
     def parse_link(self, response):
         soup = BeautifulSoup(response.body, "lxml")
-        try:
-            content = {
+        if soup.title is None:
+            yield None
+        else:
+            yield {
                 'title': SimpleSpider.clean_useless_characters(soup.title.string),
                 'content': SimpleSpider.trim_white_space(' '.join([self.clean_useless_characters(tag.get_text())
                                                                    for tag in soup.find_all(['p', 'a', 'i'])])),
                 'url': response.url
             }
-            yield content
-        except AttributeError:
-            yield None
