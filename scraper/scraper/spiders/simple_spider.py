@@ -1,7 +1,6 @@
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy_splash import SplashRequest
-import sqlite3
 from bs4 import BeautifulSoup
 import re
 
