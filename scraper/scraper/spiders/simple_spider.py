@@ -39,6 +39,6 @@ class SimpleSpider(scrapy.Spider):
             yield {
                 'title': SimpleSpider.clean_useless_characters(soup.title.string),
                 'content': SimpleSpider.trim_white_space(' '.join([self.clean_useless_characters(tag.get_text())
-                                                                   for tag in soup.find_all(['p', 'a', 'i'])])),
+                                                                   for tag in soup.find_all(['p', 'li', 'span'])])),
                 'url': response.url
             }
