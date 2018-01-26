@@ -1,6 +1,6 @@
 import scrapy
-from scrapy.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.spiders import Rule
+
+from scrapy.linkextractors import LinkExtractor
 import re
 
 
@@ -8,9 +8,9 @@ class WikiSpider(scrapy.Spider):
     name = 'wiki'
     allowed_domains = ['wikipedia.org']
     start_urls = ['https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5']
-    rules = (
-        Rule(SgmlLinkExtractor(restrict_xpaths='//div[@class="mw-body-content"]//a/@href'))
-    )
+
+    def __init__(self):
+        self.le = LinkExtractor(restrict_xpaths='//div[@class="mw-body-content"]')
 
     def parse(self, response):
         yield {
@@ -20,6 +20,9 @@ class WikiSpider(scrapy.Spider):
                         .xpath('//p/text()|//li/text()|//span/text()|//a/text()').extract())),
             'url': response.url
         }
+
+        for link in self.le.extract_links(response):
+            yield scrapy.Request(link.url, callback=self.parse)
 
     @staticmethod
     def clean_string(string):
