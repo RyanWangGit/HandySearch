@@ -2,7 +2,7 @@
 Item Exporters are used to export/serialize items into sqlite3 database.
 """
 
-from scrapy.contrib.exporter import BaseItemExporter
+from scrapy.exporters import BaseItemExporter
 import sqlite3
 
 
