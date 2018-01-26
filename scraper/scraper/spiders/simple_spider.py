@@ -19,8 +19,7 @@ class SimpleSpider(scrapy.Spider):
                 endpoint='render.html',
                 args={
                     'har': 1,
-                    'html': 1,
-                    'wait': 0.5
+                    'html': 1
                 }
             )
 
