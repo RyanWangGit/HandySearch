@@ -24,12 +24,12 @@
 *****************************************/
 #pragma once
 
-#include "ui_HandySearch.h"
-#include "BloomFilter.h"
-#include "Index.h"
-#include "LoadUI.h"
-#include "InvertedList.h"
-#include "Dictionary.h"
+#include "ui_handy_search.h"
+#include "bloom_filter.h"
+#include "index.h"
+#include "load_ui.h"
+#include "inverted_list.h"
+#include "dictionary.h"
 
 /**
  * Class:    HandySearch

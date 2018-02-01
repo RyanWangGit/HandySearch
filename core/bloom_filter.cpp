@@ -14,7 +14,7 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "BloomFilter.h"
+#include "bloom_filter.h"
 
 
 /*--------------------------

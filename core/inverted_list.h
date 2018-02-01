@@ -24,13 +24,13 @@
 *****************************************/
 #pragma once
 #include <QDir>
-#include "Html.h"
+#include "html.h"
 
 
 /**
 * Class:    InvertedList
 *
-* Brief:    This class controls several local inverted lists, send requery and load signals£¬
+* Brief:    This class controls several local inverted lists, send requery and load signals,
 * receive signals from local inverted lists, in order to do multi-thread trick.
 *
 * Date:    Nov. 2015

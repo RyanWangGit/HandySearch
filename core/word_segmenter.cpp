@@ -13,8 +13,8 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "WordSegmenter.h"
-#include "BloomFilter.h"
+#include "word_segmenter.h"
+#include "bloom_filter.h"
 
 
 /*--------------------------
