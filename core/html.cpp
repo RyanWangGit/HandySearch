@@ -14,7 +14,7 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "Html.h"
+#include "html.h"
 #include "word_segmenter.h"
 #include "handy_search.h"
 

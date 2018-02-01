@@ -14,8 +14,8 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "Html.h"
-#include "Index.h"
+#include "html.h"
+#include "index.h"
 
 
 /*--------------------------
