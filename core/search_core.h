@@ -3,18 +3,14 @@
 #include <QString>
 #include <QStringList>
 #include <QList>
-#include <QSharedPointer>
+#include <QObject>
 #include "webpage.h"
 #include "dictionary.h"
 #include "inverted_list.h"
 
-typedef struct SearchResult {
-    QStringList keywords;
-    QList<Webpage *> webpages;
-}SearchResult;
-
 class SearchCore
 {
+    Q_OBJECT
 private:
     Dictionary dictionary;
     InvertedList invertedList;
@@ -22,5 +18,7 @@ private:
 public:
     SearchCore(const QString &dictionary, const QString &database);
     void load();
-    QSharedPointer<SearchResult> query(const QString &sentence);
+    void query(const QString &sentence);
+signals:
+    void result(const QStringList &keywords, const QList<Webpage *> &webpages);
 };
