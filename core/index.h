@@ -23,35 +23,28 @@
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
 #pragma once
-#include <QDir>
-#include "BloomFilter.h"
-
+#include "html.h"
 
 /**
-* Class:    Dictionary
-*
-* Brief:    This class is implemented as a interface to control the dictionary,
-* which is the wrapper of BloomFilter.
-*
-* Date:    Oct. 2015
-*/
-class Dictionary : public QObject
+ * Class:    Index
+ *
+ * Brief:    An index item of requested word,include the html pointer
+ * and list of positions.
+ *
+ * Date:    Oct. 2015
+ */
+class Index
 {
-    Q_OBJECT
 private:
-    BloomFilter bf;
-    QDir dictFolder;
-    unsigned int maxLength;
-    bool hasLoaded;
+    QList<unsigned int> position;
+    Html* html;
 public:
-    Dictionary();
-    void load();
-    void setDictFolder(const QDir &dictFolder);
-    bool hasItem(const QString &key) const;
-    bool addItem(const QString &key);
-    unsigned int getMaxLength() const;
-signals:
-    void dictLoadStarted();
-    void dictLoaded(int num);
-    void dictLoadFinished();
+    Html* getHtml() const;
+    unsigned int getFrequency() const;
+    QList<unsigned int> &getPosition();
+    Index();
+    Index(Html *html, unsigned int firstPos);  
+    Index &operator= (const Index &other);
 };
+
+

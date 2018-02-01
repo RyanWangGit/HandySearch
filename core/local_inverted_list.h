@@ -26,8 +26,8 @@
 #include <QStringList>
 #include <QMultiHash>
 #include <QList>
-#include "Index.h"
-#include "Html.h"
+#include "index.h"
+#include "html.h"
 
 /**
 * Class:    LocalInvertedList

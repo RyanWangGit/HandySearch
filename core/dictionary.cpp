@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Dictionary.h"
+#include "dictionary.h"
 
 
 /*--------------------------

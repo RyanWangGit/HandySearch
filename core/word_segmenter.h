@@ -23,8 +23,8 @@
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
 #pragma once
-#include "Dictionary.h"
-#include "Html.h"
+#include "dictionary.h"
+#include "html.h"
 
 
 /**
