@@ -13,8 +13,8 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "LoadUI.h"
-#include "HandySearch.h"
+#include "load_ui.h"
+#include "handy_search.h"
 
 /* Initialization of static members */
 LoadUI* LoadUI::instance = nullptr;
