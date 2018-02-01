@@ -27,7 +27,7 @@
 #include <QTimer>
 #include <QTime>
 #include <QThread>
-#include "ui_LoadUI.h"
+#include "ui_load_ui.h"
 
 /**
  * Class:    LoadUI

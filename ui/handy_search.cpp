@@ -14,12 +14,12 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "Html.h"
-#include "Index.h"
-#include "HandySearch.h"
-#include "WordSegmenter.h"
-#include "LoadUI.h"
-#include "InvertedList.h"
+#include "html.h"
+#include "index.h"
+#include "handy_search.h"
+#include "word_segmenter.h"
+#include "load_ui.h"
+#include "inverted_list.h"
 
 /* Initialization of static members */
 HandySearch* HandySearch::instance = nullptr;

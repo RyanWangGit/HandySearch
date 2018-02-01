@@ -15,8 +15,8 @@
 *************************************/
 #include "stdafx.h"
 #include "Html.h"
-#include "WordSegmenter.h"
-#include "HandySearch.h"
+#include "word_segmenter.h"
+#include "handy_search.h"
 
 /* Initialize the static member */
 unsigned int Html::totalNum = 0;

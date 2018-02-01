@@ -13,9 +13,9 @@
 * Date:    Nov. 2015
 *************************************/
 #include "stdafx.h"
-#include "InvertedList.h"
-#include "LocalInvertedList.h"
-#include "LoadUI.h"
+#include "inverted_list.h"
+#include "local_inverted_list.h"
+#include "load_ui.h"
 
 
 /*--------------------------

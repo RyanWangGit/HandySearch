@@ -14,7 +14,7 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "HandySearch.h"
+#include "handy_search.h"
 
 
 int main(int argc, char *argv[])
