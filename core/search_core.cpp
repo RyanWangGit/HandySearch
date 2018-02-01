@@ -7,14 +7,17 @@ SearchCore::SearchCore(const QString &dictionary, const QString &database)
 
 
 
-QSharedPointer<SearchResult> SearchCore::query(const QString &sentence)
+void SearchCore::query(const QString &sentence)
 {
     if(!this->hasLoaded)
         qFatal("Core hasn't loaded anything yet.");
 
-    QSharedPointer<SearchResult> result(new SearchResult());
+    QStringList keywords;
+    QList<Webpage *> webpages;
 
-    return result;
+
+    emit this->result(keywords, webpages);
+    return;
 }
 
 void SearchCore::load()
