@@ -8,13 +8,15 @@
 #include "dictionary.h"
 #include "inverted_list.h"
 
-class SearchCore
+class SearchCore : public QObject
 {
     Q_OBJECT
 private:
     Dictionary dictionary;
     InvertedList invertedList;
     bool hasLoaded;
+    QString dictionaryPath;
+    QString databasePath;
 public:
     SearchCore(const QString &dictionary, const QString &database);
     void load();

@@ -2,6 +2,8 @@
 
 SearchCore::SearchCore(const QString &dictionary, const QString &database)
 {
+    this->dictionaryPath = dictionary;
+    this->databasePath = database;
     this->hasLoaded = false;
 }
 
@@ -16,7 +18,6 @@ void SearchCore::query(const QString &sentence)
     QList<Webpage *> webpages;
 
 
-    emit this->result(keywords, webpages);
     return;
 }
 
