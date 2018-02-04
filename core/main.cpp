@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "handy_search.h"
+#include "search_core.h"
 
 
 int main(int argc, char *argv[])
