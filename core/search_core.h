@@ -19,6 +19,7 @@ private:
     QString databasePath;
 public:
     SearchCore(const QString &dictionary, const QString &database);
+    SearchCore(const QString &database);
     void load();
     void query(const QString &sentence);
 signals:

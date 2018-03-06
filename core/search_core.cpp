@@ -8,6 +8,13 @@ SearchCore::SearchCore(const QString &dictionary, const QString &database)
 }
 
 
+SearchCore::SearchCore(const QString &database)
+{
+    this->dictionaryPath = "qrc:/assets/dictionary.txt";
+    this->databasePath = database;
+    this->hasLoaded = false;
+}
+
 
 void SearchCore::query(const QString &sentence)
 {
@@ -20,6 +27,7 @@ void SearchCore::query(const QString &sentence)
 
     return;
 }
+
 
 void SearchCore::load()
 {
