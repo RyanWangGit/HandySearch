@@ -20,6 +20,9 @@ private:
 public:
     SearchCore(const QString &dictionary, const QString &database);
     SearchCore(const QString &database);
+    SearchCore();
+    void setPath(const QString &dictionary, const QString &database);
+    void setPath(const QString &database);
     void load();
     void query(const QString &sentence);
 signals:
