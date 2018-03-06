@@ -20,14 +20,14 @@ SearchCore::SearchCore()
 }
 
 
-SearchCore::setPath(const QString &database)
+void SearchCore::setPath(const QString &database)
 {
     this->dictionaryPath = "qrc:/assets/dictionary.txt";
     this->databasePath = database;
 }
 
 
-SearchCore::setPath(const QString &dictionary, const QString &database)
+void SearchCore::setPath(const QString &dictionary, const QString &database)
 {
     this->dictionaryPath = dictionary;
     this->databasePath = database;
