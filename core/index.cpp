@@ -14,7 +14,7 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "html.h"
+#include "webpage.h"
 #include "index.h"
 
 
@@ -36,7 +36,7 @@ Index::Index()
 *     Html * html - Html object pointer.
 *     unsigned int firstPos - First position the word appeared in the html.
 ----------------------------*/
-Index::Index(Html* html, unsigned int firstPos)
+Index::Index(Webpage* html, unsigned int firstPos)
 {
     this->html = html;
     this->position.append(firstPos);
@@ -65,7 +65,7 @@ Index & Index::operator= (const Index &other)
 *     Returns the html object pointer the index posseses.
 * Returns:    Html* - The html pointer.
 ----------------------------*/
-Html* Index::getHtml() const
+Webpage* Index::getHtml() const
 {
     return html;
 }

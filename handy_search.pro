@@ -11,7 +11,6 @@ HEADERS += ./core/stdafx.h \
     ./ui/load_ui.h \
     ./core/word_segmenter.h \
     ./core/index.h \
-    ./core/html.h \
     ./core/inverted_list.h \
     ./core/local_inverted_list.h \
     ./core/search_core.h \
@@ -21,7 +20,6 @@ SOURCES += ./ui/handy_search.cpp \
     ./core/bloom_filter.cpp \
     ./core/dictionary.cpp \
     ./ui/load_ui.cpp \
-    ./core/html.cpp \
     ./core/index.cpp \
     ./core/local_inverted_list.cpp \
     ./core/inverted_list.cpp \

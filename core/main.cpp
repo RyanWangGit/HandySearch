@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    qRegisterMetaType<QList<Html*>>("QList<Html*>");
+    qRegisterMetaType<QList<Webpage*>>("QList<Html*>");
     qRegisterMetaType<QList<Webpage*>>("QList<Webpage*>");
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 

@@ -24,7 +24,7 @@
 *****************************************/
 #pragma once
 #include "dictionary.h"
-#include "html.h"
+#include "webpage.h"
 
 
 /**
