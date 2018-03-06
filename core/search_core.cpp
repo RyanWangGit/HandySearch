@@ -2,17 +2,35 @@
 
 SearchCore::SearchCore(const QString &dictionary, const QString &database)
 {
-    this->dictionaryPath = dictionary;
-    this->databasePath = database;
+    this->setPath(dictionary, database);
     this->hasLoaded = false;
 }
 
 
 SearchCore::SearchCore(const QString &database)
 {
+    this->setPath(database);
+    this->hasLoaded = false;
+}
+
+
+SearchCore::SearchCore()
+{
+    this->hasLoaded = false;
+}
+
+
+SearchCore::setPath(const QString &database)
+{
     this->dictionaryPath = "qrc:/assets/dictionary.txt";
     this->databasePath = database;
-    this->hasLoaded = false;
+}
+
+
+SearchCore::setPath(const QString &dictionary, const QString &database)
+{
+    this->dictionaryPath = dictionary;
+    this->databasePath = database;
 }
 
 
