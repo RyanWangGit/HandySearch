@@ -1,5 +1,5 @@
 TARGET = HandySearch
-QT += core gui widgets
+QT += core gui widgets sql concurrent
 CONFIG += c++11
 PRECOMPILED_HEADER = ./core/stable.h
 INCLUDEPATH += ./core \
