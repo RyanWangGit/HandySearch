@@ -23,8 +23,8 @@ void SearchCore::query(const QString &sentence)
 
     QStringList keywords;
     QList<Webpage *> webpages;
-
-
+    // TODO: implement query
+    emit this->result(keywords, webpages);
     return;
 }
 
