@@ -66,6 +66,7 @@ CONCURRENT_REQUESTS = 32
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'scraper.pipelines.ValidationPipeline': 300,
+    'scraper.pipelines.ConvertPipeline': 400
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -30,3 +30,10 @@ class ValidationPipeline:
             raise DropItem('Item title contains meaningless content')
         else:
             return item
+
+
+class ConvertPipeline:
+    def process_item(self, item, spider):
+        item['title'] = opencc.convert(item['title'])
+        item['content'] = opencc.convert(item['content'])
+        return item
