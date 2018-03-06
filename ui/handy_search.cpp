@@ -13,7 +13,7 @@
  
  * Date:    Oct. 2015
 *************************************/
-#include "stdafx.h"
+#include "stable.h"
 #include "webpage.h"
 #include "index.h"
 #include "handy_search.h"

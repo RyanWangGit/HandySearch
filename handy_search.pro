@@ -1,10 +1,10 @@
 TARGET = HandySearch
 QT += core gui widgets
 CONFIG += c++11
-PRECOMPILED_HEADER = ./core/stdafx.h
+PRECOMPILED_HEADER = ./core/stable.h
 INCLUDEPATH += ./core \
     ./ui
-HEADERS += ./core/stdafx.h \
+HEADERS += ./core/stable.h \
     ./ui/handy_search.h \
     ./core/bloom_filter.h \
     ./core/dictionary.h \

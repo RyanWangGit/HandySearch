@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "stable.h"
 #include "handy_search.h"
 #include "search_core.h"
 
