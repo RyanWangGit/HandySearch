@@ -12,7 +12,7 @@
 *
 * Date:    Nov. 2015
 *************************************/
-#include "stdafx.h"
+#include "stable.h"
 #include "local_inverted_list.h"
 #include "word_segmenter.h"
 #include "handy_search.h"

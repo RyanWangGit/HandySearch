@@ -12,7 +12,7 @@
  
  * Date:    Oct. 2015
 *************************************/
-#include "stdafx.h"
+#include "stable.h"
 #include "load_ui.h"
 #include "handy_search.h"
 
