@@ -14,7 +14,7 @@
  * Date:    Oct. 2015
 *************************************/
 #include "stdafx.h"
-#include "html.h"
+#include "webpage.h"
 #include "index.h"
 #include "handy_search.h"
 #include "word_segmenter.h"
@@ -146,7 +146,7 @@ void HandySearch::search()
 *     const QList<Html*> & resultList - The query resuly list.
 *    const QStringList & keyWordList - The key word list.
 ----------------------------*/
-void HandySearch::searchResult(const QList<Html*> &resultList, const QStringList &keyWordList)
+void HandySearch::searchResult(const QList<Webpage*> &resultList, const QStringList &keyWordList)
 {
     ui.resultEdit->clear();
     showResult(resultList, keyWordList);
@@ -285,12 +285,12 @@ void HandySearch::setResultUILayout()
 *     List<Index * > & resultList - List of results.
 *     QStringList & wordList - List of key words
 ----------------------------*/
-void HandySearch::showResult(const QList<Html*> &resultList, const QStringList &keyWordList)
+void HandySearch::showResult(const QList<Webpage*> &resultList, const QStringList &keyWordList)
 {
     setResultUILayout();
     QString resultContent(ui.resultEdit->toHtml());
     
-    for (Html* html : resultList)
+    for (Webpage* html : resultList)
     {
         resultContent.append("<a href=\"" + html->getFilePath() + "\"><font size = \"5\">" + html->getTitle() + "</font></a>");
         resultContent.append("<br>&emsp;......" + html->getBrief() + "......" + "<br><br>");
@@ -303,7 +303,7 @@ void HandySearch::showResult(const QList<Html*> &resultList, const QStringList &
     ui.segment->setText("   HandySearch has provided " + QString::number(resultList.size()) + " result(s) for you in " + QString::number((double)clock.elapsed() / 1000) + " second(s)");
     
     /* Clear all html's weight info in result list */
-    for (Html* html : resultList)
+    for (Webpage* html : resultList)
         html->clearWeight();
 
     clock.restart();

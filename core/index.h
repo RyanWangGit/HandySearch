@@ -23,7 +23,7 @@
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
 #pragma once
-#include "html.h"
+#include "webpage.h"
 
 /**
  * Class:    Index
@@ -37,13 +37,13 @@ class Index
 {
 private:
     QList<unsigned int> position;
-    Html* html;
+    Webpage* html;
 public:
-    Html* getHtml() const;
+    Webpage* getHtml() const;
     unsigned int getFrequency() const;
     QList<unsigned int> &getPosition();
     Index();
-    Index(Html *html, unsigned int firstPos);  
+    Index(Webpage *html, unsigned int firstPos);  
     Index &operator= (const Index &other);
 };
 

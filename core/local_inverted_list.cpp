@@ -26,7 +26,7 @@
 * Parameter:
 *     Html * html - The html pointer which is to be operated.
 ----------------------------*/
-void LocalInvertedList::putInLocalList(Html* html)
+void LocalInvertedList::putInLocalList(Webpage* html)
 {
     if (html->hasAnalyzed())
         return;
@@ -104,7 +104,7 @@ void LocalInvertedList::localLoadStart()
         if (!(path.endsWith(".html") || path.endsWith(".htm")))
             continue;
 
-        Html *pHtml = new Html(path);
+        Webpage *pHtml = new Webpage(path);
         putInLocalList(pHtml);
 
         /* Remove all pucntuations , both English and Chinese ones */
@@ -133,7 +133,7 @@ void LocalInvertedList::localLoadStart()
 ----------------------------*/
 void LocalInvertedList::localQuery(const QStringList& keyWordList)
 {
-    QList<Html*> resultList;
+    QList<Webpage*> resultList;
     for (QString word : keyWordList)
     {
         if(!localHash.contains(word))
@@ -142,25 +142,25 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
         /* Traverse all index and put them into sorted list */
         for (Index * index : localHash.values(word))
         {
-            Html* html = index->getHtml();
+            Webpage* html = index->getHtml();
 
             switch (html->getWeightType())
             {
-            case Html::WeightType::NotAssigned:
+            case Webpage::WeightType::NotAssigned:
             {
                 /* Set html's weight if title contains key words */
                 for (QString word : keyWordList)
                 {
                     if (html->getTitle().contains(word))
                     {
-                        html->setWeightType(Html::WeightType::InTitle);
+                        html->setWeightType(Webpage::WeightType::InTitle);
                         html->setWeight(html->getWeight() + word.size());
                     }
                     html->setWeight(html->getWeight() / html->getTitle().size());
                 }
                 /* If html's weight type hasn't been set it means it's InContent */
-                if (html->getWeightType() == Html::WeightType::NotAssigned)
-                    html->setWeightType(Html::WeightType::InContent);
+                if (html->getWeightType() == Webpage::WeightType::NotAssigned)
+                    html->setWeightType(Webpage::WeightType::InContent);
 
                 /* Set brief for html */
                 if (html->getBrief().isEmpty())
@@ -196,7 +196,7 @@ void LocalInvertedList::localQuery(const QStringList& keyWordList)
                 resultList.append(html);
                 break;
             }
-            case Html::WeightType::InContent:
+            case Webpage::WeightType::InContent:
             {
                 html->setWeight(html->getWeight() + index->getFrequency() * word.size());
                 break;

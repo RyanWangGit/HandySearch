@@ -5,7 +5,7 @@
 *
 * Version: V1.0
 *
-* Brief:    This controls several local inverted lists, send requery and load signals£¬
+* Brief:    This controls several local inverted lists, send requery and load signals
 * receive signals from local inverted lists, in order to do multi-thread trick.
 *
 * Author:    Ryan
@@ -30,7 +30,7 @@ InvertedList::InvertedList()
 
 /*--------------------------
 * InvertedList::~InvertedList
-*     The default destructor which quit all threads and kills all 
+*     The default destructor which quit all threads and kills all
 * local inverted lists.
 ----------------------------*/
 InvertedList::~InvertedList()
@@ -113,7 +113,7 @@ const QStringList & InvertedList::getTitleList() const
 *     QThread * thread - The thread pointer of the local inverted list.
 *    const QList<Html*> & resultList - The result of local query.
 ----------------------------*/
-void InvertedList::localQueryResult(QThread *thread, const QList<Html*> &resultList)
+void InvertedList::localQueryResult(QThread *thread, const QList<Webpage*> &resultList)
 {
     activeThreadList.removeOne(thread);
     this->resultList.append(resultList);
@@ -164,4 +164,3 @@ void InvertedList::query(const QStringList& keyWordList)
     activeThreadList.append(threadList);
     emit localQuery(keyWordList);
 }
-

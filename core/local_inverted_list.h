@@ -27,7 +27,7 @@
 #include <QMultiHash>
 #include <QList>
 #include "index.h"
-#include "html.h"
+#include "webpage.h"
 
 /**
 * Class:    LocalInvertedList
@@ -44,7 +44,7 @@ private:
     QMultiHash<QString, Index *> localHash;
     QStringList pathList;
     /* Segment the content and save it to the inverted list */
-    void putInLocalList(Html *html);
+    void putInLocalList(Webpage *html);
 public:
     LocalInvertedList(const QStringList &pathList);
     ~LocalInvertedList();
@@ -54,5 +54,5 @@ public slots:
 signals:
     void htmlLoaded(int num);
     void localLoadFinished(QThread *, const QStringList &);
-    void localQueryResult(QThread *, const QList<Html*> &);
+    void localQueryResult(QThread *, const QList<Webpage*> &);
 };

@@ -47,7 +47,7 @@ public slots:
     /* UI slots */
     void segment();
     void search();
-    void searchResult(const QList<Html*> &resultList, const QStringList &keyWordList);
+    void searchResult(const QList<Webpage*> &resultList, const QStringList &keyWordList);
     void anchorClicked(const QUrl &url);
     void about();
 public:
@@ -63,7 +63,7 @@ private:
     bool isResultShown;
     void setDefaultUILayout();
     void setResultUILayout();
-    void showResult(const QList<Html*> &resultList, const QStringList &wordList);
+    void showResult(const QList<Webpage*> &resultList, const QStringList &wordList);
     QCompleter* completer;
     static HandySearch* instance;
     Dictionary dictionary;

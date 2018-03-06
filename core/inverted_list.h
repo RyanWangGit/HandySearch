@@ -24,7 +24,7 @@
 *****************************************/
 #pragma once
 #include <QDir>
-#include "html.h"
+#include "webpage.h"
 
 
 /**
@@ -41,13 +41,13 @@ class InvertedList : public QObject
 private:
     QList<QThread*> threadList;
     QList<QThread*> activeThreadList;
-    QList<Html*> resultList;
+    QList<Webpage*> resultList;
     QStringList keyWordList;
     QStringList titleList;
     QDir htmlFolder;
     bool hasLoaded;
     /* Compare in descending order */
-    static inline bool compareHtml(Html* h1, Html* h2){ return *h2 < *h1; };
+    static inline bool compareHtml(Webpage* h1, Webpage* h2){ return *h2 < *h1; };
 public:
     InvertedList();
     ~InvertedList();
@@ -56,7 +56,7 @@ public:
     const QStringList &getTitleList() const;
     /* Signals/Slots for inner objects */
 private slots:
-    void localQueryResult(QThread *thread, const QList<Html*> &resultList);
+    void localQueryResult(QThread *thread, const QList<Webpage*> &resultList);
     void localLoadFinished(QThread *thread, const QStringList& titleList);
 signals:
     void localQuery(const QStringList &keyWordList);
@@ -66,7 +66,7 @@ signals:
 public slots:
     void query(const QStringList &keyWordList);
 signals:
-    void queryResult(const QList<Html*>&, const QStringList&);
+    void queryResult(const QList<Webpage*>&, const QStringList&);
     void htmlLoadStarted();
     void htmlLoadFinished();
 };
