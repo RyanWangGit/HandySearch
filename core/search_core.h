@@ -17,7 +17,7 @@ private:
     QString databasePath;
     QMultiHash<QString, QPair<int, QList<int> > > invertedList;
 public:
-    // <title, brief>
+    // < title, brief >
     typedef QPair<QString, QString> Webpage;
     SearchCore(const QString &dictionary, const QString &database);
     SearchCore(const QString &database);
