@@ -69,7 +69,8 @@ QMultiHash<QString, Index *> mapper(const QPair<int, int> &task)
         qFatal("Database cannot be opened.");
 
     QSqlQuery query(db);
-    query.prepare("SELECT ROWID, content from `webpages` WHERE ROWID >= :start AND ROWID <= :end");
+    // note: ROWID implementation only works for SQLITE
+    query.prepare("SELECT id, content from `webpages` WHERE ROWID >= :start AND ROWID <= :end");
     query.bindValue(":start", task.first);
     query.bindValue(":end", task.second);
     query.exec();
