@@ -4,6 +4,12 @@
 #include <QDebug>
 #include <QtConcurrent>
 #include "search_core.h"
+#include "word_segmenter.h"
+
+// < webpage_id, positions >
+typedef QPair<int, QList<int> > Index;
+// < keyword, index >
+typedef QMultiHash<QString, Index> InvertedList;
 
 SearchCore::SearchCore(const QString &dictionary, const QString &database)
 {
@@ -57,10 +63,16 @@ const QString &SearchCore::getDatabasePath() const
     return this->databasePath;
 }
 
+const Dictionary &SearchCore::getDictionary() const
+{
+    return this->dictionary;
+}
+
+
 // used by mapper and reducer since they have to be static functions
 static SearchCore *_core = NULL;
 
-QMultiHash<QString, Index *> mapper(const QPair<int, int> &task)
+InvertedList mapper(const QPair<int, int> &task)
 {
     // open a thread-specific database connection
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
@@ -75,16 +87,21 @@ QMultiHash<QString, Index *> mapper(const QPair<int, int> &task)
     query.bindValue(":end", task.second);
     query.exec();
 
-    QMultiHash<QString, Index *> result;
+    WordSegmenter ws(&_core->getDictionary());
+
+    InvertedList result;
     while (!query.next()) {
         // TODO: create Index and insert into result hashmap.
+        QList<int> positions;
+        Index index;
+
     }
     db.close();
     return result;
 }
 
 
-QMultiHash<QString, Index *> &reducer(QMultiHash<QString, Index *> &result, const QMultiHash<QString, Index *> &other)
+InvertedList &reducer(InvertedList &result, const InvertedList &other)
 {
     result.unite(other);
     return result;
@@ -118,6 +135,6 @@ void SearchCore::load(int from)
             tasks.append(QPair<int, int>(i, i + WEBPAGES_PER_THREAD - 1));
     }
 
-    this->invertedList = QtConcurrent::blockingMappedReduced<QMultiHash<QString, Index *> >(tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
+    this->invertedList = QtConcurrent::blockingMappedReduced<InvertedList>(tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
     qDebug() << this->invertedList;
 }
