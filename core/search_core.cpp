@@ -51,13 +51,20 @@ void SearchCore::query(const QString &sentence)
     return;
 }
 
-static QString _databasePath;
+
+const QString &SearchCore::getDatabasePath() const
+{
+    return this->databasePath;
+}
+
+// used by mapper and reducer since they have to be static functions
+static SearchCore *_core = NULL;
 
 QMultiHash<QString, Index *> mapper(const QPair<int, int> &task)
 {
     // open a thread-specific database connection
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
-    db.setDatabaseName(_databasePath);
+    db.setDatabaseName(_core->getDatabasePath());
     if(!db.open())
         qFatal("Database cannot be opened.");
 
@@ -94,7 +101,7 @@ void SearchCore::load(int from)
     if(!query.next())
         qFatal("Database execution failed.");
 
-    _databasePath = this->databasePath;
+    _core = &(*this);
 
     const int TOTAL_WEBPAGES = query.value(0).toInt();
     const int WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();

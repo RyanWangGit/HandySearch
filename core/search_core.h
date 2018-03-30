@@ -25,6 +25,7 @@ public:
     SearchCore();
     void setPath(const QString &dictionary, const QString &database);
     void setPath(const QString &database);
+    const QString &getDatabasePath() const;
     void load(int from = 1);
     void query(const QString &sentence);
 signals:
