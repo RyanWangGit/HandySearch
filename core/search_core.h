@@ -5,10 +5,7 @@
 #include <QList>
 #include <QObject>
 #include <QMultiHash>
-#include "webpage.h"
 #include "dictionary.h"
-#include "inverted_list.h"
-#include "index.h"
 
 class SearchCore : public QObject
 {
@@ -18,14 +15,17 @@ private:
     bool hasLoaded;
     QString dictionaryPath;
     QString databasePath;
-    QMultiHash<QString, Index *> invertedList;
+    QMultiHash<QString, QPair<int, QList<int> > > invertedList;
 public:
+    // <title, brief>
+    typedef QPair<QString, QString> Webpage;
     SearchCore(const QString &dictionary, const QString &database);
     SearchCore(const QString &database);
     SearchCore();
     void setPath(const QString &dictionary, const QString &database);
     void setPath(const QString &database);
     const QString &getDatabasePath() const;
+    const Dictionary &getDictionary() const;
     void load(int from = 1);
     void query(const QString &sentence);
 signals:
