@@ -4,12 +4,15 @@
 
 Dictionary::Dictionary()
 {
+    this->hasLoaded = false;
     this->maxLength = 0;
 }
 
 
 bool Dictionary::hasItem(const QString &key) const
 {
+    if(!this->hasLoaded)
+        qFatal("Dictionary used but not loaded.");
     if (key == "")
         return false;
     QByteArray ba = key.toLocal8Bit();
@@ -36,6 +39,8 @@ bool Dictionary::addItem(const QString &key)
 
 unsigned int Dictionary::getMaxLength() const
 {
+    if(!this->hasLoaded)
+        qFatal("Dictionary used but not loaded.");
     return maxLength;
 }
 
@@ -55,4 +60,5 @@ void Dictionary::load(const QString& path)
     }
     file.close();
 
+    this->hasLoaded = true;
 }
