@@ -44,7 +44,6 @@ unsigned int Dictionary::getMaxLength() const
     if (!dictFolder.exists())
         return;
 
-    emit dictLoadStarted();
     /* List all files */
     QStringList pathList = dictFolder.entryList(QDir::NoDotAndDotDot | QDir::Files);
     for (QString& path : pathList)
@@ -71,12 +70,9 @@ unsigned int Dictionary::getMaxLength() const
 #ifndef SKIPLOAD
             addItem(entry);
 #endif
-            if (i % 1000 == 0)
-                emit dictLoaded(1000);
         }
         file.close();
     }
-    emit dictLoadFinished();
 }
 
 void Dictionary::setDictFolder(const QDir& dictFolder)
