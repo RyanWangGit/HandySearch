@@ -148,6 +148,7 @@ InvertedList mapper(const QPair<int, int> &task)
 
     InvertedList result;
 
+    const int PROGRESS_FREQUENCY = 100;
     unsigned int i;
     for (i = 0; query.next(); i++)
     {
@@ -166,7 +167,13 @@ InvertedList mapper(const QPair<int, int> &task)
             pos += word.size();
             putInInvertedList(word, pos, id, result);
         }
+
+        if(i % PROGRESS_FREQUENCY == 0)
+            _core->progress("Loading Webpages", PROGRESS_FREQUENCY);
+
     }
+
+    _core->progress("Loading Webpages", i % PROGRESS_FREQUENCY);
     db.close();
 
     return result;
