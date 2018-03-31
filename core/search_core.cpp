@@ -31,6 +31,11 @@ SearchCore::SearchCore()
     this->hasLoaded = false;
 }
 
+SearchCore::~SearchCore()
+{
+    this->db.close();
+}
+
 
 void SearchCore::setPath(const QString &database)
 {
@@ -161,11 +166,11 @@ void SearchCore::load(int from)
     // load webpages
 
     // open database
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
-    db.setDatabaseName(this->databasePath);
-    if(!db.open())
+    this->db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
+    this->db.setDatabaseName(this->databasePath);
+    if(!this->db.open())
         qFatal("Database cannot be opened.");
-    QSqlQuery query("SELECT COUNT(id) FROM `webpages`", db);
+    QSqlQuery query("SELECT COUNT(id) FROM `webpages`", this->db);
     if(!query.next())
         qFatal("Database execution failed.");
 
@@ -174,8 +179,6 @@ void SearchCore::load(int from)
     // assign the workload
     const int TOTAL_WEBPAGES = query.value(0).toInt();
     const int WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();
-
-    db.close();
 
     QList<QPair<int, int> > tasks;
     for(int i = from; i < TOTAL_WEBPAGES; i += WEBPAGES_PER_THREAD)

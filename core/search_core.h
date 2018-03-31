@@ -5,6 +5,7 @@
 #include <QList>
 #include <QObject>
 #include <QMultiHash>
+#include <QSqlDatabase>
 #include <QSharedPointer>
 #include "dictionary.h"
 
@@ -14,9 +15,9 @@ class SearchCore : public QObject
 private:
     Dictionary dictionary;
     bool hasLoaded;
-    QString dictionaryPath;
-    QString databasePath;
+    QString dictionaryPath, databasePath;
     QMultiHash<QString, QPair<int, QList<int> > > invertedList;
+    QSqlDatabase db;
 public:
     typedef struct _webpage {
         QString title, brief, url;
@@ -24,6 +25,7 @@ public:
     SearchCore(const QString &dictionary, const QString &database);
     SearchCore(const QString &database);
     SearchCore();
+    ~SearchCore();
     void setPath(const QString &dictionary, const QString &database);
     void setPath(const QString &database);
     const QString &getDatabasePath() const;
