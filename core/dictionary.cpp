@@ -39,43 +39,20 @@ unsigned int Dictionary::getMaxLength() const
     return maxLength;
 }
 
+
+void Dictionary::load(const QString& path)
 {
-    /* If dictionary folder doesn't exist */
-    if (!dictFolder.exists())
+    QFile file(path);
+    if (!file.open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text))
         return;
 
-    /* List all files */
-    QStringList pathList = dictFolder.entryList(QDir::NoDotAndDotDot | QDir::Files);
-    for (QString& path : pathList)
-        path.prepend(dictFolder.absolutePath() + "/");
-
-    /* Traverse dictionary folder */
-    for (QString path : pathList)
+    for (int i = 0; !file.atEnd(); i++)
     {
-        /* Ignore those aren't text files*/
-        if (!path.endsWith(".txt"))
-            continue;
-
-        /* Open dictionary file */
-        QFile file(path);
-        if (!file.open(QIODevice::OpenModeFlag::ReadOnly | QIODevice::OpenModeFlag::Text))
-            continue;
-
-        /* Read dictionary file */
-        for (int i = 0; !file.atEnd(); i++)
-        {
-            QString entry = file.readLine();
-            /* Cut out the last '\n' character */
-            entry.chop(1);
-#ifndef SKIPLOAD
-            addItem(entry);
-#endif
-        }
-        file.close();
+        QString entry = file.readLine();
+        // Cut out the last '\n' character
+        entry.chop(1);
+        addItem(entry);
     }
-}
+    file.close();
 
-void Dictionary::setDictFolder(const QDir& dictFolder)
-{
-    this->dictFolder = dictFolder;
 }
