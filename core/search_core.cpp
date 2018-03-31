@@ -156,8 +156,10 @@ InvertedList &reducer(InvertedList &result, const InvertedList &other)
 
 void SearchCore::load(int from)
 {
+    // load dictonary
     this->dictionary.load(this->dictionaryPath);
-    this->hasLoaded = true;
+
+    // load webpages
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
     db.setDatabaseName(this->databasePath);
     if(!db.open())
@@ -183,5 +185,6 @@ void SearchCore::load(int from)
     }
 
     this->invertedList = QtConcurrent::blockingMappedReduced<InvertedList>(tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
-    qDebug() << this->invertedList;
+
+    this->hasLoaded = true;
 }
