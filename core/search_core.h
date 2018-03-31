@@ -18,6 +18,7 @@ private:
     QString dictionaryPath, databasePath;
     QMultiHash<QString, QPair<int, QList<int> > > invertedList;
     QSqlDatabase db;
+    unsigned int maxProgress;
 public:
     typedef struct _webpage {
         QString title, brief, url;
@@ -30,8 +31,10 @@ public:
     void setPath(const QString &database);
     const QString &getDatabasePath() const;
     const Dictionary &getDictionary() const;
+    unsigned int getMaxProgress() const;
     void load(int from = 1);
     void query(const QString &sentence);
 signals:
     void result(const QStringList &keywords, const QList<QSharedPointer<Webpage> > &webpages);
+    void progress(const QString &hint, int progress);
 };
