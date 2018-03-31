@@ -100,12 +100,13 @@ bool LoadUI::loadData()
     clock.start();
     
     /* Set dictionary folder and connect UI signals */
+    /*
     Dictionary* dict = HandySearch::getInstance()->getDictionary();
     dict->setDictFolder(dictFolder);
     connect(dict, &Dictionary::dictLoadStarted, this, &LoadUI::dictLoadStarted);
     connect(dict, &Dictionary::dictLoaded, this, &LoadUI::dictLoaded);
     connect(dict, &Dictionary::dictLoadFinished, this, &LoadUI::dictLoadFinished);
-
+    */
     /* Set html folder and connect UI signals */
     InvertedList* invertedList = HandySearch::getInstance()->getInvertedList();
     invertedList->setHtmlFolder(htmlFolder);
@@ -116,8 +117,8 @@ bool LoadUI::loadData()
     
     /* Connect the loading procedure signals/slots */
     connect(this, &LoadUI::start, this, &LoadUI::loadStarted);
-    connect(this, &LoadUI::start, dict, &Dictionary::load);
-    connect(dict, &Dictionary::dictLoadFinished, invertedList, &InvertedList::load);
+    //connect(this, &LoadUI::start, dict, &Dictionary::load);
+    //connect(dict, &Dictionary::dictLoadFinished, invertedList, &InvertedList::load);
     connect(invertedList, &InvertedList::htmlLoadFinished, this, &LoadUI::loadFinished);
 
     /* Start loading */
