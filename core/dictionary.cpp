@@ -2,22 +2,12 @@
 #include "dictionary.h"
 
 
-/*--------------------------
-* Dictionary::Dictionary
-*     This is the common-used constructor.
-----------------------------*/
 Dictionary::Dictionary()
 {
     this->maxLength = 0;
 }
 
-/*--------------------------
-* Dictionary::hasItem
-*     Interface to BloomFilter, provides support for QString.
-* Returns:    bool - Result.
-* Parameter:
-*    const QString & key - The key to search.
-----------------------------*/
+
 bool Dictionary::hasItem(const QString &key) const
 {
     if (key == "")
@@ -28,13 +18,6 @@ bool Dictionary::hasItem(const QString &key) const
 }
 
 
-/*--------------------------
-* Dictionary::addItem
-*     Interface to BloomFilter, provides support for QString.
-* Returns:    bool - Operation result.
-* Parameter:
-*     const QString & key - The key to add.
-----------------------------*/
 bool Dictionary::addItem(const QString &key)
 {
     if (key == "")
@@ -51,21 +34,11 @@ bool Dictionary::addItem(const QString &key)
 }
 
 
-/*--------------------------
-* Dictionary::getMaxLength
-*     Get the maximum word length of the dictioanry.
-* Returns:    unsigned int - Maximum word length.
-----------------------------*/
 unsigned int Dictionary::getMaxLength() const
 {
     return maxLength;
 }
 
-/*--------------------------
-* Dictionary::load
-*     Start loading dictionary.
-----------------------------*/
-void Dictionary::load()
 {
     /* If dictionary folder doesn't exist */
     if (!dictFolder.exists())
@@ -106,14 +79,6 @@ void Dictionary::load()
     emit dictLoadFinished();
 }
 
-
-/*--------------------------
-* Dictionary::setDictFolder
-*     Set the dictionary loading folder, loading process won't work
-* if the directory is not correctly set.
-* Parameter:
-*     const QDir & dictFolder - The folder to set.
-----------------------------*/
 void Dictionary::setDictFolder(const QDir& dictFolder)
 {
     this->dictFolder = dictFolder;
