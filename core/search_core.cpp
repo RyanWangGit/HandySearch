@@ -56,9 +56,31 @@ void SearchCore::query(const QString &sentence)
     if(!this->hasLoaded)
         qFatal("Core hasn't loaded anything yet.");
 
-    QStringList keywords;
+    WordSegmenter ws = WordSegmenter(&this->dictionary);
+    QStringList keywords = ws.segment(sentence);
     QList<QSharedPointer<Webpage> > webpages;
-    // TODO: implement query
+
+    QSqlQuery query(this->db);
+    for(QString & word : keywords)
+    {
+        QSharedPointer<Webpage> webpage = QSharedPointer<Webpage>(new Webpage);
+        for(Index & index : this->invertedList.values(word))
+        {
+            query.prepare("SELECT title, content, url from `webpages` WHERE id == :id");
+            query.bindValue(":id", index.first);
+            if(!query.exec() || !query.next())
+                qFatal(query.lastError().text().toLatin1().data());
+
+            webpage->title = query.value(0).toString();
+            // TODO: find the best-fit brief
+            webpage->brief = query.value(1).toString().mid(0, 30);
+            webpage->url = query.value(2).toString();
+            query.clear();
+        }
+        webpages.append(webpage);
+    }
+
+    // TODO: evaluate and order the results
     emit this->result(keywords, webpages);
     return;
 }
