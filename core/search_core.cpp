@@ -136,8 +136,8 @@ InvertedList mapper(const QPair<int, int> &task)
     if(!db.open())
         qFatal("Database cannot be opened.");
 
-    QSqlQuery query(db);
     // note: ROWID implementation only works for SQLITE
+    QSqlQuery query(db);
     query.prepare("SELECT id, title, content from `webpages` WHERE ROWID >= :start AND ROWID <= :end");
     query.bindValue(":start", task.first);
     query.bindValue(":end", task.second);
@@ -196,8 +196,6 @@ void SearchCore::load(int from)
     if(!query.next())
         qFatal("Database execution failed.");
 
-    _core = &(*this);
-
     // assign the workload
     const int TOTAL_WEBPAGES = query.value(0).toInt();
     const int WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();
@@ -210,6 +208,9 @@ void SearchCore::load(int from)
         else
             tasks.append(QPair<int, int>(i, i + WEBPAGES_PER_THREAD - 1));
     }
+
+    // set static global variable to be used in mapper and reducer
+    _core = &(*this);
 
     // mapreduce to process all the webpages
     this->invertedList = QtConcurrent::blockingMappedReduced<InvertedList>(tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
