@@ -18,8 +18,4 @@ public:
     bool hasItem(const QString &key) const;
     bool addItem(const QString &key);
     unsigned int getMaxLength() const;
-signals:
-    void dictLoadStarted();
-    void dictLoaded(int num);
-    void dictLoadFinished();
 };
