@@ -160,6 +160,8 @@ void SearchCore::load(int from)
     this->dictionary.load(this->dictionaryPath);
 
     // load webpages
+
+    // open database
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
     db.setDatabaseName(this->databasePath);
     if(!db.open())
@@ -170,6 +172,7 @@ void SearchCore::load(int from)
 
     _core = &(*this);
 
+    // assign the workload
     const int TOTAL_WEBPAGES = query.value(0).toInt();
     const int WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();
 
@@ -184,6 +187,7 @@ void SearchCore::load(int from)
             tasks.append(QPair<int, int>(i, i + WEBPAGES_PER_THREAD - 1));
     }
 
+    // mapreduce to process all the webpages
     this->invertedList = QtConcurrent::blockingMappedReduced<InvertedList>(tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
 
     this->hasLoaded = true;
