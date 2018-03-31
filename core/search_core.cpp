@@ -124,7 +124,6 @@ InvertedList mapper(const QPair<int, int> &task)
         int id = query.value(0).toInt();
 
         QStringList segments = ws.segment(query.value(1).toString());
-        //qDebug() << segments;
 
         int pos = 0;
         for(QString & word : segments)
