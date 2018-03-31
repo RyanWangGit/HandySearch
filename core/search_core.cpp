@@ -8,8 +8,8 @@
 
 // < webpage_id, positions >
 typedef QPair<int, QList<int> > Index;
-// < keyword, index >
-typedef QMultiHash<QString, Index> InvertedList;
+// < word, index >
+typedef QMultiHash<QString, Index > InvertedList;
 
 SearchCore::SearchCore(const QString &dictionary, const QString &database)
 {
@@ -51,7 +51,7 @@ void SearchCore::query(const QString &sentence)
         qFatal("Core hasn't loaded anything yet.");
 
     QStringList keywords;
-    QList<Webpage *> webpages;
+    QList<QSharedPointer<Webpage> > webpages;
     // TODO: implement query
     emit this->result(keywords, webpages);
     return;
