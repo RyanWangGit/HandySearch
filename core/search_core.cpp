@@ -34,7 +34,7 @@ SearchCore::SearchCore()
 
 void SearchCore::setPath(const QString &database)
 {
-    this->dictionaryPath = "qrc:/assets/dictionary.txt";
+    this->dictionaryPath = ":/assets/dictionary.txt";
     this->databasePath = database;
 }
 
@@ -156,6 +156,7 @@ InvertedList &reducer(InvertedList &result, const InvertedList &other)
 
 void SearchCore::load(int from)
 {
+    this->dictionary.load(this->dictionaryPath);
     this->hasLoaded = true;
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
     db.setDatabaseName(this->databasePath);
