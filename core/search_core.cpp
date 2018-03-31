@@ -147,9 +147,11 @@ InvertedList mapper(const QPair<int, int> &task)
     WordSegmenter ws(&_core->getDictionary());
 
     InvertedList result;
-    while (query.next()) {
-        int id = query.value(0).toInt();
 
+    unsigned int i;
+    for (i = 0; query.next(); i++)
+    {
+        int id = query.value(0).toInt();
 
         int pos = 0;
         for(QString & word : ws.segment(query.value(1).toString()))
