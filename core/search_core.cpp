@@ -242,3 +242,10 @@ void SearchCore::load(int from)
 
     this->hasLoaded = true;
 }
+
+
+void SearchCore::clear()
+{
+    this->invertedList.clear();
+    this->webpagesCount = 0;
+}

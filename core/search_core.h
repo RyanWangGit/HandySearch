@@ -36,6 +36,7 @@ public:
     unsigned int getWebpagesCount() const;
     void load(int from = 1);
     void query(const QString &sentence);
+    void clear();
 signals:
     void result(const QStringList &keywords, const QList<QSharedPointer<Webpage> > &webpages);
     void progress(const QString &hint, int progress);
