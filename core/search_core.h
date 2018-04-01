@@ -19,6 +19,7 @@ private:
     QHash<QString, QHash<int, QList<int> > > invertedList;
     QSqlDatabase db;
     unsigned int maxProgress;
+    unsigned int webpagesCount;
 public:
     typedef struct _webpage {
         QString title, brief, url;
@@ -32,6 +33,7 @@ public:
     const QString &getDatabasePath() const;
     const Dictionary &getDictionary() const;
     unsigned int getMaxProgress() const;
+    unsigned int getWebpagesCount() const;
     void load(int from = 1);
     void query(const QString &sentence);
 signals:
