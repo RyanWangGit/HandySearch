@@ -1,4 +1,5 @@
 #include "stable.h"
+#include <tuple>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -7,10 +8,10 @@
 #include "search_core.h"
 #include "word_segmenter.h"
 
-// < webpage_id, positions >
-typedef QPair<int, QList<int> > Index;
+// <id, positions>
+typedef QHash<int, QList<int> > Index;
 // < word, index >
-typedef QMultiHash<QString, Index > InvertedList;
+typedef QHash<QString, QHash<int, QList<int> > > InvertedList;
 
 SearchCore::SearchCore(const QString &dictionary, const QString &database)
 {
@@ -51,41 +52,6 @@ void SearchCore::setPath(const QString &dictionary, const QString &database)
 }
 
 
-void SearchCore::query(const QString &sentence)
-{
-    if(!this->hasLoaded)
-        qFatal("Core hasn't loaded anything yet.");
-
-    WordSegmenter ws = WordSegmenter(&this->dictionary);
-    QStringList keywords = ws.segment(sentence);
-    QList<QSharedPointer<Webpage> > webpages;
-
-    QSqlQuery query(this->db);
-    for(QString & word : keywords)
-    {
-        QSharedPointer<Webpage> webpage = QSharedPointer<Webpage>(new Webpage);
-        for(Index & index : this->invertedList.values(word))
-        {
-            query.prepare("SELECT title, content, url from `webpages` WHERE id == :id");
-            query.bindValue(":id", index.first);
-            if(!query.exec() || !query.next())
-                qFatal(query.lastError().text().toLatin1().data());
-
-            webpage->title = query.value(0).toString();
-            // TODO: find the best-fit brief
-            webpage->brief = query.value(1).toString().mid(0, 30);
-            webpage->url = query.value(2).toString();
-            query.clear();
-        }
-        webpages.append(webpage);
-    }
-
-    // TODO: evaluate and order the results
-    emit this->result(keywords, webpages);
-    return;
-}
-
-
 const QString &SearchCore::getDatabasePath() const
 {
     return this->databasePath;
@@ -96,39 +62,17 @@ const Dictionary &SearchCore::getDictionary() const
     return this->dictionary;
 }
 
+unsigned int SearchCore::getWebpagesCount() const
+{
+    return this->webpagesCount;
+}
+
 
 // used by mapper and reducer since they have to be static functions
 static SearchCore *_core = NULL;
 
-// helper function
-inline void putInInvertedList(const QString &word, int pos, int id, InvertedList &result)
-{
-    bool hasFound = false;
-    if(result.contains(word))
-    {
-        for(Index &index : result.values(word))
-        {
-            // found existing index
-            if(index.first == id)
-            {
-                hasFound = true;
-                index.second.append(pos);
-                break;
-            }
-        }
-    }
-
-    // create index and insert
-    if(!hasFound)
-    {
-        Index index;
-        index.first = id;
-        index.second.append(pos);
-        result.insert(word, index);
-    }
-}
-
-InvertedList mapper(const QPair<int, int> &task)
+// extract word from webpage and store into <word, id, pos> to be processed in reducer
+QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 {
     // open a thread-specific database connection
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
@@ -146,7 +90,7 @@ InvertedList mapper(const QPair<int, int> &task)
 
     WordSegmenter ws(&_core->getDictionary());
 
-    InvertedList result;
+    QList<std::tuple<QString, int, int> > indexList;
 
     const int PROGRESS_FREQUENCY = 100;
     unsigned int i;
@@ -158,14 +102,14 @@ InvertedList mapper(const QPair<int, int> &task)
         for(QString & word : ws.segment(query.value(1).toString()))
         {
             pos -= word.size();
-            putInInvertedList(word, pos, id, result);
+            indexList.append(std::make_tuple(word, id, pos));
         }
 
         pos = 0;
         for(QString & word : ws.segment(query.value(2).toString()))
         {
             pos += word.size();
-            putInInvertedList(word, pos, id, result);
+            indexList.append(std::make_tuple(word, id, pos));
         }
 
         if(i % PROGRESS_FREQUENCY == 0)
@@ -176,14 +120,44 @@ InvertedList mapper(const QPair<int, int> &task)
     _core->progress("Loading Webpages", i % PROGRESS_FREQUENCY);
     db.close();
 
-    return result;
+    return indexList;
 }
 
 
-InvertedList &reducer(InvertedList &result, const InvertedList &other)
+// get <word, id, pos> from mapper and store into the inverted list
+void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &other)
 {
-    result.unite(other);
-    return result;
+    if(result.isEmpty())
+        result.reserve(_core->getWebpagesCount());
+
+    for(const std::tuple<QString, int, int> & index : other)
+    {
+        const QString &word = std::get<0>(index);
+        int id = std::get<1>(index);
+        int pos = std::get<2>(index);
+        if(result.contains(word))
+        {
+            if(result.value(word).contains(id))
+            {
+                result[word][id].append(pos);
+            }
+            else
+            {
+                QList<int> positions;
+                positions.append(pos);
+                result[word].insert(id, positions);
+            }
+        }
+        else
+        {
+            // create an index and store into the inverted list
+            Index index;
+            QList<int> positions;
+            positions.append(pos);
+            index.insert(id, positions);
+            result.insert(word, index);
+        }
+    }
 }
 
 
@@ -207,6 +181,8 @@ void SearchCore::load(int from)
     const int TOTAL_WEBPAGES = query.value(0).toInt();
     const int WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();
 
+    this->webpagesCount += TOTAL_WEBPAGES - from + 1;
+
     QList<QPair<int, int> > tasks;
     for(int i = from; i < TOTAL_WEBPAGES; i += WEBPAGES_PER_THREAD)
     {
@@ -222,5 +198,54 @@ void SearchCore::load(int from)
     // mapreduce to process all the webpages
     this->invertedList = QtConcurrent::blockingMappedReduced<InvertedList>(tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
 
+    // optional: squeeze all the index hashes in to inverted list
+    for(auto iter = this->invertedList.begin(); iter != this->invertedList.end(); ++iter)
+        iter.value().squeeze();
+    this->invertedList.squeeze();
+
     this->hasLoaded = true;
+}
+
+
+void SearchCore::query(const QString &sentence)
+{
+    if(!this->hasLoaded)
+        qFatal("Core hasn't loaded anything yet.");
+
+    WordSegmenter ws = WordSegmenter(&this->dictionary);
+    QStringList keywords = ws.segment(sentence);
+    QList<QSharedPointer<Webpage> > webpages;
+
+    QSqlQuery query(this->db);
+    for(QString & word : keywords)
+    {
+        QSharedPointer<Webpage> webpage = QSharedPointer<Webpage>(new Webpage);
+
+        const QHash<int, QList<int> > & wordHash = this->invertedList.value(word);
+        for(auto iter = wordHash.begin(); iter != wordHash.end(); ++iter)
+        {
+            query.prepare("SELECT title, content, url from `webpages` WHERE id == :id");
+            query.bindValue(":id", iter.key());
+            if(!query.exec() || !query.next())
+                qFatal(query.lastError().text().toLatin1().data());
+
+            webpage->title = query.value(0).toString();
+            // TODO: find the best-fit brief
+            webpage->brief = query.value(1).toString().mid(0, 30);
+            webpage->url = query.value(2).toString();
+            query.clear();
+        }
+        webpages.append(webpage);
+    }
+
+    // TODO: evaluate and order the results
+    emit this->result(keywords, webpages);
+    return;
+}
+
+
+void SearchCore::clear()
+{
+    this->invertedList.clear();
+    this->webpagesCount = 0;
 }
