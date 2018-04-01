@@ -99,6 +99,11 @@ const Dictionary &SearchCore::getDictionary() const
     return this->dictionary;
 }
 
+unsigned int SearchCore::getWebpagesCount() const
+{
+    return this->webpagesCount;
+}
+
 
 // used by mapper and reducer since they have to be static functions
 static SearchCore *_core = NULL;
@@ -159,6 +164,9 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 // get <word, id, pos> from mapper and store into the inverted list
 void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &other)
 {
+    if(result.isEmpty())
+        result.reserve(_core->getWebpagesCount());
+
     for(const std::tuple<QString, int, int> & index : other)
     {
         const QString &word = std::get<0>(index);
@@ -209,6 +217,8 @@ void SearchCore::load(int from)
     // assign the workload
     const int TOTAL_WEBPAGES = query.value(0).toInt();
     const int WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();
+
+    this->webpagesCount += TOTAL_WEBPAGES - from + 1;
 
     QList<QPair<int, int> > tasks;
     for(int i = from; i < TOTAL_WEBPAGES; i += WEBPAGES_PER_THREAD)
