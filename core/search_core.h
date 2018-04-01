@@ -4,7 +4,7 @@
 #include <QStringList>
 #include <QList>
 #include <QObject>
-#include <QMultiHash>
+#include <QHash>
 #include <QSqlDatabase>
 #include <QSharedPointer>
 #include "dictionary.h"
@@ -16,7 +16,7 @@ private:
     Dictionary dictionary;
     bool hasLoaded;
     QString dictionaryPath, databasePath;
-    QMultiHash<QString, QPair<int, QList<int> > > invertedList;
+    QHash<QString, QHash<int, QList<int> > > invertedList;
     QSqlDatabase db;
     unsigned int maxProgress;
 public:
