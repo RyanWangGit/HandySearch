@@ -41,8 +41,6 @@ private:
     // For dragging the window
     QPoint origin;
     bool isPressed;
-    unsigned long currentProgress;
-    unsigned long maximumProgress;
     static LoadUI *instance;
     bool checkDirectory();
 protected:
@@ -56,18 +54,7 @@ public:
 public slots:
     bool loadData();
     void loadingDots();
-    void loadStarted();
-    void loadFinished();
-    void htmlLoadStarted();
-    void htmlLoaded(int num);
-    void htmlLoadFinished();
-    void dictLoadStarted();
-    void dictLoaded(int num);
-    void dictLoadFinished();
 signals:
-    void start();
-    void canceled();
-    void finished();
 private:
     Ui::LoadUI ui;
 };
