@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QHash>
 #include <QSqlDatabase>
-#include <QSharedPointer>
 #include "dictionary.h"
 
 class SearchCore : public QObject
@@ -38,6 +37,6 @@ public:
     void query(const QString &sentence);
     void clear();
 signals:
-    void result(const QStringList &keywords, const QList<QSharedPointer<Webpage> > &webpages);
     void progress(const QString &hint, int progress);
+    void result(const QStringList &keywords, const QList<Webpage> &webpages);
 };
