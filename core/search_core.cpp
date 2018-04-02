@@ -214,12 +214,12 @@ void SearchCore::query(const QString &sentence)
 
     WordSegmenter ws = WordSegmenter(&this->dictionary);
     QStringList keywords = ws.segment(sentence);
-    QList<QSharedPointer<Webpage> > webpages;
+    QList<Webpage> webpages;
 
     QSqlQuery query(this->db);
     for(QString & word : keywords)
     {
-        QSharedPointer<Webpage> webpage = QSharedPointer<Webpage>(new Webpage);
+        Webpage webpage;
 
         const QHash<int, QList<int> > & wordHash = this->invertedList.value(word);
         for(auto iter = wordHash.begin(); iter != wordHash.end(); ++iter)
@@ -229,10 +229,10 @@ void SearchCore::query(const QString &sentence)
             if(!query.exec() || !query.next())
                 qFatal(query.lastError().text().toLatin1().data());
 
-            webpage->title = query.value(0).toString();
+            webpage.title = query.value(0).toString();
             // TODO: find the best-fit brief
-            webpage->brief = query.value(1).toString().mid(0, 30);
-            webpage->url = query.value(2).toString();
+            webpage.brief = query.value(1).toString().mid(0, 30);
+            webpage.url = query.value(2).toString();
             query.clear();
         }
         webpages.append(webpage);
