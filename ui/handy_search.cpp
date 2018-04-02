@@ -63,10 +63,10 @@ bool HandySearch::load()
 }
 
 
-void HandySearch::searchResult(const QList<Webpage*> &resultList, const QStringList &keyWordList)
+void HandySearch::searchResult(const QStringList &keywords, const QList<Webpage> &webpages)
 {
     ui.resultEdit->clear();
-    showResult(resultList, keyWordList);
+    showResult(keywords, webpages);
 }
 
 
@@ -157,26 +157,22 @@ void HandySearch::setResultUILayout()
 }
 
 
-void HandySearch::showResult(const QList<Webpage*> &resultList, const QStringList &keyWordList)
+void HandySearch::showResult(const QStringList &keywords, const QList<Webpage> &webpages)
 {
     setResultUILayout();
     QString resultContent(ui.resultEdit->toHtml());
     
-    for (Webpage* html : resultList)
+    for (const Webpage &webpage : webpages)
     {
-        resultContent.append("<a href=\"" + html->getFilePath() + "\"><font size = \"5\">" + html->getTitle() + "</font></a>");
-        resultContent.append("<br>&emsp;......" + html->getBrief() + "......" + "<br><br>");
+        resultContent.append("<a href=\"" + webpage.url + "\"><font size = \"5\">" + webpage.title + "</font></a>");
+        resultContent.append("<br>&emsp;......" + webpage.brief + "......" + "<br><br>");
     }
 
-    for (QString word : keyWordList)
+    for (const QString &word : keywords)
         resultContent.replace(word, "<font color=\"#cc0000\">" + word + "</font>");
 
     ui.resultEdit->setHtml(resultContent);
-    ui.segment->setText("   HandySearch has provided " + QString::number(resultList.size()) + " result(s) for you in " + QString::number((double)clock.elapsed() / 1000) + " second(s)");
-    
-    /* Clear all html's weight info in result list */
-    for (Webpage* html : resultList)
-        html->clearWeight();
+    ui.segment->setText("   HandySearch has provided " + QString::number(webpages.size()) + " result(s) for you in " + QString::number((double)clock.elapsed() / 1000) + " second(s)");
 
     clock.restart();
 }
