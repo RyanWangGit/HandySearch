@@ -1,31 +1,8 @@
-/*************************************
- * Copyright(C),2015-2016,Ryan Wang 
- * 
- * File:    WordSegmenter.cpp
- *
- * Version: V1.0
- * 
- * Brief:    This implements a word segementer based on MMSeg algorithm,
- * providing fast segmentation and also real good accuracy.
- *
- * Author:    Ryan
- 
- * Date:    Oct. 2015
-*************************************/
 #include "stable.h"
 #include "word_segmenter.h"
 #include "bloom_filter.h"
 
 
-/*--------------------------
-* Chunk::Chunk
-*     Chunk constructor,construct Chunk object with three words,
-* use QString::null to represent empty string,common-used.
-* Parameter:
-*     QString fWord - First word.
-*     QString sWord - Second word.
-*     QString tWord - Third word.
-----------------------------*/
 Chunk::Chunk(QString fWord,QString sWord,QString tWord)
 {
     this->words.append(fWord);
@@ -40,10 +17,6 @@ Chunk::Chunk(QString fWord,QString sWord,QString tWord)
 }
 
 
-/*--------------------------
-* Chunk::Chunk
-*     Default constructor,used for list head node.
-----------------------------*/
 Chunk::Chunk()
 {
     this->wordCount = -1;
@@ -53,23 +26,12 @@ Chunk::Chunk()
 }
 
 
-/*--------------------------
-* Chunk::Chunk
-*     Copy constructor.
-* Parameter:
-*     const Chunk & other - The other Chunk object.
-----------------------------*/
 Chunk::Chunk(const Chunk & other)
 {
     this->operator=(other);
 }
 
 
-/*--------------------------
-* Chunk::getCount
-*     Returns the number of words the chunk posseses.
-* Returns:    int - The number of words.
-----------------------------*/
 int Chunk::getCount()
 {
     if (wordCount < 0)
@@ -83,11 +45,6 @@ int Chunk::getCount()
 }
 
 
-/*--------------------------
-* Chunk::getLength
-*     Returns the total word length of the chunk.
-* Returns:    int - The total words length.
-----------------------------*/
 int Chunk::getLength()
 {
     if (totalLen < 0)
@@ -103,11 +60,6 @@ int Chunk::getLength()
 }
 
 
-/*--------------------------
-* Chunk::getAvgLen
-*     Returns the average word length of the chunk.
-* Returns:    double - Average word length.
-----------------------------*/
 double Chunk::getAvgLen()
 {
     if (avgLen < 0)
@@ -116,11 +68,6 @@ double Chunk::getAvgLen()
 }
 
 
-/*--------------------------
-* Chunk::getVariance
-*     Returns the variance of the chunk.
-* Returns:    double - Variance of the chunk.
-----------------------------*/
 double Chunk::getVariance()
 {
     if (variance < 0)
@@ -140,24 +87,12 @@ double Chunk::getVariance()
 }
 
 
-/*--------------------------
-* Chunk::getWords
-*     Returns the word list of the chunk.
-* Returns:    QStringList & - 
-----------------------------*/
 QStringList & Chunk::getWords()
 {
     return words;
 }
 
 
-/*--------------------------
-* Chunk::operator=
-*     Override operator method to assign value directly.
-* Returns:    Chunk & - The chunk obejct itself.
-* Parameter:
-*     const Chunk & other - The other chunk object.
-----------------------------*/
 Chunk & Chunk::operator=(const Chunk &other)
 {
     this->words = other.words;
@@ -170,12 +105,6 @@ Chunk & Chunk::operator=(const Chunk &other)
 }
 
 
-/*--------------------------
-* WordSegmenter::mmFilter
-*     Filter the chunk list with Max-Matching rule.
-* Parameter:
-*     QList<Chunk *> & chunks - Chunk list to be filtered.
-----------------------------*/
 void WordSegmenter::mmFilter(QList<Chunk *> &chunks)
 {
     //Filter with segmentation length
@@ -194,12 +123,6 @@ void WordSegmenter::mmFilter(QList<Chunk *> &chunks)
 }
 
 
-/*--------------------------
-* WordSegmenter::lawlFilter
-*     Filter the chunk list with Largest-Average-Word-Length rule.
-* Parameter:
-*     QList<Chunk *> & chunks - Chunk list to be filtered.
-----------------------------*/
 void WordSegmenter::lawlFilter(QList<Chunk *> &chunks)
 {
     //Filter with average word length
@@ -218,12 +141,6 @@ void WordSegmenter::lawlFilter(QList<Chunk *> &chunks)
 }
 
 
-/*--------------------------
-* WordSegmenter::svwlFilter
-*     Filter the chunk list with Smallest-Variance-of-Word-Length rule.
-* Parameter:
-*     QList<Chunk *> & chunks - Chunk list to be filtered.
-----------------------------*/
 void WordSegmenter::svwlFilter(QList<Chunk *> &chunks)
 {
     //Fiter with variance of word length
@@ -241,13 +158,6 @@ void WordSegmenter::svwlFilter(QList<Chunk *> &chunks)
 }
 
 
-/*--------------------------
-* WordSegmenter::logFreqFilter
-*     Filter the chunk list with largest-Sum-of-Degree-of-Morphemic
-* -Freedom-of-one-character-words rule.
-* Parameter:
-*     QList<Chunk *> & chunks - Chunk list to be filtered.
-----------------------------*/
 void WordSegmenter::sdmfFilter(QList<Chunk *> &chunks)
 {
     //Due to lack of information
@@ -256,36 +166,18 @@ void WordSegmenter::sdmfFilter(QList<Chunk *> &chunks)
 }
 
 
-/*--------------------------
-* WordSegmenter::isChineseChar
-*     Determine whether a character is Chinese or not.
-* Returns:    bool - Result.
-* Parameter:
-*     QChar & ch - The character
-----------------------------*/
 bool WordSegmenter::isChineseChar(const QChar &ch)
 {
     return (ch.unicode() >= 0x4e00 && ch.unicode() <= 0x9FA5);
 }
 
 
-/*--------------------------
-* WordSegmenter::peekNextChar
-*     Return the next character of the current position of the content
-* without pushing the pos indicator.
-* Returns:    QChar - The next character.
-----------------------------*/
 QChar WordSegmenter::peekNextChar() const
 {
     return content.data()[pos];
 }
 
 
-/*--------------------------
-* WordSegmenter::getMaxMatchingWord
-*     Return all possible segmentation results using MaxMatching method.
-* Returns:    QStringList - All possible segmentation results.
-----------------------------*/
 QStringList WordSegmenter::getMaxMatchingWord()
 {
     QStringList words;
@@ -308,11 +200,6 @@ QStringList WordSegmenter::getMaxMatchingWord()
 }
 
 
-/*--------------------------
-* WordSegmenter::getChineseWords
-*     Returns the next three segmented Chinese words(a chunk).
-* Returns:    QStringList - Segmented chunk(Chinese word list).
-----------------------------*/
 QStringList WordSegmenter::getChineseWords()
 {
     //Find all possible chunks
@@ -343,11 +230,6 @@ QStringList WordSegmenter::getChineseWords()
 }
 
 
-/*--------------------------
-* WordSegmenter::getASCIIWords
-*     Returns the next english word or punctuation.
-* Returns:    QString - English word or punctuation.
-----------------------------*/
 QString WordSegmenter::getASCIIWords()
 {
     unsigned int start = pos;
@@ -377,12 +259,6 @@ QString WordSegmenter::getASCIIWords()
 }
 
 
-/*--------------------------
-* WordSegmenter::createChunks
-*     Create multiple possible chunks.
-* Parameter:
-*     QList<Chunk> & chunks - List of possible chunks.
-----------------------------*/
 void WordSegmenter::createChunks(QList<Chunk *> &chunks)
 {
     unsigned int originalPos = pos;
@@ -428,13 +304,6 @@ void WordSegmenter::createChunks(QList<Chunk *> &chunks)
 }
 
 
-/*--------------------------
-* WordSegmenter::WordSegmenter
-*     Constructor of segmenter.
-* Parameter:
-*     QString & content - The content needed to be segmented.
-*     Dictionary* dict - Dictionary object pointer.
-----------------------------*/
 WordSegmenter::WordSegmenter(const Dictionary *dict)
     :dict(dict)
 {
@@ -442,11 +311,6 @@ WordSegmenter::WordSegmenter(const Dictionary *dict)
 }
 
 
-/*--------------------------
-* WordSegmenter::segment
-*     Returns the segmented word list as result.
-* Returns:    QStringList - Segmented word list.
-----------------------------*/
 QStringList WordSegmenter::segment(const QString &content)
 {
     QStringList result;

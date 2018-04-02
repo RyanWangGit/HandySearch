@@ -1,26 +1,7 @@
-/*************************************
- * Copyright(C),2015-2016,Ryan Wang 
- * 
- * File:    BloomFilter.cpp
- *
- * Version: V1.0
- * 
- * Brief:    This is the implementation of BloomFilter,simple use addItem to put
- * new dictionary entry to the dictionary and use hasItem to test whether an entry
- * is in the dictionary or not.
- *
- * Author:    Ryan
- 
- * Date:    Oct. 2015
-*************************************/
 #include "stable.h"
 #include "bloom_filter.h"
 
 
-/*--------------------------
-* BloomFilter::BloomFilter
-*     The default constructor of BloomFilter.
-----------------------------*/
 BloomFilter::BloomFilter()
 {
     this->bitArray.resize(MAXSIZE);
@@ -28,14 +9,6 @@ BloomFilter::BloomFilter()
 
 
 
-/*--------------------------
-* BloomFilter::hasItem
-*     Find whether the item is in the BloomFilter or not.
-* Returns:    bool - Result.
-* Parameter:
-*    void * key - The key to search.
-*    int len - Length of string.
-----------------------------*/
 bool BloomFilter::hasItem(const void *key, int len) const
 {
     return
@@ -58,14 +31,6 @@ bool BloomFilter::hasItem(const void *key, int len) const
 }
 
 
-/*--------------------------
-* BloomFilter::addItem
-*     Add an item to the BloomFilter.
-* Returns:    bool - Operation result.
-* Parameter:
-*    void * key - String pointer.
-*    int len - Length of string.
-----------------------------*/
 bool BloomFilter::addItem(const void *key, int len)
 {
     bitArray.setBit(APHash((char *)key, len) % MAXSIZE);
@@ -86,13 +51,6 @@ bool BloomFilter::addItem(const void *key, int len)
 }
 
 
-/*--------------------------
-* 14 Hash function list
-* Returns:    unsigned int - The hash code.
-* Parameter:
-*     char * str - String to hash.
-*     unsigned int len - Length of the string.
-----------------------------*/
 unsigned int BloomFilter::RSHash(const char* str, unsigned int len) const {
     unsigned int b = 378551;
     unsigned int a = 63689;
@@ -287,4 +245,3 @@ unsigned int BloomFilter::StrHash(const char* str, unsigned int) const
     return h;
 
 }
-/* End of hash function list */
