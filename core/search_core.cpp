@@ -72,6 +72,15 @@ unsigned int SearchCore::getMaxProgress() const
     return this->maxProgress;
 }
 
+QStringList SearchCore::getTitleList() const
+{
+    QSqlQuery query("SELECT title FROM `webpages`", this->db);
+    QStringList list;
+    while(query.next())
+        list.append(query.value(0).toString());
+    return list;
+}
+
 /* TODO: need more elegant solution */
 // used by mapper and reducer since they have to be static functions
 static SearchCore *_core = NULL;
