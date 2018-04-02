@@ -17,7 +17,6 @@ public slots:
     void segment();
     void search();
     void searchResult(const QList<Webpage*> &resultList, const QStringList &keyWordList);
-    void anchorClicked(const QUrl &url);
     void about();
 public:
     HandySearch(QWidget *parent = 0);
