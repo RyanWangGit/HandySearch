@@ -22,7 +22,7 @@ HandySearch::HandySearch(QWidget *parent)
     connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, [](const QUrl &url) { QDesktopServices::openUrl(url); });
 
     connect(&this->loadUI, &LoadUI::start, [this](const QString &dictionaryPath, const QString &databasePath) {
-        this->core.setPath(dictionaryPath, "/Users/Ryan/Desktop/HandySearch/scraper/wiki.sqlite");
+        this->core.setPath(dictionaryPath, databasePath);
         emit this->startLoading();
     } );
     connect(&this->core, &SearchCore::progress, [this](const QString &hint, int progress) {
