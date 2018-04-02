@@ -1,10 +1,8 @@
 #include "stable.h"
-#include "webpage.h"
-#include "index.h"
 #include "handy_search.h"
 #include "word_segmenter.h"
 #include "load_ui.h"
-#include "inverted_list.h"
+#include "search_core.h"
 
 
 HandySearch::HandySearch(QWidget *parent)
@@ -18,27 +16,8 @@ HandySearch::HandySearch(QWidget *parent)
     setMinimumWidth(MINWIDTH);
     setWindowIconText("HandySearch");
 
-    connect(ui.resultEdit, &QTextBrowser::anchorClicked, this, &HandySearch::anchorClicked);
-
-    /* Turn on separate thread to store Dictionary and inverted list 
-        in order to work independently */
-    connect(&invertedList, &InvertedList::queryResult, this, &HandySearch::searchResult);
-    dictionary.moveToThread(&dictThread);
-    invertedList.moveToThread(&listThread);
-    dictThread.start();
-    listThread.start();
     connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, [](const QUrl &url) { QDesktopServices::openUrl(url); });
-}
 
-
-Dictionary* HandySearch::getDictionary()
-{
-    return &dictionary;
-}
-
-InvertedList* HandySearch::getInvertedList()
-{
-    return &invertedList;
 }
 
 
