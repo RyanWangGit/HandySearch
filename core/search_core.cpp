@@ -72,6 +72,7 @@ unsigned int SearchCore::getMaxProgress() const
     return this->maxProgress;
 }
 
+/* TODO: need more elegant solution */
 // used by mapper and reducer since they have to be static functions
 static SearchCore *_core = NULL;
 // used by mapper and reducer to report progress
@@ -190,7 +191,7 @@ void SearchCore::load(int from)
     WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();
 
     this->webpagesCount += TOTAL_WEBPAGES - from + 1;
-    this->maxProgress = (TOTAL_WEBPAGES - from + 1) + WEBPAGES_PER_THREAD * (QThread::idealThreadCount() + 1);
+    this->maxProgress = (TOTAL_WEBPAGES - from + 1) + WEBPAGES_PER_THREAD * (QThread::idealThreadCount() + 1) + 1;
 
     QList<QPair<int, int> > tasks;
     for(int i = from; i < TOTAL_WEBPAGES; i += WEBPAGES_PER_THREAD)
@@ -213,6 +214,7 @@ void SearchCore::load(int from)
     this->invertedList.squeeze();
 
     this->hasLoaded = true;
+    emit this->progress("Loading webpages", 1);
 }
 
 
