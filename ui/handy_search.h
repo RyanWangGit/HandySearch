@@ -17,7 +17,6 @@ public slots:
     void segment();
     void search();
     void searchResult(const QList<Webpage*> &resultList, const QStringList &keyWordList);
-    void about();
 public:
     HandySearch(QWidget *parent = 0);
     Dictionary *getDictionary();
