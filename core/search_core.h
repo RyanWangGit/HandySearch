@@ -34,6 +34,7 @@ public:
     const Dictionary &getDictionary() const;
     unsigned int getMaxProgress() const;
     unsigned int getWebpagesCount() const;
+    QStringList getTitleList() const;
     void load(int from = 1);
     void query(const QString &sentence);
     void clear();
