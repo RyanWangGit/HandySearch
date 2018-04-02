@@ -1,39 +1,16 @@
-/*************************************
- * Copyright(C),2015-2016,Ryan Wang 
- * 
- * File:    LoadUI.cpp
- *
- * Version: V1.0
- * 
- * Brief:    This implements the user interface of loading dialog,supporting
- * multiple animations and information-displaying.
- *
- * Author:    Ryan
- 
- * Date:    Oct. 2015
-*************************************/
 #include "stable.h"
 #include "load_ui.h"
 #include "handy_search.h"
 
-/* Initialization of static members */
-LoadUI* LoadUI::instance = nullptr;
 
-/*--------------------------
-* LoadUI::LoadUI
-*     Loading dialog constructor.
-----------------------------*/
 LoadUI::LoadUI()
 {
     ui.setupUi(this);
     /* Initialize variables */
     isPressed = false;
-    currentProgress = 0;
-    maximumProgress = 0;
-    instance = &(*this);
 
     /* Bind the signal */
-    connect(ui.close, &QPushButton::clicked, this, &LoadUI::canceled);
+    connect(ui.close, &QPushButton::clicked, []{ QApplication::quit(); });
 
     setWindowIconText("Handy Search");
     setWindowFlags(Qt::FramelessWindowHint);
@@ -41,98 +18,47 @@ LoadUI::LoadUI()
 }
 
 
-/*--------------------------
-* LoadUI::checkDirectory
-*     Check if current directory is correct or not,and queries for right directory if not.
-* Returns:    Whether the user decides to quit the appilication or not.
-----------------------------*/
-bool LoadUI::checkDirectory()
+void LoadUI::progress(const QString &hint, float progress)
 {
-    QString currentPath = QApplication::applicationDirPath();
-    /* The default html library path */
-    htmlFolder = currentPath + "/Html Library";
-
-    /* The default dictionary library path */
-    dictFolder = currentPath + "/Dictionary Library";
-
-    /* If html folder or dictionary folder doesn't exist */
-    if (!htmlFolder.exists() || !dictFolder.exists())
-    {
-        while (!dictFolder.exists())
-        {
-            dictFolder = QFileDialog::getExistingDirectory(this, "Choose Dictionary Library", "");
-            if (!dictFolder.exists())
-            {
-                QApplication::beep();
-                if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
-                    return false;
-            }
-        }
-        while (!htmlFolder.exists())
-        {
-            htmlFolder = QFileDialog::getExistingDirectory(this, "Choose Html Library", "");
-            if (!htmlFolder.exists())
-            {
-                QApplication::beep();
-                if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
-                    return false;
-            }
-        }
-    }
-    return true;
+    this->ui.statusBar->setText(hint + " - " + QString::number(progress * 100, 'g', 4) + "%");
 }
 
 
-/*--------------------------
-* LoadUI::loadData
-*     Start loading htmls and dictionary,connect the signals and slots,
-* and start initialization thread.
-----------------------------*/
 bool LoadUI::loadData()
 {
-    /* Show up the dialog */
-    show();
-    /* Check the directory is correct or not */
-    if (!checkDirectory())
-        return false;
+    QString dictionaryPath, databasePath;
 
-    /* Start the loading clock */
-    clock.start();
-    
-    /* Set dictionary folder and connect UI signals */
-    /*
-    Dictionary* dict = HandySearch::getInstance()->getDictionary();
-    dict->setDictFolder(dictFolder);
-    connect(dict, &Dictionary::dictLoadStarted, this, &LoadUI::dictLoadStarted);
-    connect(dict, &Dictionary::dictLoaded, this, &LoadUI::dictLoaded);
-    connect(dict, &Dictionary::dictLoadFinished, this, &LoadUI::dictLoadFinished);
-    */
-    /* Set html folder and connect UI signals */
-    InvertedList* invertedList = HandySearch::getInstance()->getInvertedList();
-    invertedList->setHtmlFolder(htmlFolder);
-    connect(invertedList, &InvertedList::htmlLoadStarted, this, &LoadUI::htmlLoadStarted);
-    /* htmlLoaded signal is directly connected to LoadUI inside HtmlLoadTask */
-    connect(invertedList, &InvertedList::htmlLoadFinished, this, &LoadUI::htmlLoadFinished);
-    
-    
-    /* Connect the loading procedure signals/slots */
-    connect(this, &LoadUI::start, this, &LoadUI::loadStarted);
-    //connect(this, &LoadUI::start, dict, &Dictionary::load);
-    //connect(dict, &Dictionary::dictLoadFinished, invertedList, &InvertedList::load);
-    connect(invertedList, &InvertedList::htmlLoadFinished, this, &LoadUI::loadFinished);
+    dictionaryPath = QFileDialog::getOpenFileName(this, "Choose Dictionary", "");
 
-    /* Start loading */
-    emit start();
+    if (dictionaryPath.isEmpty())
+        dictionaryPath = ":/assets/dictionary.txt";
+
+    databasePath = QFileDialog::getOpenFileName(this, "Choose Webpage database", "", "Database (*.db *.sqlite *.sqlite3)");
+    if (databasePath.isEmpty())
+    {
+        QApplication::beep();
+        if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
+            return false;
+    }
+    emit start(dictionaryPath, databasePath);
+
+    connect(&timer, &QTimer::timeout, this, &LoadUI::loadingDots);
+    timer.start(20);
+
+    QPropertyAnimation geometry(ui.statusBar, "geometry");
+    geometry.setDuration(1000);
+    QPoint leftTop = ui.statusBar->pos();
+    QPoint rightBot(leftTop.x() + ui.statusBar->width(), leftTop.y() + ui.statusBar->height());
+    QRect rect(leftTop, rightBot);
+    geometry.setStartValue(rect);
+    rect.setY(rect.y() - 15);
+    geometry.setEndValue(rect);
+    geometry.start();
 
     return true;
 }
 
 
-/* ------Slot functions--------- */
-/*--------------------------
-* LoadUI::loadingDots
-*     Controls the moving trace of five loading dots,provides a fancy loading animation.
-----------------------------*/
 void LoadUI::loadingDots()
 {
     //TODO:
@@ -183,131 +109,6 @@ void LoadUI::loadingDots()
 }
 
 
-/*--------------------------
-* LoadUI::htmlLoadStarted
-*     Initialize the variables and get ready to load html.
-----------------------------*/
-void LoadUI::htmlLoadStarted()
-{
-    QDir dir(htmlFolder);
-    currentProgress = 0;
-    maximumProgress = dir.entryList().size();
-    ui.statusBar->setText("Started Loading Html Library");
-}
-
-
-/*--------------------------
-* LoadUI::htmlLoaded
-*     Receive html loaded signal from sub-threads and set the loading text.
-* Parameter:
-*     unsigned int threadID - Thread ID the html was loaded,not currently used.
-*     QString path - Html file path,not currently used.
-----------------------------*/
-void LoadUI::htmlLoaded(int num)
-{
-    currentProgress += num;
-    QString msg ;
-    int percent = ((float)currentProgress / maximumProgress) * 100;
-    msg.append(QString::number(percent));
-    msg.append(" % - Loading Htmls");
-    ui.statusBar->setText(msg);
-}
-
-
-/*--------------------------
-* LoadUI::htmlLoadFinished
-*     Receives html loading finished signal,set loading text and quit loading thread.
-----------------------------*/
-void LoadUI::htmlLoadFinished()
-{
-    ui.statusBar->setText("Ready");
-    currentProgress = 0;
-    maximumProgress = 0;
-}
-
-
-/*--------------------------
-* LoadUI::dictLoadStarted
-*     Initialize the variables and get ready to load dictionary.
-----------------------------*/
-void LoadUI::dictLoadStarted()
-{
-    /* Started Loading Dictionary Library */
-    currentProgress = 0;
-    maximumProgress = 0;
-}
-
-
-/*--------------------------
-* LoadUI::dictLoaded
-*     Receive html loaded signal and set the loading text.
-* Parameter:
-*     int num - Number of dictionary items loaded.
-----------------------------*/
-void LoadUI::dictLoaded(int num)
-{
-    currentProgress += num;
-    QString msg;
-    msg.append(QString::number(currentProgress));
-    msg.append(" Items Loaded");
-    ui.statusBar->setText(msg);
-}
-
-
-/*--------------------------
-* LoadUI::dictLoadFinished
-*     Receives html loading finished signal,this method is not implemented.
-----------------------------*/
-void LoadUI::dictLoadFinished()
-{
-    /* Quit the task-load threads */
-    
-}
-
-
-/*--------------------------
-* LoadUI::loadStarted
-*     Receives load started signal,loading text fades in,initiate loading dots animation.
-----------------------------*/
-void LoadUI::loadStarted()
-{
-    connect(&timer, &QTimer::timeout, this, &LoadUI::loadingDots);
-    timer.start(20);
-
-    QPropertyAnimation geometry(ui.statusBar, "geometry");
-    geometry.setDuration(1000);
-    QPoint leftTop = ui.statusBar->pos();
-    QPoint rightBot(leftTop.x() + ui.statusBar->width(), leftTop.y() + ui.statusBar->height());
-    QRect rect(leftTop, rightBot);
-    geometry.setStartValue(rect);
-    rect.setY(rect.y() - 15);
-    geometry.setEndValue(rect);
-    geometry.start();
-}
-
-
-/*--------------------------
-* LoadUI::loadFinished
-*     Recieves load finished signal,close the dialog.
-----------------------------*/
-void LoadUI::loadFinished()
-{
-#ifdef _DEBUG
-    QMessageBox::information(nullptr, "Time", "Time elapsed: " + QString::number(clock.elapsed()));
-    qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::getTotalHtmlCount();
-#endif
-    emit finished();
-    /* Close the dialog */
-    close();
-}
-
-
-/*--------------------------
-* LoadUI::mousePressEvent
-*     Override method to implement drag movement.
-* Parameter:
-*     QMouseEvent * event - Mouse event.
-----------------------------*/
 void LoadUI::mousePressEvent(QMouseEvent *event)
 {
     isPressed = true;
@@ -315,12 +116,6 @@ void LoadUI::mousePressEvent(QMouseEvent *event)
 }
 
 
-/*--------------------------
-* LoadUI::mouseMoveEvent
-*     Override method to implement drag movement.
-* Parameter:
-*     QMouseEvent * event - Mouse event.
-----------------------------*/
 void LoadUI::mouseMoveEvent(QMouseEvent *event)
 {
     if (isPressed)
@@ -328,28 +123,12 @@ void LoadUI::mouseMoveEvent(QMouseEvent *event)
 }
 
 
-/*--------------------------
-* LoadUI::mouseReleaseEvent
-*     Override method to implement drag movement.
-* Parameter:
-*     QMouseEvent * event - Mouse event.
-----------------------------*/
 void LoadUI::mouseReleaseEvent(QMouseEvent * event)
 {
     isPressed = false;
 }
 
 
-/*--------------------------
-* LoadUI::~LoadUI
-*     Destructor of LoadUI,not implemented.
-----------------------------*/
 LoadUI::~LoadUI()
 {
 }
-
-LoadUI* LoadUI::getInstance()
-{
-    return instance;
-}
-

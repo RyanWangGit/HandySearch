@@ -20,13 +20,6 @@ SearchCore::SearchCore(const QString &dictionary, const QString &database)
 }
 
 
-SearchCore::SearchCore(const QString &database)
-{
-    this->setPath(database);
-    this->hasLoaded = false;
-}
-
-
 SearchCore::SearchCore()
 {
     this->hasLoaded = false;
@@ -35,13 +28,6 @@ SearchCore::SearchCore()
 SearchCore::~SearchCore()
 {
     this->db.close();
-}
-
-
-void SearchCore::setPath(const QString &database)
-{
-    this->dictionaryPath = ":/assets/dictionary.txt";
-    this->databasePath = database;
 }
 
 
@@ -70,6 +56,15 @@ unsigned int SearchCore::getWebpagesCount() const
 unsigned int SearchCore::getMaxProgress() const
 {
     return this->maxProgress;
+}
+
+QStringList SearchCore::getTitleList() const
+{
+    QSqlQuery query("SELECT title FROM `webpages`", this->db);
+    QStringList list;
+    while(query.next())
+        list.append(query.value(0).toString());
+    return list;
 }
 
 /* TODO: need more elegant solution */
@@ -214,7 +209,7 @@ void SearchCore::load(int from)
     this->invertedList.squeeze();
 
     this->hasLoaded = true;
-    emit this->progress("Loading webpages", 1);
+    emit this->progress("Loading Webpages", 1);
 }
 
 
