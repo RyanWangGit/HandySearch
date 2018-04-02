@@ -22,37 +22,38 @@
 * - License: GNU Lesser General Public License (LGPL)
 * - Blog and source code availability: http://ryanwanggit.github.io/HandySearch/
 *****************************************/
-#pragma  once
-#include <QStringList>
-#include <QMultiHash>
-#include <QList>
-#include "Index.h"
-#include "Html.h"
+#pragma once
+#include <QDir>
+#include <QTimer>
+#include <QTime>
+#include <QThread>
+#include "ui_load_ui.h"
 
-/**
-* Class:    LocalInvertedList
-*
-* Brief:    Local invertedList consists of several html tasks and a local hashmap
-* which contains the index of htmls.
-*
-* Date:    Nov. 2015
-*/
-class LocalInvertedList : public QObject
+
+class LoadUI : public QDialog
 {
     Q_OBJECT
 private:
-    QMultiHash<QString, Index *> localHash;
-    QStringList pathList;
-    /* Segment the content and save it to the inverted list */
-    void putInLocalList(Html *html);
+    QTime clock;
+    QTimer timer;
+    // For dragging the window
+    QPoint origin;
+    bool isPressed;
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 public:
-    LocalInvertedList(const QStringList &pathList);
-    ~LocalInvertedList();
+    LoadUI();
+    ~LoadUI();
+    static LoadUI *getInstance();
 public slots:
-    void localLoadStart();
-    void localQuery(const QStringList &keyWordList);
+    bool loadData();
+    void loadingDots();
+    void progress(const QString &hint, float progress);
 signals:
-    void htmlLoaded(int num);
-    void localLoadFinished(QThread *, const QStringList &);
-    void localQueryResult(QThread *, const QList<Html*> &);
+    void start(const QString &dictionaryPath, const QString &databasePath);
+private:
+    Ui::LoadUI ui;
 };
+
