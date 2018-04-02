@@ -21,19 +21,14 @@ HandySearch::HandySearch(QWidget *parent)
 }
 
 
-bool HandySearch::load()
+void HandySearch::handleFinished()
 {
-    /* Connect LoadUI signals/slots */
-    connect(&loadUI, &LoadUI::canceled, this, &HandySearch::loadCanceled);
-    connect(&loadUI, &LoadUI::finished, this, &HandySearch::loadFinished);
-    return loadUI.loadData();
-}
+    this->show();
+    this->loadUI.hide();
 
-void HandySearch::segment()
-{
-    WordSegmenter ws(&dictionary);
-    QStringList wordList = ws.segment(ui.searchEdit->text());
-    ui.searchEdit->setText(wordList.join("\\"));
+    /* Set Auto completer */
+    this->completer = new QCompleter(this->core.getTitleList(), this);
+    this->ui.searchEdit->setCompleter(completer);
 }
 
 
@@ -174,19 +169,3 @@ void HandySearch::showResult(const QList<Webpage*> &resultList, const QStringLis
 
     clock.restart();
 }
-
-
-void HandySearch::loadCanceled()
-{
-    QApplication::quit();
-}
-
-
-void HandySearch::loadFinished()
-{
-    show();
-    /* Set Auto completer */
-    completer = new QCompleter(invertedList.getTitleList(), this);
-    ui.searchEdit->setCompleter(completer);
-}
-

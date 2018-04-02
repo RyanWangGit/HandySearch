@@ -9,17 +9,9 @@
 class HandySearch : public QMainWindow
 {
     Q_OBJECT
-public slots:
-    void loadCanceled();
-    void loadFinished();
-    /* UI slots */
-    void segment();
-    void search();
     void searchResult(const QList<Webpage*> &resultList, const QStringList &keyWordList);
 public:
     HandySearch(QWidget *parent = 0);
-    Dictionary *getDictionary();
-    InvertedList *getInvertedList();
     bool load();
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -32,6 +24,8 @@ private:
     QCompleter* completer;
     SearchCore core;
     QThread coreThread;
+    void handleFinished();
+
     LoadUI loadUI;
     Ui::HandySearchClass ui;
     /* Constants */
