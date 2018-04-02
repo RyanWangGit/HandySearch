@@ -55,23 +55,11 @@ void HandySearch::handleFinished()
 }
 
 
-void HandySearch::search()
+bool HandySearch::load()
 {
-    clock.start();
-    if (ui.searchEdit->text() == "")
-    {
-        setDefaultUILayout();
-        return;
-    }
-
-    QString searchContent = ui.searchEdit->text().mid(0, 20);
-    WordSegmenter ws(&dictionary);
-    QStringList wordList = ws.segment(searchContent);
-    wordList.removeDuplicates();
-    wordList.removeAll(" ");
-    invertedList.query(wordList);
-
-    /* TODO: Start searching animations */
+    loadUI.show();
+    loadUI.loadData();
+    return true;
 }
 
 
