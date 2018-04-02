@@ -25,11 +25,9 @@ private:
     unsigned int webpagesCount;
 public:
     SearchCore(const QString &dictionary, const QString &database);
-    SearchCore(const QString &database);
     SearchCore();
     ~SearchCore();
     void setPath(const QString &dictionary, const QString &database);
-    void setPath(const QString &database);
     const QString &getDatabasePath() const;
     const Dictionary &getDictionary() const;
     unsigned int getMaxProgress() const;

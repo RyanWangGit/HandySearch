@@ -20,13 +20,6 @@ SearchCore::SearchCore(const QString &dictionary, const QString &database)
 }
 
 
-SearchCore::SearchCore(const QString &database)
-{
-    this->setPath(database);
-    this->hasLoaded = false;
-}
-
-
 SearchCore::SearchCore()
 {
     this->hasLoaded = false;
@@ -35,13 +28,6 @@ SearchCore::SearchCore()
 SearchCore::~SearchCore()
 {
     this->db.close();
-}
-
-
-void SearchCore::setPath(const QString &database)
-{
-    this->dictionaryPath = ":/assets/dictionary.txt";
-    this->databasePath = database;
 }
 
 
