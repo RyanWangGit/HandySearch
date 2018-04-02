@@ -54,6 +54,7 @@ public:
 public slots:
     bool loadData();
     void loadingDots();
+    void progress(const QString &hint, float progress);
 signals:
 private:
     Ui::LoadUI ui;

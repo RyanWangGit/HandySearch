@@ -10,8 +10,6 @@ LoadUI::LoadUI()
     ui.setupUi(this);
     /* Initialize variables */
     isPressed = false;
-    currentProgress = 0;
-    maximumProgress = 0;
     instance = &(*this);
 
     /* Bind the signal */
@@ -24,10 +22,11 @@ LoadUI::LoadUI()
 
 
 bool LoadUI::checkDirectory()
+void LoadUI::progress(const QString &hint, float progress)
 {
-    QString currentPath = QApplication::applicationDirPath();
-    /* The default html library path */
-    htmlFolder = currentPath + "/Html Library";
+    this->ui.statusBar->setText(hint + " - " + QString::number(progress * 100, 'g', 4) + "%");
+}
+
 
     /* The default dictionary library path */
     dictFolder = currentPath + "/Dictionary Library";
