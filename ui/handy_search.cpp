@@ -16,8 +16,31 @@ HandySearch::HandySearch(QWidget *parent)
     setMinimumWidth(MINWIDTH);
     setWindowIconText("HandySearch");
 
+    this->core.moveToThread(&this->coreThread);
+    connect(this, &HandySearch::progress, &this->loadUI, &LoadUI::progress);
+    connect(this, &HandySearch::startLoading, &this->core, &SearchCore::load);
     connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, [](const QUrl &url) { QDesktopServices::openUrl(url); });
 
+    connect(&this->loadUI, &LoadUI::start, [this](const QString &dictionaryPath, const QString &databasePath) {
+        this->core.setPath(dictionaryPath, "/Users/Ryan/Desktop/HandySearch/scraper/wiki.sqlite");
+        emit this->startLoading();
+    } );
+    connect(&this->core, &SearchCore::progress, [this](const QString &hint, int progress) {
+        static int totalProgress = 0;
+        totalProgress += progress;
+        emit this->progress(hint, totalProgress / float(this->core.getMaxProgress()));
+
+        if(totalProgress == this->core.getMaxProgress())
+            emit this->loadFinished();
+
+    });
+    connect(this, &HandySearch::loadFinished, this, &HandySearch::handleFinished);
+
+    connect(this->ui.searchEdit, &QLineEdit::returnPressed, [this]() { emit this->query(this->ui.searchEdit->text()); });
+    connect(this->ui.search, &QPushButton::clicked, [this]() { emit this->query(this->ui.searchEdit->text()); });
+    connect(this, &HandySearch::query, &this->core, &SearchCore::query);
+    connect(&this->core, &SearchCore::result, this, &HandySearch::searchResult);
+    this->coreThread.start();
 }
 
 
