@@ -1,18 +1,3 @@
-/*************************************
- * Copyright(C),2015-2016,Ryan Wang 
- * 
- * File:    HandySearch.cpp
- *
- * Version: V1.0
- * 
- * Brief:    This is the implementations of HandySearch class,
- * which is the main QT class that controls and manages every
- * QT objects and main window.
- *
- * Author:    Ryan
- 
- * Date:    Oct. 2015
-*************************************/
 #include "stable.h"
 #include "webpage.h"
 #include "index.h"
@@ -24,13 +9,6 @@
 /* Initialization of static members */
 HandySearch* HandySearch::instance = nullptr;
 
-/*--------------------------
-* HandySearch::HandySearch
-*     The default constructor of HandySearch,setup UI andconnect signal and
-* slots between loadUI and HandySearch class,and start initiating threads.
-* Parameter:
-*     QWidget * parent - Parent of MainWindow.
-----------------------------*/
 HandySearch::HandySearch(QWidget *parent)
     : QMainWindow(parent), MINHEIGHT(500), MINWIDTH(850)
 {
@@ -55,44 +33,23 @@ HandySearch::HandySearch(QWidget *parent)
 }
 
 
-/*--------------------------
-* HandySearch::getDictionary
-*     Returns the global dictionary pointer.
-* Returns: Dictionary * - The dictioanry pointer.
-----------------------------*/
 Dictionary* HandySearch::getDictionary()
 {
     return &dictionary;
 }
 
-
-/*--------------------------
-* HandySearch::getInvertedList
-*     Returns the global inverted list pointer.
-* Returns: InvertedList * - The inverted list pointer.
-----------------------------*/
 InvertedList* HandySearch::getInvertedList()
 {
     return &invertedList;
 }
 
 
-/*--------------------------
-* HandySearch::getInstance
-*     Returns the global instance of HandySearch pointer.
-* Returns: HandySearch * - The HandySearch pointer.
-----------------------------*/
 HandySearch* HandySearch::getInstance()
 {
     return instance;
 }
 
 
-/*--------------------------
-* HandySearch::getInstance
-*     connect the signals and slots and start loading the whole system.
-* Returns: bool - The result of load.
-----------------------------*/
 bool HandySearch::load()
 {
     /* Connect LoadUI signals/slots */
@@ -101,11 +58,6 @@ bool HandySearch::load()
     return loadUI.loadData();
 }
 
-/*--------------------------
-* HandySearch::segment
-*     Retrive the text in searchEdit and do segmentations,
-* and put the result back in searchEdit.
-----------------------------*/
 void HandySearch::segment()
 {
     WordSegmenter ws(&dictionary);
@@ -114,11 +66,6 @@ void HandySearch::segment()
 }
 
 
-/*--------------------------
-* HandySearch::search
-*     Set the UI Layout into result mode,collect the search result
-* in the inverted list and sort it,then show the result.
-----------------------------*/
 void HandySearch::search()
 {
     clock.start();
@@ -139,13 +86,6 @@ void HandySearch::search()
 }
 
 
-/*--------------------------
-* HandySearch::searchResult
-*     Slot fucntion processes the result return of inverted list and show to the user.
-* Parameter:
-*     const QList<Html*> & resultList - The query resuly list.
-*    const QStringList & keyWordList - The key word list.
-----------------------------*/
 void HandySearch::searchResult(const QList<Webpage*> &resultList, const QStringList &keyWordList)
 {
     ui.resultEdit->clear();
@@ -153,33 +93,17 @@ void HandySearch::searchResult(const QList<Webpage*> &resultList, const QStringL
 }
 
 
-/*--------------------------
-* HandySearch::anchorClicked
-*     Open the url in native browser.
-* Parameter:
-*     const QUrl & url - The url user clicked.
-----------------------------*/
 void HandySearch::anchorClicked(const QUrl &url)
 {
     QDesktopServices::openUrl(QUrl("file:///" + url.toString()));
 }
 
 
-/*--------------------------
-* HandySearch::about
-*     Show about dialog.
-----------------------------*/
 void HandySearch::about()
 {
     segment();
 }
 
-/*--------------------------
-* HandySearch::resizeEvent
-*     Handle resize event.
-* Parameter:
-*     QResizeEvent * event - The resize event.
-----------------------------*/
 void HandySearch::resizeEvent(QResizeEvent *event)
 {
     if (!isResultShown)
@@ -189,11 +113,6 @@ void HandySearch::resizeEvent(QResizeEvent *event)
 }
 
 
-/*--------------------------
-* HandySearch::setDefaultUILayout
-*     Set defaulkt UI layout,which puts logo in the center
-* and searchEdit below the logo.
-----------------------------*/
 void HandySearch::setDefaultUILayout()
 {
     ui.about->show();
@@ -230,11 +149,6 @@ void HandySearch::setDefaultUILayout()
 }
 
 
-/*--------------------------
-* HandySearch::setResultUILayout
-*     Set result-showing UI layout which puts logo in the left-top
-* cornor and searchEdit at its right,with resultEdit put below them.
-----------------------------*/
 void HandySearch::setResultUILayout()
 {
     isResultShown = true;
@@ -277,14 +191,6 @@ void HandySearch::setResultUILayout()
 }
 
 
-/*--------------------------
-* HandySearch::showResult
-*     Organize the result in the resultList and show them in the 
-* resultEdit.
-* Parameter:
-*     List<Index * > & resultList - List of results.
-*     QStringList & wordList - List of key words
-----------------------------*/
 void HandySearch::showResult(const QList<Webpage*> &resultList, const QStringList &keyWordList)
 {
     setResultUILayout();
@@ -310,20 +216,12 @@ void HandySearch::showResult(const QList<Webpage*> &resultList, const QStringLis
 }
 
 
-/*--------------------------
-* HandySearch::loadCanceled
-*     Quit application when initiating load was canceled.
-----------------------------*/
 void HandySearch::loadCanceled()
 {
     QApplication::quit();
 }
 
 
-/*--------------------------
-* HandySearch::loadFinished
-*     Show the main window and set the completer.
-----------------------------*/
 void HandySearch::loadFinished()
 {
     show();

@@ -29,32 +29,23 @@
 #include <QThread>
 #include "ui_load_ui.h"
 
-/**
- * Class:    LoadUI
- *
- * Brief:    The loading dialog class.
- *
- * Date:    Oct. 2015
- */
+
 class LoadUI : public QDialog
 {
     Q_OBJECT
 private:
     QDir htmlFolder;
     QDir dictFolder;
-    /* Loading clock */
     QTime clock;
     QTimer timer;
-    /* For dragging the window */
+    // For dragging the window
     QPoint origin;
     bool isPressed;
-    /* For showing current progress */
     unsigned long currentProgress;
     unsigned long maximumProgress;
     static LoadUI *instance;
     bool checkDirectory();
 protected:
-    /* Override event handler */
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
@@ -64,16 +55,12 @@ public:
     static LoadUI *getInstance();
 public slots:
     bool loadData();
-    /* UI slots */
     void loadingDots();
-    /* Load slots */
     void loadStarted();
     void loadFinished();
-    /* Html load slots */
     void htmlLoadStarted();
     void htmlLoaded(int num);
     void htmlLoadFinished();
-    /* Dictionary load slots */
     void dictLoadStarted();
     void dictLoaded(int num);
     void dictLoadFinished();
