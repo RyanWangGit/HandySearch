@@ -65,7 +65,7 @@ QPushButton{color:rgb(255,255,255);}
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="handysearch.qrc">:/assets/Logo.png</pixmap>
+     <pixmap resource="../handy_search.qrc">:/assets/Logo.png</pixmap>
     </property>
    </widget>
    <widget class="QLineEdit" name="searchEdit">
@@ -241,58 +241,9 @@ QPushButton:hover{color:rgb(58, 58, 58);}
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="handysearch.qrc"/>
+  <include location="../handy_search.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>search</sender>
-   <signal>clicked()</signal>
-   <receiver>HandySearchClass</receiver>
-   <slot>search()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>464</x>
-     <y>422</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>495</x>
-     <y>384</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>searchEdit</sender>
-   <signal>returnPressed()</signal>
-   <receiver>search</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>237</x>
-     <y>277</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>620</x>
-     <y>268</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>_about</sender>
-   <signal>clicked()</signal>
-   <receiver>HandySearchClass</receiver>
-   <slot>about()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>350</x>
-     <y>526</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>333</x>
-     <y>467</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>test()</slot>
   <slot>search()</slot>
