@@ -8,6 +8,10 @@
 #include <QSqlDatabase>
 #include "dictionary.h"
 
+
+typedef struct _webpage { QString title, brief, url; } Webpage;
+
+
 class SearchCore : public QObject
 {
     Q_OBJECT
@@ -20,9 +24,6 @@ private:
     unsigned int maxProgress;
     unsigned int webpagesCount;
 public:
-    typedef struct _webpage {
-        QString title, brief, url;
-    } Webpage;
     SearchCore(const QString &dictionary, const QString &database);
     SearchCore(const QString &database);
     SearchCore();
