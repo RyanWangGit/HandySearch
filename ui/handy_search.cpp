@@ -6,8 +6,6 @@
 #include "load_ui.h"
 #include "inverted_list.h"
 
-/* Initialization of static members */
-HandySearch* HandySearch::instance = nullptr;
 
 HandySearch::HandySearch(QWidget *parent)
     : QMainWindow(parent), MINHEIGHT(500), MINWIDTH(850)
@@ -15,7 +13,6 @@ HandySearch::HandySearch(QWidget *parent)
     ui.setupUi(this);
     /* Initialize variables */
     isResultShown = false;
-    instance = &(*this);
 
     setMinimumHeight(MINHEIGHT);
     setMinimumWidth(MINWIDTH);
@@ -41,12 +38,6 @@ Dictionary* HandySearch::getDictionary()
 InvertedList* HandySearch::getInvertedList()
 {
     return &invertedList;
-}
-
-
-HandySearch* HandySearch::getInstance()
-{
-    return instance;
 }
 
 

@@ -23,7 +23,6 @@ public:
     HandySearch(QWidget *parent = 0);
     Dictionary *getDictionary();
     InvertedList *getInvertedList();
-    static HandySearch *getInstance();
     bool load();
 protected:
     void resizeEvent(QResizeEvent *event);
