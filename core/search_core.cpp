@@ -209,7 +209,7 @@ void SearchCore::load(int from)
     this->invertedList.squeeze();
 
     this->hasLoaded = true;
-    emit this->progress("Loading webpages", 1);
+    emit this->progress("Loading Webpages", 1);
 }
 
 
