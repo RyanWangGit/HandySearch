@@ -225,23 +225,22 @@ void SearchCore::query(const QString &sentence)
     QSqlQuery query(this->db);
     for(QString & word : keywords)
     {
-        Webpage webpage;
-
         const QHash<int, QList<int> > & wordHash = this->invertedList.value(word);
         for(auto iter = wordHash.begin(); iter != wordHash.end(); ++iter)
         {
+
             query.prepare("SELECT title, content, url from `webpages` WHERE id == :id");
             query.bindValue(":id", iter.key());
             if(!query.exec() || !query.next())
                 qFatal(query.lastError().text().toLatin1().data());
-
+            Webpage webpage;
             webpage.title = query.value(0).toString();
             // TODO: find the best-fit brief
-            webpage.brief = query.value(1).toString().mid(0, 30);
+            webpage.brief = query.value(1).toString().mid(0, 300);
             webpage.url = query.value(2).toString();
             query.clear();
+            webpages.append(webpage);
         }
-        webpages.append(webpage);
     }
 
     // TODO: evaluate and order the results
