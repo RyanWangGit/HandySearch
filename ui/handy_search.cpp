@@ -85,11 +85,6 @@ void HandySearch::searchResult(const QList<Webpage*> &resultList, const QStringL
 }
 
 
-void HandySearch::about()
-{
-    segment();
-}
-
 void HandySearch::resizeEvent(QResizeEvent *event)
 {
     if (!isResultShown)
