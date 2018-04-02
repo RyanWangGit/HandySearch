@@ -67,9 +67,15 @@ unsigned int SearchCore::getWebpagesCount() const
     return this->webpagesCount;
 }
 
+unsigned int SearchCore::getMaxProgress() const
+{
+    return this->maxProgress;
+}
 
 // used by mapper and reducer since they have to be static functions
 static SearchCore *_core = NULL;
+// used by mapper and reducer to report progress
+static int WEBPAGES_PER_THREAD = -1;
 
 // extract word from webpage and store into <word, id, pos> to be processed in reducer
 QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
@@ -112,7 +118,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
             indexList.append(std::make_tuple(word, id, pos));
         }
 
-        if(i % PROGRESS_FREQUENCY == 0)
+        if(i % PROGRESS_FREQUENCY == 0 && i != 0)
             _core->progress("Loading Webpages", PROGRESS_FREQUENCY);
 
     }
@@ -158,6 +164,8 @@ void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &
             result.insert(word, index);
         }
     }
+
+    _core->progress("Loading Webpages", WEBPAGES_PER_THREAD);
 }
 
 
@@ -179,9 +187,10 @@ void SearchCore::load(int from)
 
     // assign the workload
     const int TOTAL_WEBPAGES = query.value(0).toInt();
-    const int WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();
+    WEBPAGES_PER_THREAD = float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount();
 
     this->webpagesCount += TOTAL_WEBPAGES - from + 1;
+    this->maxProgress = (TOTAL_WEBPAGES - from + 1) + WEBPAGES_PER_THREAD * (QThread::idealThreadCount() + 1);
 
     QList<QPair<int, int> > tasks;
     for(int i = from; i < TOTAL_WEBPAGES; i += WEBPAGES_PER_THREAD)
