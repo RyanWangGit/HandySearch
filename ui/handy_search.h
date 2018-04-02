@@ -2,10 +2,9 @@
 
 #include "ui_handy_search.h"
 #include "bloom_filter.h"
-#include "index.h"
 #include "load_ui.h"
-#include "inverted_list.h"
-#include "dictionary.h"
+#include "search_core.h"
+
 
 class HandySearch : public QMainWindow
 {
@@ -31,11 +30,8 @@ private:
     void setResultUILayout();
     void showResult(const QList<Webpage*> &resultList, const QStringList &wordList);
     QCompleter* completer;
-    static HandySearch* instance;
-    Dictionary dictionary;
-    InvertedList invertedList;
-    QThread dictThread;
-    QThread listThread;
+    SearchCore core;
+    QThread coreThread;
     LoadUI loadUI;
     Ui::HandySearchClass ui;
     /* Constants */
