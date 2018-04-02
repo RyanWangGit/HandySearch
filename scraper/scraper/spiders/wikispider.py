@@ -6,7 +6,7 @@ import re
 
 class WikiSpider(scrapy.Spider):
     name = 'wiki'
-    allowed_domains = ['wikipedia.org']
+    allowed_domains = ['zh.wikipedia.org']
     start_urls = ['https://zh.wikipedia.org/wiki/Wikipedia:%E9%A6%96%E9%A1%B5']
 
     def __init__(self):

@@ -13,8 +13,8 @@
  
  * Date:    Oct. 2015
 *************************************/
-#include "stdafx.h"
-#include "BloomFilter.h"
+#include "stable.h"
+#include "bloom_filter.h"
 
 
 /*--------------------------
