@@ -9,9 +9,9 @@
 class HandySearch : public QMainWindow
 {
     Q_OBJECT
-    void searchResult(const QList<Webpage*> &resultList, const QStringList &keyWordList);
 public:
     HandySearch(QWidget *parent = 0);
+    void searchResult(const QStringList &keywords, const QList<Webpage> &webpages);
     bool load();
 protected:
     void resizeEvent(QResizeEvent *event);
@@ -20,7 +20,7 @@ private:
     bool isResultShown;
     void setDefaultUILayout();
     void setResultUILayout();
-    void showResult(const QList<Webpage*> &resultList, const QStringList &wordList);
+    void showResult(const QStringList &keywords, const QList<Webpage> &webpages);
     QCompleter* completer;
     SearchCore core;
     QThread coreThread;
