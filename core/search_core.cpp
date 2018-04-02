@@ -99,14 +99,14 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
         int id = query.value(0).toInt();
 
         int pos = 0;
-        for(QString & word : ws.segment(query.value(1).toString()))
+        for(const QString & word : ws.segment(query.value(1).toString()))
         {
             pos -= word.size();
             indexList.append(std::make_tuple(word, id, pos));
         }
 
         pos = 0;
-        for(QString & word : ws.segment(query.value(2).toString()))
+        for(const QString & word : ws.segment(query.value(2).toString()))
         {
             pos += word.size();
             indexList.append(std::make_tuple(word, id, pos));
