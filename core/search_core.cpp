@@ -11,7 +11,7 @@
 // <id, positions>
 typedef QHash<int, QList<int> > Index;
 // < word, index >
-typedef QHash<QString, QHash<int, QList<int> > > InvertedList;
+typedef QHash<QString, Index> InvertedList;
 
 SearchCore::SearchCore(const QString &dictionary, const QString &database)
 {
