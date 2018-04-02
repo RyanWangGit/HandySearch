@@ -39,7 +39,6 @@ private:
     // For dragging the window
     QPoint origin;
     bool isPressed;
-    static LoadUI *instance;
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

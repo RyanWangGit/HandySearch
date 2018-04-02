@@ -2,15 +2,12 @@
 #include "load_ui.h"
 #include "handy_search.h"
 
-/* Initialization of static members */
-LoadUI* LoadUI::instance = nullptr;
 
 LoadUI::LoadUI()
 {
     ui.setupUi(this);
     /* Initialize variables */
     isPressed = false;
-    instance = &(*this);
 
     /* Bind the signal */
     connect(ui.close, &QPushButton::clicked, []{ QApplication::quit(); });
@@ -135,9 +132,3 @@ void LoadUI::mouseReleaseEvent(QMouseEvent * event)
 LoadUI::~LoadUI()
 {
 }
-
-LoadUI* LoadUI::getInstance()
-{
-    return instance;
-}
-
