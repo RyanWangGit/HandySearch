@@ -6,10 +6,8 @@
 LoadUI::LoadUI()
 {
     ui.setupUi(this);
-    /* Initialize variables */
     isPressed = false;
 
-    /* Bind the signal */
     connect(ui.close, &QPushButton::clicked, []{ QApplication::quit(); });
 
     setWindowIconText("Handy Search");
