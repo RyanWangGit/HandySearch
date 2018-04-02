@@ -15,7 +15,7 @@ LoadUI::LoadUI()
     instance = &(*this);
 
     /* Bind the signal */
-    connect(ui.close, &QPushButton::clicked, this, &LoadUI::canceled);
+    connect(ui.close, &QPushButton::clicked, []{ QApplication::quit(); });
 
     setWindowIconText("Handy Search");
     setWindowFlags(Qt::FramelessWindowHint);
@@ -147,88 +147,6 @@ void LoadUI::loadingDots()
     time3 %= 50;
     time4 %= 50;
     time5 %= 50;
-}
-
-
-void LoadUI::htmlLoadStarted()
-{
-    QDir dir(htmlFolder);
-    currentProgress = 0;
-    maximumProgress = dir.entryList().size();
-    ui.statusBar->setText("Started Loading Html Library");
-}
-
-
-void LoadUI::htmlLoaded(int num)
-{
-    currentProgress += num;
-    QString msg ;
-    int percent = ((float)currentProgress / maximumProgress) * 100;
-    msg.append(QString::number(percent));
-    msg.append(" % - Loading Htmls");
-    ui.statusBar->setText(msg);
-}
-
-
-void LoadUI::htmlLoadFinished()
-{
-    ui.statusBar->setText("Ready");
-    currentProgress = 0;
-    maximumProgress = 0;
-}
-
-
-void LoadUI::dictLoadStarted()
-{
-    /* Started Loading Dictionary Library */
-    currentProgress = 0;
-    maximumProgress = 0;
-}
-
-
-void LoadUI::dictLoaded(int num)
-{
-    currentProgress += num;
-    QString msg;
-    msg.append(QString::number(currentProgress));
-    msg.append(" Items Loaded");
-    ui.statusBar->setText(msg);
-}
-
-
-void LoadUI::dictLoadFinished()
-{
-    /* Quit the task-load threads */
-    
-}
-
-
-void LoadUI::loadStarted()
-{
-    connect(&timer, &QTimer::timeout, this, &LoadUI::loadingDots);
-    timer.start(20);
-
-    QPropertyAnimation geometry(ui.statusBar, "geometry");
-    geometry.setDuration(1000);
-    QPoint leftTop = ui.statusBar->pos();
-    QPoint rightBot(leftTop.x() + ui.statusBar->width(), leftTop.y() + ui.statusBar->height());
-    QRect rect(leftTop, rightBot);
-    geometry.setStartValue(rect);
-    rect.setY(rect.y() - 15);
-    geometry.setEndValue(rect);
-    geometry.start();
-}
-
-
-void LoadUI::loadFinished()
-{
-#ifdef _DEBUG
-    QMessageBox::information(nullptr, "Time", "Time elapsed: " + QString::number(clock.elapsed()));
-    qDebug() << "Time elapsed: " << clock.elapsed() << "with List size:" << Html::getTotalHtmlCount();
-#endif
-    emit finished();
-    /* Close the dialog */
-    close();
 }
 
 
