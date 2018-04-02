@@ -21,79 +21,42 @@ LoadUI::LoadUI()
 }
 
 
-bool LoadUI::checkDirectory()
 void LoadUI::progress(const QString &hint, float progress)
 {
     this->ui.statusBar->setText(hint + " - " + QString::number(progress * 100, 'g', 4) + "%");
 }
 
 
-    /* The default dictionary library path */
-    dictFolder = currentPath + "/Dictionary Library";
-
-    /* If html folder or dictionary folder doesn't exist */
-    if (!htmlFolder.exists() || !dictFolder.exists())
-    {
-        while (!dictFolder.exists())
-        {
-            dictFolder = QFileDialog::getExistingDirectory(this, "Choose Dictionary Library", "");
-            if (!dictFolder.exists())
-            {
-                QApplication::beep();
-                if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
-                    return false;
-            }
-        }
-        while (!htmlFolder.exists())
-        {
-            htmlFolder = QFileDialog::getExistingDirectory(this, "Choose Html Library", "");
-            if (!htmlFolder.exists())
-            {
-                QApplication::beep();
-                if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
-                    return false;
-            }
-        }
-    }
-    return true;
-}
-
-
 bool LoadUI::loadData()
 {
-    /* Show up the dialog */
-    show();
-    /* Check the directory is correct or not */
-    if (!checkDirectory())
-        return false;
+    QString dictionaryPath, databasePath;
 
-    /* Start the loading clock */
-    clock.start();
-    
-    /* Set dictionary folder and connect UI signals */
-    /*
-    Dictionary* dict = HandySearch::getInstance()->getDictionary();
-    dict->setDictFolder(dictFolder);
-    connect(dict, &Dictionary::dictLoadStarted, this, &LoadUI::dictLoadStarted);
-    connect(dict, &Dictionary::dictLoaded, this, &LoadUI::dictLoaded);
-    connect(dict, &Dictionary::dictLoadFinished, this, &LoadUI::dictLoadFinished);
-    */
-    /* Set html folder and connect UI signals */
-    InvertedList* invertedList = HandySearch::getInstance()->getInvertedList();
-    invertedList->setHtmlFolder(htmlFolder);
-    connect(invertedList, &InvertedList::htmlLoadStarted, this, &LoadUI::htmlLoadStarted);
-    /* htmlLoaded signal is directly connected to LoadUI inside HtmlLoadTask */
-    connect(invertedList, &InvertedList::htmlLoadFinished, this, &LoadUI::htmlLoadFinished);
-    
-    
-    /* Connect the loading procedure signals/slots */
-    connect(this, &LoadUI::start, this, &LoadUI::loadStarted);
-    //connect(this, &LoadUI::start, dict, &Dictionary::load);
-    //connect(dict, &Dictionary::dictLoadFinished, invertedList, &InvertedList::load);
-    connect(invertedList, &InvertedList::htmlLoadFinished, this, &LoadUI::loadFinished);
+    dictionaryPath = QFileDialog::getOpenFileName(this, "Choose Dictionary", "");
 
-    /* Start loading */
-    emit start();
+    if (dictionaryPath.isEmpty())
+        dictionaryPath = ":/assets/dictionary.txt";
+
+    databasePath = QFileDialog::getOpenFileName(this, "Choose Webpage database", "", "Database (*.db *.sqlite *.sqlite3)");
+    if (databasePath.isEmpty())
+    {
+        QApplication::beep();
+        if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
+            return false;
+    }
+    emit start(dictionaryPath, databasePath);
+
+    connect(&timer, &QTimer::timeout, this, &LoadUI::loadingDots);
+    timer.start(20);
+
+    QPropertyAnimation geometry(ui.statusBar, "geometry");
+    geometry.setDuration(1000);
+    QPoint leftTop = ui.statusBar->pos();
+    QPoint rightBot(leftTop.x() + ui.statusBar->width(), leftTop.y() + ui.statusBar->height());
+    QRect rect(leftTop, rightBot);
+    geometry.setStartValue(rect);
+    rect.setY(rect.y() - 15);
+    geometry.setEndValue(rect);
+    geometry.start();
 
     return true;
 }
