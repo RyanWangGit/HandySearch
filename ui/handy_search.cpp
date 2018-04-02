@@ -27,6 +27,7 @@ HandySearch::HandySearch(QWidget *parent)
     invertedList.moveToThread(&listThread);
     dictThread.start();
     listThread.start();
+    connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, [](const QUrl &url) { QDesktopServices::openUrl(url); });
 }
 
 
@@ -81,12 +82,6 @@ void HandySearch::searchResult(const QList<Webpage*> &resultList, const QStringL
 {
     ui.resultEdit->clear();
     showResult(resultList, keyWordList);
-}
-
-
-void HandySearch::anchorClicked(const QUrl &url)
-{
-    QDesktopServices::openUrl(QUrl("file:///" + url.toString()));
 }
 
 
