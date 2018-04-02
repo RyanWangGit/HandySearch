@@ -34,15 +34,12 @@ class LoadUI : public QDialog
 {
     Q_OBJECT
 private:
-    QDir htmlFolder;
-    QDir dictFolder;
     QTime clock;
     QTimer timer;
     // For dragging the window
     QPoint origin;
     bool isPressed;
     static LoadUI *instance;
-    bool checkDirectory();
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -56,6 +53,7 @@ public slots:
     void loadingDots();
     void progress(const QString &hint, float progress);
 signals:
+    void start(const QString &dictionaryPath, const QString &databasePath);
 private:
     Ui::LoadUI ui;
 };
