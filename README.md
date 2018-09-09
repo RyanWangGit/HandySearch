@@ -1,10 +1,10 @@
 # HandySearch [![](https://travis-ci.org/RyanWangGit/HandySearch.svg?branch=master)](https://www.travis-ci.org/RyanWangGit/HandySearch)
 
-A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project. 
+A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project.
 
 Using QMake + QT Designer.
 
-Tested on `QT 5.2 - 5.10 on linux`, `QT 5.5 5.11 on MacOS`. 
+Tested on `QT 5.2 - 5.11 on linux`, `QT 5.5 5.11 on MacOS`. 
 
 ## Features
 * Beautiful GUI design. (Thanks to QT)
@@ -21,7 +21,7 @@ Tested on `QT 5.2 - 5.10 on linux`, `QT 5.5 5.11 on MacOS`.
 
 ## For Developers
 * This projects includes pure-English notes to every single cornor to make it clear to understand.
-     
+
 * UI and process threads are completely separeted in order not to cause mess.
 
 * Most of the UI Design copies from Baidu and Google.(lol)
