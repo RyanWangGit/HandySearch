@@ -17,12 +17,14 @@ SearchCore::SearchCore(const QString &dictionary, const QString &database)
 {
     this->setPath(dictionary, database);
     this->hasLoaded = false;
+    this->maxProgress = 0;
 }
 
 
 SearchCore::SearchCore()
 {
     this->hasLoaded = false;
+    this->maxProgress = 0;
 }
 
 SearchCore::~SearchCore()
