@@ -8,6 +8,7 @@ import sqlite3
 
 class SqliteWebpageExporter(BaseItemExporter):
     def __init__(self, file, **kwargs):
+        super().__init__()
         self._configure(kwargs)
         self.conn = sqlite3.connect(file.name)
         self.conn.execute(r"""CREATE TABLE IF NOT EXISTS `webpages`(
@@ -22,7 +23,7 @@ class SqliteWebpageExporter(BaseItemExporter):
 
     def export_item(self, item):
         self.start_exporting()
-        self.conn.execute(r"""INSERT INTO webpages(title, content, url) VALUES ('%s', '%s', '%s')""" %
+        self.conn.execute(r"""INSERT INTO webpages(title, content, url) VALUES ?""",
                           (item['title'], item['content'], item['url']))
         self.conn.commit()
         self.finish_exporting()
