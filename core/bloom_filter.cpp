@@ -84,10 +84,9 @@ unsigned int BloomFilter::PJWHash(const char* str, unsigned int len) const
     const unsigned int OneEighth = (unsigned int)(BitsInUnsignedInt / 8);
     const unsigned int HighBits = (unsigned int)(0xFFFFFFFF) << (BitsInUnsignedInt - OneEighth);
     unsigned int hash = 0;
-    unsigned int test = 0;
-    unsigned int i = 0;
 
-    for (i = 0; i<len; str++, i++) {
+    for (unsigned int i = 0; i<len; str++, i++) {
+        unsigned int test = 0;
         hash = (hash << OneEighth) + (*str);
         if ((test = hash & HighBits) != 0) {
             hash = ((hash ^ (test >> ThreeQuarters)) & (~HighBits));
@@ -101,10 +100,8 @@ unsigned int BloomFilter::PJWHash(const char* str, unsigned int len) const
 unsigned int BloomFilter::ELFHash(const char* str, unsigned int len) const
 {
     unsigned int hash = 0;
-    unsigned int x = 0;
-    unsigned int i = 0;
-
-    for (i = 0; i < len; str++, i++) {
+    for (unsigned int i = 0; i < len; str++, i++) {
+        unsigned int x = 0;
         hash = (hash << 4) + (*str);
         if ((x = hash & 0xF0000000L) != 0) {
             hash ^= (x >> 24);
