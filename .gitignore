@@ -197,3 +197,7 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+# CMake files
+cmake-*/
+build/
