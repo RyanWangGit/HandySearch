@@ -9,15 +9,15 @@ set(CMAKE_CXX_STANDARD 14)
 option(BuildTest "Build the tests." ON)
 
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(HANDYSEARCH_LIB handysearch)
+set(HANDYSEARCH_TARGET handysearch)
 
-add_library(${HANDYSEARCH_LIB} SHARED
+add_library(${HANDYSEARCH_TARGET} SHARED
         ${INCLUDE_DIR}/handysearch/handysearch.h
         ${INCLUDE_DIR}/handysearch/dictionary.h
         src/handysearch.cpp
         src/dictionary.cpp)
 
-target_include_directories(${HANDYSEARCH_LIB}
+target_include_directories(${HANDYSEARCH_TARGET}
         PUBLIC
         $<BUILD_INTERFACE:${INCLUDE_DIR}>)
 

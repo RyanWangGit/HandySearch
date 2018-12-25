@@ -10,7 +10,7 @@ foreach(file ${files})
     add_executable(${testcase} $<TARGET_OBJECTS:catch_main> ${file})
 
     target_include_directories(${testcase} PRIVATE ${INCLUDE_DIR} third_party)
-    target_link_libraries(${testcase} ${HANDYSEARCH_LIB})
+    target_link_libraries(${testcase} ${HANDYSEARCH_TARGET})
 
     add_test(NAME ${testcase}
             COMMAND ${testcase}
