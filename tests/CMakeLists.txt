@@ -7,10 +7,10 @@ foreach(file ${files})
     get_filename_component(file_basename ${file} NAME_WE)
     string(REGEX REPLACE "test_([^$]+)" "test-\\1" testcase ${file_basename})
 
-    add_executable(${testcase} ${file})
+    add_executable(${testcase} $<TARGET_OBJECTS:catch_main> ${file})
 
     target_include_directories(${testcase} PRIVATE ${INCLUDE_DIR} third_party)
-    target_link_libraries(${testcase} ${HANDYSEARCH_LIB} catch_main)
+    target_link_libraries(${testcase} ${HANDYSEARCH_LIB})
 
     add_test(NAME ${testcase}
             COMMAND ${testcase}
