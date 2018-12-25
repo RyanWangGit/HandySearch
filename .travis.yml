@@ -9,6 +9,7 @@ compiler:
   - gcc
 
 script:
+  - cmake --version
   - mkdir build && cd build
   - cmake ..
   - make
