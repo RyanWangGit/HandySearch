@@ -5,8 +5,7 @@
 TEST_CASE("Test dictionary functionality", "[HandySearch::Dictionary]") {
   handysearch::dictionary dictionary;
   std::uint64_t test_current = 0, test_total = 0;
-  std::string prefix(CMAKE_CURRENT_BINARY_DIR);
-  dictionary.load(prefix + "/sample_dictionary.txt", [&test_current, &test_total](std::uint64_t current, std::uint64_t total) {
+  dictionary.load("./sample_dictionary.txt", [&test_current, &test_total](std::uint64_t current, std::uint64_t total) {
     test_current = current;
     test_total = total;
   });

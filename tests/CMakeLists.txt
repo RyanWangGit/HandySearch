@@ -14,7 +14,7 @@ foreach(file ${files})
 
     add_test(NAME ${testcase}
             COMMAND ${testcase}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             )
 endforeach()
 
@@ -24,5 +24,3 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_SOURCE_DIR}/sample_dictionary.txt
         ${CMAKE_CURRENT_BINARY_DIR}/sample_dictionary.txt)
-
-add_definitions(-DCMAKE_CURRENT_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
