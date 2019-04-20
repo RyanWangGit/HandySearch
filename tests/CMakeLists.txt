@@ -14,8 +14,7 @@ foreach(file ${files})
 
     add_test(NAME ${testcase}
             COMMAND ${testcase}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            )
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
 
 # copy the sample dictionary file to binary directory
