@@ -6,7 +6,7 @@ namespace handysearch{
 class segmenter {
 public:
   segmenter(handysearch::dictionary &dict);
-  std::vector<std::string> segment(std::string &content) const;
+  std::vector<std::string> segment(const std::string &content) const;
 
 private:
   handysearch::dictionary m_dictionary;
