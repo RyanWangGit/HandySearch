@@ -16,10 +16,3 @@ foreach(file ${files})
             COMMAND ${testcase}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
-
-# copy the sample dictionary file to binary directory
-add_custom_command(
-        TARGET test-dictionary POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_CURRENT_SOURCE_DIR}/sample_dictionary.txt
-        ${CMAKE_CURRENT_BINARY_DIR}/sample_dictionary.txt)

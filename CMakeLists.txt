@@ -10,19 +10,15 @@ option(BuildTest "Build the tests." ON)
 
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(HANDYSEARCH_TARGET handysearch)
+set(LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libraries)
+add_subdirectory(${LIBRARY_DIR})
 
 add_library(${HANDYSEARCH_TARGET} SHARED
         ${INCLUDE_DIR}/handysearch/handysearch.h
-        ${INCLUDE_DIR}/handysearch/dictionary.h
-        src/handysearch.cpp
-        src/dictionary.cpp
-        )
+        src/handysearch.cpp)
 
-target_include_directories(${HANDYSEARCH_TARGET}
-        PUBLIC
-        $<BUILD_INTERFACE:${INCLUDE_DIR}>)
+target_include_directories(${HANDYSEARCH_TARGET} PUBLIC $<BUILD_INTERFACE:${INCLUDE_DIR}>)
 
 if(BuildTest)
     ENABLE_TESTING()
