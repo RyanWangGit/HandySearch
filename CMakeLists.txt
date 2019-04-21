@@ -4,12 +4,14 @@ project(HandySearch
         VERSION 1.0
         LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 option(BuildTest "Build the tests." ON)
 
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(HANDYSEARCH_TARGET handysearch)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libraries)
 
 add_library(${HANDYSEARCH_TARGET} SHARED
         ${INCLUDE_DIR}/handysearch/handysearch.h

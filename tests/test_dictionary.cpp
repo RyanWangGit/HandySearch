@@ -1,5 +1,5 @@
 #include <iostream>
-#include <catch.hpp>
+#include <catch/catch.hpp>
 #include <handysearch/dictionary.h>
 
 TEST_CASE("Test dictionary functionality", "[HandySearch::Dictionary]") {

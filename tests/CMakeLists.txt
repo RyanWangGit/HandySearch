@@ -1,6 +1,6 @@
 # compile Catch library with the main function to speed up the compilation
 add_library(catch_main OBJECT test.cpp)
-target_include_directories(catch_main PRIVATE lib)
+target_link_libraries(catch_main PRIVATE catch)
 
 file(GLOB files "test_*.cpp")
 foreach(file ${files})
@@ -9,8 +9,8 @@ foreach(file ${files})
 
     add_executable(${testcase} $<TARGET_OBJECTS:catch_main> ${file})
 
-    target_include_directories(${testcase} PRIVATE ${INCLUDE_DIR} lib)
-    target_link_libraries(${testcase} ${HANDYSEARCH_TARGET})
+    target_include_directories(${testcase} PRIVATE ${INCLUDE_DIR})
+    target_link_libraries(${testcase} PRIVATE ${HANDYSEARCH_TARGET} catch)
 
     add_test(NAME ${testcase}
             COMMAND ${testcase}

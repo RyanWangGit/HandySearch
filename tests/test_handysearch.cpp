@@ -1,5 +1,5 @@
 #include <iostream>
-#include <catch.hpp>
+#include <catch/catch.hpp>
 #include <handysearch/handysearch.h>
 
 TEST_CASE("Test initialization of core", "[HandySearch]") {
