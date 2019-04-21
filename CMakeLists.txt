@@ -4,7 +4,7 @@ project(HandySearch
         VERSION 1.0
         LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 option(BuildTest "Build the tests." ON)
 
