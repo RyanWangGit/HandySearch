@@ -14,10 +14,9 @@ set(HANDYSEARCH_TARGET handysearch)
 add_library(${HANDYSEARCH_TARGET} SHARED
         ${INCLUDE_DIR}/handysearch/handysearch.h
         ${INCLUDE_DIR}/handysearch/dictionary.h
-        ${INCLUDE_DIR}/handysearch/segmenter.h
         src/handysearch.cpp
         src/dictionary.cpp
-        src/segmenter.cpp)
+        )
 
 target_include_directories(${HANDYSEARCH_TARGET}
         PUBLIC
