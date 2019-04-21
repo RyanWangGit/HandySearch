@@ -11,11 +11,11 @@ handysearch::search_core::search_core() {
 
 }
 
-handysearch::search_core::search_core(const std::string &database) {
+handysearch::search_core::search_core(std::string const &database) {
 
 }
 
-handysearch::search_core::search_core(const std::string &database, const std::string &dictionary_file) {
+handysearch::search_core::search_core(std::string const &database, std::string const &dictionary_file) {
 
 }
 
@@ -34,12 +34,12 @@ handysearch::search_core &handysearch::search_core::operator=(handysearch::searc
   return *this;
 }
 
-void handysearch::search_core::load_dictionary(const std::string &dictionary_file, std::function< void(std::uint64_t, std::uint64_t) > report_hook) {
+void handysearch::search_core::load_dictionary(std::string const &dictionary_file, std::function< void(std::uint64_t, std::uint64_t) > report_hook) {
   if(report_hook)
     report_hook(1, 100);
 }
 
-void handysearch::search_core::load_database(const std::string &database, std::function< void(std::uint64_t, std::uint64_t) > report_hook) {
+void handysearch::search_core::load_database(std::string const &database, std::function< void(std::uint64_t, std::uint64_t) > report_hook) {
   if(report_hook)
     report_hook(1, 100);
 }

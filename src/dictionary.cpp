@@ -6,7 +6,7 @@ handysearch::dictionary::dictionary() {
   this->m_total_items = 0;
 }
 
-void handysearch::dictionary::load(const std::string &dictionary_file, std::function<void(uint64_t, uint64_t)> report_hook) {
+void handysearch::dictionary::load(std::string const &dictionary_file, std::function<void(uint64_t, uint64_t)> report_hook) {
   std::fstream fs;
   fs.open(dictionary_file, std::fstream::in);
   if(!fs.is_open())
@@ -31,11 +31,11 @@ void handysearch::dictionary::load(const std::string &dictionary_file, std::func
   }
 }
 
-bool handysearch::dictionary::has_word(const std::string &word) const{
+bool handysearch::dictionary::has_word(std::string const &word) const{
   return this->m_internal_map.find(word) != this->m_internal_map.end();
 }
 
-std::uint64_t handysearch::dictionary::get_frequency(const std::string &word) const{
+std::uint64_t handysearch::dictionary::get_frequency(std::string const &word) const{
   if(!this->has_word(word))
     return 0;
   else
