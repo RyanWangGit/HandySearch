@@ -9,6 +9,11 @@ public:
 };
 
 
+typedef struct _chunk {
+  std::string_view first_word, second_word, third_word;
+} chunk;
+
+
 handysearch::segmenter::segmenter(handysearch::dictionary &dict): m_impl(new impl(dict)) { }
 
 handysearch::segmenter::~segmenter() = default;
