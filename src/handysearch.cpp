@@ -3,11 +3,13 @@
 #include <string>
 
 
-std::uint64_t handysearch::search_core::total_items() const {
-  return 0;
-}
+class handysearch::search_core::impl {
+public:
+  impl() = default;
+  ~impl() = default;
+};
 
-handysearch::search_core::search_core() {
+handysearch::search_core::search_core(): m_impl(new handysearch::search_core::impl()) {
 
 }
 
@@ -27,6 +29,10 @@ handysearch::search_core::~search_core() {
 
 }
 
+std::uint64_t handysearch::search_core::total_items() const {
+  return 0;
+}
+
 handysearch::search_core &handysearch::search_core::operator=(handysearch::search_core const &other) {
   if (this != &other) {
     
@@ -34,9 +40,8 @@ handysearch::search_core &handysearch::search_core::operator=(handysearch::searc
   return *this;
 }
 
-void handysearch::search_core::load_dictionary(std::string const &dictionary_file, std::function< void(std::uint64_t, std::uint64_t) > report_hook) {
-  if(report_hook)
-    report_hook(1, 100);
+void handysearch::search_core::load_dictionary(std::string const &dictionary_file) {
+
 }
 
 void handysearch::search_core::load_database(std::string const &database, std::function< void(std::uint64_t, std::uint64_t) > report_hook) {
