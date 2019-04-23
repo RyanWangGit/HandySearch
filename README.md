@@ -1,4 +1,4 @@
-# HandySearch [![](https://travis-ci.org/RyanWangGit/HandySearch.svg?branch=master)](https://www.travis-ci.org/RyanWangGit/HandySearch)
+# HandySearch [![](https://travis-ci.org/RyanWangGit/handysearch.svg?branch=master)](https://www.travis-ci.org/RyanWangGit/HandySearch)
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project.
 
