@@ -1,4 +1,4 @@
-# HandySearch [![](https://travis-ci.org/RyanWangGit/handysearch.svg?branch=master)](https://www.travis-ci.org/RyanWangGit/HandySearch)
+# HandySearch [![](https://travis-ci.org/yxwangcs/handysearch.svg?branch=master)](https://www.travis-ci.org/yxwangcs/handysearch)
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project.
 
@@ -21,13 +21,13 @@ Tested on `QT 5.2 - 5.11 on linux`, `QT 5.5 5.11 on MacOS`.
 
 ## Screenshots
 
-![#1](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/1.png)
+![#1](https://github.com/yxwangcs/handysearch/raw/master/Screenshots/1.png)
 
-![#2](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/2.png)
+![#2](https://github.com/yxwangcs/handysearch/raw/master/Screenshots/2.png)
 
-![#3](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/3.png)
+![#3](https://github.com/yxwangcs/handysearch/raw/master/Screenshots/3.png)
 
-![#4](https://github.com/RyanWangGit/HandySearch/raw/master/Screenshots/4.png)
+![#4](https://github.com/yxwangcs/handysearch/raw/master/Screenshots/4.png)
 
 ## License
-[GPLv3](https://github.com/RyanWangGit/HandySearch/blob/master/LICENSE)
+[GPLv3](https://github.com/yxwangcs/handysearch/blob/master/LICENSE)
