@@ -4,7 +4,7 @@ A Mini Search Engine Based On QT , Created For My Data Structure Course Design P
 
 Using QMake + QT Designer.
 
-Tested on `QT 5.2 - 5.11 on linux`, `QT 5.5 5.11 on MacOS`. 
+Tested on `QT 5.8 - 5.11 on linux`, `QT latest on MacOS`. 
 
 ## Features
 * Beautiful GUI design. (Thanks to QT)
