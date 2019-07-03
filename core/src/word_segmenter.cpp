@@ -1,4 +1,3 @@
-#include "stable.h"
 #include "word_segmenter.h"
 #include "bloom_filter.h"
 

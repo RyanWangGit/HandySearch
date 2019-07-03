@@ -1,4 +1,7 @@
-#include "stable.h"
+#include <cmath>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QPropertyAnimation>
 #include "load_ui.h"
 #include "handy_search.h"
 

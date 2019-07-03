@@ -1,4 +1,4 @@
-#include "stable.h"
+#include <QTextCodec>
 #include "handy_search.h"
 #include "search_core.h"
 

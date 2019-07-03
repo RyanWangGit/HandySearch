@@ -1,5 +1,5 @@
 #pragma once
-#include "stable.h"
+#include <QObject>
 #include "bloom_filter.h"
 
 

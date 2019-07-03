@@ -1,4 +1,3 @@
-#include "stable.h"
 #include <tuple>
 #include <QSqlDatabase>
 #include <QSqlQuery>

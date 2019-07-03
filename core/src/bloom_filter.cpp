@@ -1,4 +1,3 @@
-#include "stable.h"
 #include "bloom_filter.h"
 
 

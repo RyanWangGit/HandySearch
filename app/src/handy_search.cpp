@@ -1,4 +1,5 @@
-#include "stable.h"
+#include <QDesktopServices>
+#include <QCompleter>
 #include "handy_search.h"
 #include "word_segmenter.h"
 #include "load_ui.h"

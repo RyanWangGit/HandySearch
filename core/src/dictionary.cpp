@@ -1,5 +1,5 @@
-#include "stable.h"
 #include "dictionary.h"
+#include <QFile>
 
 
 Dictionary::Dictionary()
