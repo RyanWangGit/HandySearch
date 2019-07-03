@@ -23,7 +23,7 @@ private slots:
       qFatal("Could not obtain writable location for test database file");
     this->dbPath.append("/test.sqlite");
     dbFile.copy(this->dbPath);
-    QFile::setPermissions(this->dbPath, QFile::ReadOwner);
+    QFile::setPermissions(this->dbPath, QFile::ReadOwner | QFile::WriteOwner);
     this->core->setPath(":/assets/dictionary.txt", this->dbPath);
   }
 
