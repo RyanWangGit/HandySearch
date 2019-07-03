@@ -27,8 +27,8 @@ HandySearch::HandySearch(QWidget *parent)
     this->core.setPath(":/assets/dictionary.txt", databasePath);
     emit this->startLoading();
   } );
-  connect(&this->core, &SearchCore::progress, [this](const QString &hint, int progress) {
-    static int totalProgress = 0;
+  connect(&this->core, &SearchCore::progress, [this](const QString &hint, uint progress) {
+    static uint totalProgress = 0;
     totalProgress += progress;
     emit this->progress(hint, totalProgress / float(this->core.getMaxProgress()));
 
