@@ -18,7 +18,7 @@ private slots:
     QFile dbFile(":/tests/test.sqlite");
     if(!dbFile.exists())
       qFatal("Embedded database file doesn\'t exist");
-    this->dbPath = QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation);
+    this->dbPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     if(this->dbPath.isEmpty())
       qFatal("Could not obtain writable location for test database file");
     this->dbPath.append("/test.sqlite");
