@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPropertyAnimation>
+#include <QPalette>
 #include "load_ui.h"
 #include "handy_search.h"
 
