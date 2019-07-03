@@ -95,7 +95,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
   QList<std::tuple<QString, int, int> > indexList;
 
-  const int PROGRESS_FREQUENCY = 100;
+  const int PROGRESS_FREQUENCY = 10;
   unsigned int i;
   for (i = 0; query.next(); i++)
   {
