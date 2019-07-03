@@ -37,7 +37,11 @@ private slots:
     for(const QList<QVariant> &signal: spy)
       totalProgress += qvariant_cast<unsigned int>(signal.at(1));
     QVERIFY2(totalProgress == this->core->getMaxProgress(),
-             "Total progress should be the same as max progress");
+             QString("Total progress (%1) should be "
+                     "the same as max progress (%2)")
+             .arg(totalProgress)
+             .arg(this->core->getMaxProgress())
+             .toLatin1().constData());
   }
 
   void cleanupTestCase()
