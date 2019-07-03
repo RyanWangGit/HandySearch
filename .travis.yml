@@ -2,11 +2,6 @@ language: cpp
 
 matrix:
  include:
-  - os: linux
-    dist: xenial
-    compiler: gcc
-    env:
-     - QT_BASE=58
   # QT 5.9 LTS
   - os: linux
     dist: xenial
@@ -18,11 +13,6 @@ matrix:
     compiler: clang
     env:
      - QT_BASE=59
-  - os: linux
-    dist: xenial
-    compiler: gcc
-    env:
-     - QT_BASE=510
   - os: linux
     dist: xenial
     compiler: gcc
@@ -45,9 +35,7 @@ matrix:
      - QT_BASE=latest
 
 before_install:
-  - if [ "$QT_BASE" = "58" ]; then sudo add-apt-repository ppa:beineri/opt-qt58-xenial -y; fi
   - if [ "$QT_BASE" = "59" ]; then sudo add-apt-repository ppa:beineri/opt-qt597-xenial -y; fi
-  - if [ "$QT_BASE" = "510" ]; then sudo add-apt-repository ppa:beineri/opt-qt-5.10.1-xenial -y; fi
   - if [ "$QT_BASE" = "511" ]; then sudo add-apt-repository ppa:beineri/opt-qt-5.11.3-xenial -y; fi
   - if [ "$QT_BASE" = "512" ]; then sudo add-apt-repository ppa:beineri/opt-qt-5.12.3-xenial -y; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
@@ -57,9 +45,7 @@ before_install:
     fi
 
 install:
-  - if [ "$QT_BASE" = "58" ]; then sudo apt-get install -qq qt58base; source /opt/qt58/bin/qt58-env.sh; fi
   - if [ "$QT_BASE" = "59" ]; then sudo apt-get install -qq qt59base; source /opt/qt59/bin/qt59-env.sh; fi
-  - if [ "$QT_BASE" = "510" ]; then sudo apt-get install -qq qt510base; source /opt/qt510/bin/qt510-env.sh; fi
   - if [ "$QT_BASE" = "511" ]; then sudo apt-get install -qq qt511base; source /opt/qt511/bin/qt511-env.sh; fi
   - if [ "$QT_BASE" = "512" ]; then sudo apt-get install -qq qt512base; source /opt/qt512/bin/qt512-env.sh; fi
   - if [ "$QT_BASE" = "latest" ]; then
