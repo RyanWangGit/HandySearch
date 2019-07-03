@@ -176,11 +176,17 @@ void SearchCore::load(int from)
   // open database
   this->db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
   this->db.setDatabaseName(this->databasePath);
+
   if(!this->db.open())
-    qFatal("Database cannot be opened.");
+  {
+    qFatal("Database cannot be opened with error \"%s\".",
+           this->db.lastError().text().toLatin1().constData());
+  }
+
   QSqlQuery query("SELECT COUNT(id) FROM `webpages`", this->db);
   if(!query.next())
-    qFatal("Database execution failed.");
+    qFatal("Database execution failed with error \"%s\".",
+           query.lastError().text().toLatin1().constData());
 
   // assign the workload
   const int TOTAL_WEBPAGES = query.value(0).toInt();
