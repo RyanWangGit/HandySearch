@@ -7,7 +7,7 @@
 
 
 HandySearch::HandySearch(QWidget *parent)
-  : QMainWindow(parent), MINHEIGHT(500), MINWIDTH(850)
+  : QMainWindow(parent), MINWIDTH(850), MINHEIGHT(500)
 {
   ui.setupUi(this);
   /* Initialize variables */
