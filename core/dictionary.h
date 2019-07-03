@@ -5,15 +5,15 @@
 
 class Dictionary : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 private:
-    BloomFilter bf;
-    unsigned int maxLength;
-    bool hasLoaded;
+  BloomFilter bf;
+  unsigned int maxLength;
+  bool hasLoaded;
 public:
-    Dictionary();
-    void load(const QString &path);
-    bool hasItem(const QString &key) const;
-    bool addItem(const QString &key);
-    unsigned int getMaxLength() const;
+  Dictionary();
+  void load(const QString &path);
+  bool hasItem(const QString &key) const;
+  bool addItem(const QString &key);
+  unsigned int getMaxLength() const;
 };
