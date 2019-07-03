@@ -65,7 +65,7 @@ QPushButton{color:rgb(255,255,255);}
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../app.qrc">:/assets/Logo.png</pixmap>
+     <pixmap resource="../handy_search.qrc">:/assets/Logo.png</pixmap>
     </property>
    </widget>
    <widget class="QLineEdit" name="searchEdit">
@@ -241,7 +241,7 @@ QPushButton:hover{color:rgb(58, 58, 58);}
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../app.qrc"/>
+  <include location="../handy_search.qrc"/>
  </resources>
  <connections/>
  <slots>
