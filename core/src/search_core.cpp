@@ -96,8 +96,8 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
   QList<std::tuple<QString, int, int> > indexList;
 
   const int PROGRESS_FREQUENCY = 10;
-  unsigned int i;
-  for (i = 0; query.next(); i++)
+  uint count = 0, reported = 0;
+  while(query.next())
   {
     int id = query.value(0).toInt();
 
@@ -115,12 +115,19 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
       indexList.append(std::make_tuple(word, id, pos));
     }
 
-    if(i % PROGRESS_FREQUENCY == 0 && i != 0)
+    if(count % PROGRESS_FREQUENCY == 0 && count != 0)
+    {
       _core->progress("Loading Webpages", PROGRESS_FREQUENCY);
+      reported += PROGRESS_FREQUENCY;
+    }
 
+    count++;
   }
 
-  _core->progress("Loading Webpages", i % PROGRESS_FREQUENCY);
+  // report the remaining progress
+  if(count - reported != 0)
+    _core->progress("Loading Webpages", count - reported);
+
   db.close();
 
   return indexList;
