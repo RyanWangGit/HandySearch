@@ -207,7 +207,8 @@ void SearchCore::load(uint from)
   _core = &(*this);
 
   // mapreduce to process all the webpages
-  this->invertedList = QtConcurrent::blockingMappedReduced<InvertedList>(tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
+  this->invertedList = QtConcurrent::blockingMappedReduced<InvertedList>(
+        tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
 
   // optional: squeeze all the index hashes in to inverted list
   for(auto iter = this->invertedList.begin(); iter != this->invertedList.end(); ++iter)
