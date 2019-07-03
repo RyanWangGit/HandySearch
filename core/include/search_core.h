@@ -33,10 +33,10 @@ public:
   unsigned int getMaxProgress() const;
   unsigned int getWebpagesCount() const;
   QStringList getTitleList() const;
-  void load(int from = 1);
+  void load(uint from = 1);
   void query(const QString &sentence);
   void clear();
 signals:
-  void progress(const QString &hint, int progress);
+  void progress(const QString &hint, uint progress);
   void result(const QStringList &keywords, const QList<Webpage> &webpages);
 };

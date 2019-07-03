@@ -72,7 +72,7 @@ QStringList SearchCore::getTitleList() const
 // used by mapper and reducer since they have to be static functions
 static SearchCore *_core = NULL;
 // used by mapper and reducer to report progress
-static int WEBPAGES_PER_THREAD = -1;
+static unsigned int WEBPAGES_PER_THREAD = 0;
 
 // extract word from webpage and store into <word, id, pos> to be processed in reducer
 QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
@@ -168,7 +168,7 @@ void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &
 }
 
 
-void SearchCore::load(int from)
+void SearchCore::load(uint from)
 {
   // load dictonary
   this->dictionary.load(this->dictionaryPath);
@@ -198,12 +198,12 @@ void SearchCore::load(int from)
   this->maxProgress = (TOTAL_WEBPAGES - from + 1) + WEBPAGES_PER_THREAD * (QThread::idealThreadCount() + 1) + 1;
 
   QList<QPair<int, int> > tasks;
-  for(int i = from; i < TOTAL_WEBPAGES; i += WEBPAGES_PER_THREAD)
+  for(uint i = from; i < TOTAL_WEBPAGES; i += WEBPAGES_PER_THREAD)
   {
     if(i + WEBPAGES_PER_THREAD >= TOTAL_WEBPAGES)
-      tasks.append(QPair<int, int>(i, TOTAL_WEBPAGES));
+      tasks.append(QPair<uint, uint>(i, TOTAL_WEBPAGES));
     else
-      tasks.append(QPair<int, int>(i, i + WEBPAGES_PER_THREAD - 1));
+      tasks.append(QPair<uint, uint>(i, i + WEBPAGES_PER_THREAD - 1));
   }
 
   // set static global variable to be used in mapper and reducer

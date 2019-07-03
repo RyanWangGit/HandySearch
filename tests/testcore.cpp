@@ -33,9 +33,9 @@ private slots:
     this->core->load();
     QVERIFY2(spy.count() > 0, "Must at least emit one progress signal");
     QVERIFY2(this->core->getMaxProgress() > 0, "Max progress of SearchCore must be positive");
-    unsigned int totalProgress = 0;
+    uint totalProgress = 0;
     for(const QList<QVariant> &signal: spy)
-      totalProgress += qvariant_cast<unsigned int>(signal.at(1));
+      totalProgress += qvariant_cast<uint>(signal.at(1));
     QVERIFY2(totalProgress == this->core->getMaxProgress(),
              QString("Total progress (%1) should be "
                      "the same as max progress (%2)")
