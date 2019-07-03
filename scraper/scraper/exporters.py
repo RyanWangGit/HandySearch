@@ -23,7 +23,7 @@ class SqliteWebpageExporter(BaseItemExporter):
 
     def export_item(self, item):
         self.start_exporting()
-        self.conn.execute(r"""INSERT INTO webpages(title, content, url) VALUES ?""",
+        self.conn.execute(r"""INSERT INTO webpages(title, content, url) VALUES (?, ?, ?)""",
                           (item['title'], item['content'], item['url']))
         self.conn.commit()
         self.finish_exporting()
