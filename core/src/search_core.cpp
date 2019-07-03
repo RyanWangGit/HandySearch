@@ -131,7 +131,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &other)
 {
   if(result.isEmpty())
-    result.reserve(_core->getWebpagesCount());
+    result.reserve(static_cast<int>(_core->getWebpagesCount()));
 
   for(const std::tuple<QString, int, int> & index : other)
   {
