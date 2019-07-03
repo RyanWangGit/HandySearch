@@ -7,9 +7,15 @@ matrix:
     compiler: gcc
     env:
      - QT_BASE=58
+  # QT 5.9 LTS
   - os: linux
     dist: xenial
     compiler: gcc
+    env:
+     - QT_BASE=59
+  - os: linux
+    dist: xenial
+    compiler: clang
     env:
      - QT_BASE=59
   - os: linux
@@ -22,6 +28,7 @@ matrix:
     compiler: gcc
     env:
      - QT_BASE=511
+  # QT 5.12 LTS
   - os: linux
     dist: xenial
     compiler: gcc
