@@ -85,11 +85,13 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
   // note: ROWID implementation only works for SQLITE
   QSqlQuery query(db);
-  query.prepare("SELECT id, title, content from `webpages` WHERE ROWID >= :start AND ROWID <= :end");
+  query.prepare("SELECT id, title, content from `webpages` "
+                "WHERE ROWID >= :start AND ROWID <= :end");
   query.bindValue(":start", task.first);
   query.bindValue(":end", task.second);
   if(!query.exec())
-    qFatal(query.lastError().text().toLatin1().data());
+    qFatal("Database query failure: \"%s\"",
+           query.lastError().text().toLatin1().constData());
 
   WordSegmenter ws(&_core->getDictionary());
 
@@ -239,7 +241,8 @@ void SearchCore::query(const QString &sentence)
       query.prepare("SELECT title, content, url from `webpages` WHERE id == :id");
       query.bindValue(":id", iter.key());
       if(!query.exec() || !query.next())
-        qFatal(query.lastError().text().toLatin1().data());
+        qFatal("Database query failure: \"%s\"",
+               query.lastError().text().toLatin1().constData());
       Webpage webpage;
       webpage.title = query.value(0).toString();
       // TODO: find the best-fit brief
