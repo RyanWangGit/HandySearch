@@ -24,12 +24,7 @@ void LoadUI::progress(const QString &hint, float progress)
 
 bool LoadUI::loadData()
 {
-    QString dictionaryPath, databasePath;
-
-    dictionaryPath = QFileDialog::getOpenFileName(this, "Choose Dictionary", "");
-
-    if (dictionaryPath.isEmpty())
-        dictionaryPath = ":/assets/dictionary.txt";
+    QString databasePath;
 
     databasePath = QFileDialog::getOpenFileName(this, "Choose Webpage database", "", "Database (*.db *.sqlite *.sqlite3)");
     if (databasePath.isEmpty())
@@ -38,7 +33,7 @@ bool LoadUI::loadData()
         if (QMessageBox::question(nullptr, "Warning", "Are you sure you want to quit the application?") == QMessageBox::Yes)
             return false;
     }
-    emit start(dictionaryPath, databasePath);
+    emit start(databasePath);
 
     connect(&timer, &QTimer::timeout, this, &LoadUI::loadingDots);
     timer.start(20);

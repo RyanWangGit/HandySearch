@@ -21,8 +21,9 @@ HandySearch::HandySearch(QWidget *parent)
     connect(this, &HandySearch::startLoading, &this->core, &SearchCore::load);
     connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, [](const QUrl &url) { QDesktopServices::openUrl(url); });
 
-    connect(&this->loadUI, &LoadUI::start, [this](const QString &dictionaryPath, const QString &databasePath) {
-        this->core.setPath(dictionaryPath, databasePath);
+    connect(&this->loadUI, &LoadUI::start, [this](const QString &databasePath) {
+        // use bundled dictionary file
+        this->core.setPath(":/assets/dictionary.txt", databasePath);
         emit this->startLoading();
     } );
     connect(&this->core, &SearchCore::progress, [this](const QString &hint, int progress) {

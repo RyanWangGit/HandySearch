@@ -52,7 +52,7 @@ public slots:
     void loadingDots();
     void progress(const QString &hint, float progress);
 signals:
-    void start(const QString &dictionaryPath, const QString &databasePath);
+    void start(const QString &databasePath);
 private:
     Ui::LoadUI ui;
 };
