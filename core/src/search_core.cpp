@@ -5,16 +5,15 @@
 #include <QDebug>
 #include <QtConcurrent>
 #include "search_core.h"
-#include "word_segmenter.h"
 
 // <id, positions>
 typedef QHash<int, QList<int> > Index;
 // < word, index >
 typedef QHash<QString, Index> InvertedList;
 
-SearchCore::SearchCore(const QString &dictionary, const QString &database)
+SearchCore::SearchCore(const QString &database)
 {
-  this->setPath(dictionary, database);
+  this->setPath(database);
   this->hasLoaded = false;
   this->maxProgress = 0;
 }
@@ -32,9 +31,8 @@ SearchCore::~SearchCore()
 }
 
 
-void SearchCore::setPath(const QString &dictionary, const QString &database)
+void SearchCore::setPath(const QString &database)
 {
-  this->dictionaryPath = dictionary;
   this->databasePath = database;
 }
 
@@ -42,11 +40,6 @@ void SearchCore::setPath(const QString &dictionary, const QString &database)
 const QString &SearchCore::getDatabasePath() const
 {
   return this->databasePath;
-}
-
-const Dictionary &SearchCore::getDictionary() const
-{
-  return this->dictionary;
 }
 
 unsigned int SearchCore::getWebpagesCount() const
@@ -91,7 +84,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
     qFatal("Database query failure: \"%s\"",
            query.lastError().text().toLatin1().constData());
 
-  WordSegmenter ws(&_core->getDictionary());
+  // TODO: setup word segmenter
 
   QList<std::tuple<QString, int, int> > indexList;
 
@@ -117,7 +110,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
     if(count % PROGRESS_FREQUENCY == 0 && count != 0)
     {
-      _core->progress("Loading Webpages", PROGRESS_FREQUENCY);
+      _core->progress(PROGRESS_FREQUENCY);
       reported += PROGRESS_FREQUENCY;
     }
 
@@ -126,7 +119,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
   // report the remaining progress
   if(count - reported != 0)
-    _core->progress("Loading Webpages", count - reported);
+    _core->progress(count - reported);
 
   db.close();
 
@@ -173,11 +166,6 @@ void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &
 
 void SearchCore::load(uint from)
 {
-  // load dictonary
-  this->dictionary.load(this->dictionaryPath);
-
-  // load webpages
-
   // open database
   this->db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
   this->db.setDatabaseName(this->databasePath);
@@ -232,7 +220,8 @@ void SearchCore::query(const QString &sentence)
   if(!this->hasLoaded)
     qFatal("Core hasn't loaded anything yet.");
 
-  WordSegmenter ws = WordSegmenter(&this->dictionary);
+  // TODO: setup word segmenter
+
   QStringList keywords = ws.segment(sentence);
   QList<Webpage> webpages;
 
