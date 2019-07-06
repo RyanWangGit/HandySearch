@@ -1,7 +1,8 @@
 QT += core sql concurrent
 CONFIG += c++11
 
-INCLUDEPATH += $$PWD/include
+INCLUDEPATH += $$PWD/include \
+    $$PWD/libs/cppjieba/include
 
 SOURCES += $$PWD/src/bloom_filter.cpp \
     $$PWD/src/dictionary.cpp \
