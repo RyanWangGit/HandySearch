@@ -24,7 +24,7 @@ private slots:
     this->dbPath.append("/test.sqlite");
     dbFile.copy(this->dbPath);
     QFile::setPermissions(this->dbPath, QFile::ReadOwner | QFile::WriteOwner);
-    this->core->setPath(":/assets/dictionary.txt", this->dbPath);
+    this->core->setPath(this->dbPath);
   }
 
   void testLoad()
@@ -35,7 +35,7 @@ private slots:
     QVERIFY2(this->core->getMaxProgress() > 0, "Max progress of SearchCore must be positive");
     uint totalProgress = 0;
     for(const QList<QVariant> &signal: spy)
-      totalProgress += qvariant_cast<uint>(signal.at(1));
+      totalProgress += qvariant_cast<uint>(signal.at(0));
     QVERIFY2(totalProgress == this->core->getMaxProgress(),
              QString("Total progress (%1) should be "
                      "the same as max progress (%2)")
