@@ -3,7 +3,7 @@
 #include <QTimer>
 #include <QSignalSpy>
 #include <QStandardPaths>
-#include "search_core.h"
+#include "searchcore.h"
 
 class TestCore: public QObject
 {

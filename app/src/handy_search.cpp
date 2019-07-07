@@ -3,7 +3,7 @@
 #include "handy_search.h"
 #include "word_segmenter.h"
 #include "load_ui.h"
-#include "search_core.h"
+#include "searchcore.h"
 
 
 HandySearch::HandySearch(QWidget *parent)

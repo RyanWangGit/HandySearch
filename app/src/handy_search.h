@@ -3,7 +3,7 @@
 #include "ui_handy_search.h"
 #include "bloom_filter.h"
 #include "load_ui.h"
-#include "search_core.h"
+#include "searchcore.h"
 
 
 class HandySearch : public QMainWindow
