@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>assets/dictionary.txt</file>
+        <file>libs/cppjieba/dict/hmm_model.utf8</file>
+        <file>libs/cppjieba/dict/idf.utf8</file>
+        <file>libs/cppjieba/dict/jieba.dict.utf8</file>
+        <file>libs/cppjieba/dict/stop_words.utf8</file>
+        <file>libs/cppjieba/dict/user.dict.utf8</file>
     </qresource>
 </RCC>
