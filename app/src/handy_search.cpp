@@ -172,7 +172,7 @@ void HandySearch::showResult(const QStringList &keywords, const QList<Webpage> &
     resultContent.replace(word, "<font color=\"#cc0000\">" + word + "</font>");
 
   ui.resultEdit->setHtml(resultContent);
-  ui.segment->setText("   HandySearch has provided " + QString::number(webpages.size()) + " result(s) for you in " + QString::number((double)clock.elapsed() / 1000) + " second(s)");
+  ui.segment->setText("   HandySearch has provided " + QString::number(webpages.size()) + " result(s) for you in " + QString::number(static_cast<double>(clock.elapsed()) / 1000) + " second(s)");
 
   clock.restart();
 }
