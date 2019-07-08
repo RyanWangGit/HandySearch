@@ -1,7 +1,6 @@
 #include <QDesktopServices>
 #include <QCompleter>
 #include "handy_search.h"
-#include "word_segmenter.h"
 #include "load_ui.h"
 #include "searchcore.h"
 
@@ -23,8 +22,7 @@ HandySearch::HandySearch(QWidget *parent)
   connect(this->ui.resultEdit, &QTextBrowser::anchorClicked, [](const QUrl &url) { QDesktopServices::openUrl(url); });
 
   connect(&this->loadUI, &LoadUI::start, [this](const QString &databasePath) {
-    // use bundled dictionary file
-    this->core.setPath(":/assets/dictionary.txt", databasePath);
+    this->core.setPath(databasePath);
     emit this->startLoading();
   } );
   connect(&this->core, &SearchCore::progress, [this](const QString &hint, uint progress) {
