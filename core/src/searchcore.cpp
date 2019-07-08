@@ -3,6 +3,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QDir>
 #include <QtConcurrent>
 #include "qjieba.hpp"
 #include "searchcore.h"
@@ -68,17 +69,18 @@ QString SearchCore::copyEmbedded(const QString &path)
   QFile embedded(path);
   if(!embedded.exists())
     qFatal("Embedded file doesn\'t exist");
-  QString copied = QStandardPaths::writableLocation(
+  QString location = QStandardPaths::writableLocation(
         QStandardPaths::TempLocation);
 
-  if(copied.isEmpty())
+  if(location.isEmpty())
     qFatal("Could not obtain writable location for test database file");
 
-  copied.append(path.section('/', -1, -1));
+  QString copyLocation = QDir::cleanPath(location + QDir::separator() +
+                                         path.section('/', -1, -1));
 
-  embedded.copy(copied);
-  QFile::setPermissions(copied, QFile::ReadOwner | QFile::WriteOwner);
-  return copied;
+  embedded.copy(copyLocation);
+  QFile::setPermissions(copyLocation, QFile::ReadOwner | QFile::WriteOwner);
+  return copyLocation;
 }
 
 /* TODO: need more elegant solution */
