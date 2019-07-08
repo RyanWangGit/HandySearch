@@ -1,6 +1,6 @@
 #include <QTextCodec>
 #include "handy_search.h"
-#include "search_core.h"
+#include "searchcore.h"
 
 
 int main(int argc, char *argv[])

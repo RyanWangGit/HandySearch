@@ -3,7 +3,7 @@
 #include <QTimer>
 #include <QSignalSpy>
 #include <QStandardPaths>
-#include "search_core.h"
+#include "searchcore.h"
 
 class TestCore: public QObject
 {
@@ -14,6 +14,7 @@ private:
 private slots:
   void initTestCase()
   {
+    qRegisterMetaType<QList<Webpage> >("QList<Webpage>");
     this->core = new SearchCore();
     QFile dbFile(":/tests/test.sqlite");
     if(!dbFile.exists())
@@ -24,7 +25,7 @@ private slots:
     this->dbPath.append("/test.sqlite");
     dbFile.copy(this->dbPath);
     QFile::setPermissions(this->dbPath, QFile::ReadOwner | QFile::WriteOwner);
-    this->core->setPath(":/assets/dictionary.txt", this->dbPath);
+    this->core->setPath(this->dbPath);
   }
 
   void testLoad()
@@ -35,13 +36,26 @@ private slots:
     QVERIFY2(this->core->getMaxProgress() > 0, "Max progress of SearchCore must be positive");
     uint totalProgress = 0;
     for(const QList<QVariant> &signal: spy)
-      totalProgress += qvariant_cast<uint>(signal.at(1));
+      totalProgress += qvariant_cast<uint>(signal.at(0));
     QVERIFY2(totalProgress == this->core->getMaxProgress(),
              QString("Total progress (%1) should be "
                      "the same as max progress (%2)")
              .arg(totalProgress)
              .arg(this->core->getMaxProgress())
              .toLatin1().constData());
+  }
+
+  void testQuery()
+  {
+    QSignalSpy spy(this->core, &SearchCore::result);
+    QString query = "这是一个测试用例Test Case";
+    this->core->query(query);
+    QVERIFY2(spy.count() == 1, "Should only emit one result for one query");
+    QStringList keywords = qvariant_cast<QStringList>(spy.at(0).at(0));
+    QList<Webpage> webpages = qvariant_cast<QList<Webpage> >(spy.at(0).at(1));
+    QVERIFY2(keywords.length() > 1, "Keyword is not splitted at all");
+    for(const QString &word: keywords)
+      QVERIFY2(query.contains(word), "Keyword list contains invalid word");
   }
 
   void cleanupTestCase()

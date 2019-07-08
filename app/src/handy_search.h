@@ -1,9 +1,8 @@
 #pragma once
 
 #include "ui_handy_search.h"
-#include "bloom_filter.h"
 #include "load_ui.h"
-#include "search_core.h"
+#include "searchcore.h"
 
 
 class HandySearch : public QMainWindow
@@ -16,7 +15,7 @@ public:
 signals:
   void startLoading(int from=1);
   void query(const QString &sentence);
-  void progress(const QString &hint, float progress);
+  void progress(float progress);
   void loadFinished();
 protected:
   void resizeEvent(QResizeEvent *event);

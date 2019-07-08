@@ -19,9 +19,9 @@ LoadUI::LoadUI()
 }
 
 
-void LoadUI::progress(const QString &hint, float progress)
+void LoadUI::progress(float progress)
 {
-  this->ui.statusBar->setText(hint + " - " + QString::number(progress * 100, 'g', 4) + "%");
+  this->ui.statusBar->setText("Loading - " + QString::number(progress * 100, 'g', 4) + "%");
 }
 
 

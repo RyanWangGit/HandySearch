@@ -3,18 +3,20 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QDir>
 #include <QtConcurrent>
-#include "search_core.h"
-#include "word_segmenter.h"
+#include "qjieba.hpp"
+#include "searchcore.h"
+
 
 // <id, positions>
 typedef QHash<int, QList<int> > Index;
 // < word, index >
 typedef QHash<QString, Index> InvertedList;
 
-SearchCore::SearchCore(const QString &dictionary, const QString &database)
+SearchCore::SearchCore(const QString &database)
 {
-  this->setPath(dictionary, database);
+  this->setPath(database);
   this->hasLoaded = false;
   this->maxProgress = 0;
 }
@@ -32,9 +34,8 @@ SearchCore::~SearchCore()
 }
 
 
-void SearchCore::setPath(const QString &dictionary, const QString &database)
+void SearchCore::setPath(const QString &database)
 {
-  this->dictionaryPath = dictionary;
   this->databasePath = database;
 }
 
@@ -42,11 +43,6 @@ void SearchCore::setPath(const QString &dictionary, const QString &database)
 const QString &SearchCore::getDatabasePath() const
 {
   return this->databasePath;
-}
-
-const Dictionary &SearchCore::getDictionary() const
-{
-  return this->dictionary;
 }
 
 unsigned int SearchCore::getWebpagesCount() const
@@ -66,6 +62,25 @@ QStringList SearchCore::getTitleList() const
   while(query.next())
     list.append(query.value(0).toString());
   return list;
+}
+
+QString SearchCore::copyEmbedded(const QString &path)
+{
+  QFile embedded(path);
+  if(!embedded.exists())
+    qFatal("Embedded file doesn\'t exist");
+  QString location = QStandardPaths::writableLocation(
+        QStandardPaths::TempLocation);
+
+  if(location.isEmpty())
+    qFatal("Could not obtain writable location for test database file");
+
+  QString copyLocation = QDir::cleanPath(location + QDir::separator() +
+                                         path.section('/', -1, -1));
+
+  embedded.copy(copyLocation);
+  QFile::setPermissions(copyLocation, QFile::ReadOwner | QFile::WriteOwner);
+  return copyLocation;
 }
 
 /* TODO: need more elegant solution */
@@ -91,7 +106,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
     qFatal("Database query failure: \"%s\"",
            query.lastError().text().toLatin1().constData());
 
-  WordSegmenter ws(&_core->getDictionary());
+  // setup word segmenter
 
   QList<std::tuple<QString, int, int> > indexList;
 
@@ -102,14 +117,19 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
     int id = query.value(0).toInt();
 
     int pos = 0;
-    for(const QString & word : ws.segment(query.value(1).toString()))
+
+    // use negative position to indicate that word is in title
+    for(const QString &word :
+        _core->wordSegmenter->cut(query.value(1).toString()))
     {
+
       pos -= word.size();
       indexList.append(std::make_tuple(word, id, pos));
     }
 
     pos = 0;
-    for(const QString & word : ws.segment(query.value(2).toString()))
+    for(const QString &word :
+        _core->wordSegmenter->cut(query.value(2).toString()))
     {
       pos += word.size();
       indexList.append(std::make_tuple(word, id, pos));
@@ -117,7 +137,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
     if(count % PROGRESS_FREQUENCY == 0 && count != 0)
     {
-      _core->progress("Loading Webpages", PROGRESS_FREQUENCY);
+      _core->progress(PROGRESS_FREQUENCY);
       reported += PROGRESS_FREQUENCY;
     }
 
@@ -126,7 +146,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
   // report the remaining progress
   if(count - reported != 0)
-    _core->progress("Loading Webpages", count - reported);
+    _core->progress(count - reported);
 
   db.close();
 
@@ -173,10 +193,14 @@ void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &
 
 void SearchCore::load(uint from)
 {
-  // load dictonary
-  this->dictionary.load(this->dictionaryPath);
+  // setup word segmenter
+  QString jieba = this->copyEmbedded(":/libs/cppjieba/dict/jieba.dict.utf8");
+  QString hmmModel = this->copyEmbedded(":/libs/cppjieba/dict/hmm_model.utf8");
+  QString user = this->copyEmbedded(":/libs/cppjieba/dict/user.dict.utf8");
+  QString idf = this->copyEmbedded(":/libs/cppjieba/dict/idf.utf8");
+  QString stopWords = this->copyEmbedded(":/libs/cppjieba/dict/stop_words.utf8");
 
-  // load webpages
+  this->wordSegmenter.reset(new QJieba(jieba, hmmModel, user, idf, stopWords));
 
   // open database
   this->db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
@@ -223,7 +247,7 @@ void SearchCore::load(uint from)
   this->invertedList.squeeze();
 
   this->hasLoaded = true;
-  emit this->progress("Loading Webpages", 1);
+  emit this->progress(1);
 }
 
 
@@ -232,8 +256,7 @@ void SearchCore::query(const QString &sentence)
   if(!this->hasLoaded)
     qFatal("Core hasn't loaded anything yet.");
 
-  WordSegmenter ws = WordSegmenter(&this->dictionary);
-  QStringList keywords = ws.segment(sentence);
+  QStringList keywords = _core->wordSegmenter->cut(sentence);
   QList<Webpage> webpages;
 
   QSqlQuery query(this->db);
@@ -242,7 +265,6 @@ void SearchCore::query(const QString &sentence)
     const QHash<int, QList<int> > & wordHash = this->invertedList.value(word);
     for(auto iter = wordHash.begin(); iter != wordHash.end(); ++iter)
     {
-
       query.prepare("SELECT title, content, url from `webpages` WHERE id == :id");
       query.bindValue(":id", iter.key());
       if(!query.exec() || !query.next())
