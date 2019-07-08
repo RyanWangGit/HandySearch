@@ -26,7 +26,7 @@ public:
 public slots:
   bool loadData();
   void loadingDots();
-  void progress(float progress);
+  void progress(double progress);
 signals:
   void start(const QString &databasePath);
 private:

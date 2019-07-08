@@ -28,7 +28,8 @@ HandySearch::HandySearch(QWidget *parent)
   connect(&this->core, &SearchCore::progress, [this](uint progress) {
     static uint totalProgress = 0;
     totalProgress += progress;
-    emit this->progress(totalProgress / float(this->core.getMaxProgress()));
+    emit this->progress(
+          static_cast<double>(totalProgress) / this->core.getMaxProgress());
 
     if(totalProgress == this->core.getMaxProgress())
       emit this->loadFinished();
