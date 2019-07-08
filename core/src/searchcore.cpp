@@ -85,7 +85,7 @@ QString SearchCore::copyEmbedded(const QString &path)
 
 /* TODO: need more elegant solution */
 // used by mapper and reducer since they have to be static functions
-static SearchCore *_core = NULL;
+static SearchCore *_core = nullptr;
 
 // extract word from webpage and store into <word, id, pos> to be processed in reducer
 QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
