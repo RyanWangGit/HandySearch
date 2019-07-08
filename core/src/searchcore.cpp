@@ -106,8 +106,6 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
     qFatal("Database query failure: \"%s\"",
            query.lastError().text().toLatin1().constData());
 
-  // setup word segmenter
-
   QList<std::tuple<QString, int, int> > indexList;
 
   const int PROGRESS_FREQUENCY = 10;
