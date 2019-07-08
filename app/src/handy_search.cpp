@@ -70,7 +70,7 @@ void HandySearch::searchResult(const QStringList &keywords, const QList<Webpage>
 }
 
 
-void HandySearch::resizeEvent(QResizeEvent *event)
+void HandySearch::resizeEvent(QResizeEvent *)
 {
   if (!isResultShown)
     setDefaultUILayout();
