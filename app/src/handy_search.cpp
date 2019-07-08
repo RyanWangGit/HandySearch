@@ -25,10 +25,10 @@ HandySearch::HandySearch(QWidget *parent)
     this->core.setPath(databasePath);
     emit this->startLoading();
   } );
-  connect(&this->core, &SearchCore::progress, [this](const QString &hint, uint progress) {
+  connect(&this->core, &SearchCore::progress, [this](uint progress) {
     static uint totalProgress = 0;
     totalProgress += progress;
-    emit this->progress(hint, totalProgress / float(this->core.getMaxProgress()));
+    emit this->progress(totalProgress / float(this->core.getMaxProgress()));
 
     if(totalProgress == this->core.getMaxProgress())
       emit this->loadFinished();
