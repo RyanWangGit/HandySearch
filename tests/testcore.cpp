@@ -1,3 +1,4 @@
+#include <memory>
 #include <QTest>
 #include <QDebug>
 #include <QTimer>
@@ -9,13 +10,13 @@ class TestCore: public QObject
 {
   Q_OBJECT
 private:
-  SearchCore *core;
+  std::unique_ptr<SearchCore> core;
   QString dbPath;
 private slots:
   void initTestCase()
   {
     qRegisterMetaType<QList<Webpage> >("QList<Webpage>");
-    this->core = new SearchCore();
+    this->core.reset(new SearchCore());
     QFile dbFile(":/tests/test.sqlite");
     if(!dbFile.exists())
       qFatal("Embedded database file doesn\'t exist");
@@ -30,7 +31,7 @@ private slots:
 
   void testLoad()
   {
-    QSignalSpy spy(this->core, &SearchCore::progress);
+    QSignalSpy spy(this->core.get(), &SearchCore::progress);
     this->core->load();
     QVERIFY2(spy.count() > 0, "Must at least emit one progress signal");
     QVERIFY2(this->core->getMaxProgress() > 0, "Max progress of SearchCore must be positive");
@@ -47,7 +48,7 @@ private slots:
 
   void testQuery()
   {
-    QSignalSpy spy(this->core, &SearchCore::result);
+    QSignalSpy spy(this->core.get(), &SearchCore::result);
     QString query = "这是一个测试用例Test Case";
     this->core->query(query);
     QVERIFY2(spy.count() == 1, "Should only emit one result for one query");
@@ -60,7 +61,6 @@ private slots:
 
   void cleanupTestCase()
   {
-    delete this->core;
     if(!QFile::remove(this->dbPath))
       qWarning() << "Cannot remove generated database file, "
                      "please manually remove it at \"\"" << this->dbPath;
