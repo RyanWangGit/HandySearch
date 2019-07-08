@@ -14,6 +14,7 @@ private:
 private slots:
   void initTestCase()
   {
+    qRegisterMetaType<QList<Webpage> >("QList<Webpage>");
     this->core = new SearchCore();
     QFile dbFile(":/tests/test.sqlite");
     if(!dbFile.exists())
@@ -42,6 +43,19 @@ private slots:
              .arg(totalProgress)
              .arg(this->core->getMaxProgress())
              .toLatin1().constData());
+  }
+
+  void testQuery()
+  {
+    QSignalSpy spy(this->core, &SearchCore::result);
+    QString query = "这是一个测试用例Test Case";
+    this->core->query(query);
+    QVERIFY2(spy.count() == 1, "Should only emit one result for one query");
+    QStringList keywords = qvariant_cast<QStringList>(spy.at(0).at(0));
+    QList<Webpage> webpages = qvariant_cast<QList<Webpage> >(spy.at(0).at(1));
+    QVERIFY2(keywords.length() > 1, "Keyword is not splitted at all");
+    for(const QString &word: keywords)
+      QVERIFY2(query.contains(word), "Keyword list contains invalid word");
   }
 
   void cleanupTestCase()
