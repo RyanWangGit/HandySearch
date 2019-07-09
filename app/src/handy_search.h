@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QMainWindow>
 #include "ui_handy_search.h"
 #include "load_ui.h"
 #include "searchcore.h"

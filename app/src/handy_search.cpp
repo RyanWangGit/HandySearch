@@ -1,5 +1,7 @@
 #include <QDesktopServices>
 #include <QCompleter>
+#include <QObject>
+#include <QTextBrowser>
 #include "handy_search.h"
 #include "load_ui.h"
 #include "searchcore.h"

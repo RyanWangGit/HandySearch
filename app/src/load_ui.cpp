@@ -1,4 +1,5 @@
 #include <cmath>
+#include <QtGui>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPropertyAnimation>
