@@ -18,6 +18,7 @@ __pycache__/
 [Rr]elease/
 x64/
 build/
+cmake-build-*
 bld/
 [Bb]in/
 [Oo]bj/
