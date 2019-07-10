@@ -51,6 +51,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
       brew install qt5;
       brew link --force qt5;
+      export Qt5_DIR=$(brew --prefix qt)/lib/cmake/Qt5
     fi
 
 script:
