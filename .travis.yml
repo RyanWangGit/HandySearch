@@ -56,7 +56,12 @@ install:
 
 script:
   - mkdir build && cd build
-  - cmake ../
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - make
+  - ctest -V
+  # test release build
+  - make clean
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
   - make
   - ctest -V
 
