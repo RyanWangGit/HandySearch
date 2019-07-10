@@ -11,6 +11,7 @@ class HandySearch : public QMainWindow
   Q_OBJECT
 public:
   HandySearch(QWidget *parent = 0);
+  virtual ~HandySearch();
   void searchResult(const QStringList &keywords, const QList<Webpage> &webpages);
   bool load();
 signals:

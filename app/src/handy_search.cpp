@@ -47,6 +47,12 @@ HandySearch::HandySearch(QWidget *parent)
 }
 
 
+HandySearch::~HandySearch()
+{
+  this->coreThread.quit();
+}
+
+
 void HandySearch::handleFinished()
 {
   this->show();
