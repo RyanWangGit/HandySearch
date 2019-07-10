@@ -51,17 +51,22 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
       brew install qt5;
       brew link --force qt5;
+      export Qt5_DIR=$(brew --prefix qt)/lib/cmake/Qt5;
     fi
 
 script:
-  - qmake -v
   - mkdir build && cd build
-  - qmake -r ../
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
   - make
-  - make check
+  - ctest -V
+  # test release build
+  - rm -rf *
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - make
+  - ctest -V
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash
+  - bash <(curl -s https://codecov.io/bash)
 
 notifications:
   email: false
