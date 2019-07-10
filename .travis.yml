@@ -60,7 +60,7 @@ script:
   - make
   - ctest -V
   # test release build
-  - make clean
+  - rm -rf *
   - cmake -DCMAKE_BUILD_TYPE=Release ..
   - make
   - ctest -V
