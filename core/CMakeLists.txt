@@ -19,3 +19,7 @@ else()
     target_compile_options(SearchCore PRIVATE -Wall -Wextra -pedantic)
 endif()
 
+if(SEARCH_CORE_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
+

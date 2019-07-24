@@ -6,10 +6,10 @@ project(HandySearch
 
 option(BuildTest "Build the tests." ON)
 
-add_subdirectory(core)
-add_subdirectory(app)
-
 if(BuildTest)
     enable_testing()
-    add_subdirectory(tests)
+    set(SEARCH_CORE_BUILD_TESTS ON)
 endif()
+
+add_subdirectory(core)
+add_subdirectory(app)
