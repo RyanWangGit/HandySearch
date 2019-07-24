@@ -1,4 +1,4 @@
-#include <handysearch/handysearch.h>
+#include <handysearch/core.h>
 #include <cstdint>
 #include <string>
 
