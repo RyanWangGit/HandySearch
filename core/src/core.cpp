@@ -1,4 +1,5 @@
 #include <handysearch/core.h>
+#include <cppjieba/Jieba.hpp>
 #include <cstdint>
 #include <string>
 
