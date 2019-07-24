@@ -20,6 +20,7 @@ else()
 endif()
 
 if(SEARCH_CORE_BUILD_TESTS)
+    enable_testing()
     add_subdirectory(tests)
 endif()
 
