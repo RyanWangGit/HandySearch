@@ -4,8 +4,6 @@ project(HandySearch
         VERSION 2.0
         LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
-
 option(BuildTest "Build the tests." ON)
 
 add_subdirectory(core)
