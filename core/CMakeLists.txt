@@ -2,7 +2,7 @@ include(libs/cppjieba.cmake)
 
 add_library(SearchCore SHARED src/core.cpp)
 target_include_directories(SearchCore PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
-target_link_libraries(SearchCore cppjieba)
+target_link_libraries(SearchCore SYSTEM cppjieba)
 target_compile_features(SearchCore
         PUBLIC
         cxx_nullptr
