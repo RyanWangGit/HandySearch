@@ -1,3 +1,6 @@
 [submodule "tests/libs/Catch2"]
 	path = tests/libs/Catch2
 	url = https://github.com/catchorg/Catch2.git
+[submodule "core/libs/cppjieba"]
+	path = core/libs/cppjieba
+	url = https://github.com/yanyiwu/cppjieba.git
