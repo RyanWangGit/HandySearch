@@ -1,5 +1,5 @@
 # HandySearch 
-[![travis](https://travis-ci.org/yxwangcs/handysearch.svg?branch=master)](https://www.travis-ci.org/yxwangcs/handysearch) [![codecov](https://codecov.io/gh/yxwangcs/handysearch/branch/master/graph/badge.svg)](https://codecov.io/gh/yxwangcs/handysearch)
+[![travis](https://travis-ci.com/yxwangcs/handysearch.svg?branch=master)](https://www.travis-ci.org/yxwangcs/handysearch) [![codecov](https://codecov.io/gh/yxwangcs/handysearch/branch/master/graph/badge.svg)](https://codecov.io/gh/yxwangcs/handysearch)
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project.
 
