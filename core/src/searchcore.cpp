@@ -19,6 +19,7 @@ SearchCore::SearchCore(const QString &database)
   this->setPath(database);
   this->hasLoaded = false;
   this->maxProgress = 0;
+  this->webpagesCount = 0;
 }
 
 
@@ -26,6 +27,7 @@ SearchCore::SearchCore()
 {
   this->hasLoaded = false;
   this->maxProgress = 0;
+  this->webpagesCount = 0;
 }
 
 SearchCore::~SearchCore()
