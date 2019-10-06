@@ -282,7 +282,6 @@ void SearchCore::query(const QString &sentence)
 
   // TODO: evaluate and order the results
   emit this->result(keywords, webpages);
-  return;
 }
 
 
