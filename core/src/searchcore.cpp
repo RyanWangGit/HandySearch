@@ -181,11 +181,11 @@ void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &
     else
     {
       // create an index and store into the inverted list
-      Index index;
+      Index newIndex;
       QList<int> positions;
       positions.append(pos);
-      index.insert(id, positions);
-      result.insert(word, index);
+      newIndex.insert(id, positions);
+      result.insert(word, newIndex);
     }
   }
 }
