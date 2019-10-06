@@ -1,8 +1,8 @@
+#include <memory>
 #include <tuple>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDebug>
 #include <QDir>
 #include <QtConcurrent>
 #include "qjieba.hpp"
@@ -19,6 +19,7 @@ SearchCore::SearchCore(const QString &database)
   this->setPath(database);
   this->hasLoaded = false;
   this->maxProgress = 0;
+  this->webpagesCount = 0;
 }
 
 
@@ -26,6 +27,7 @@ SearchCore::SearchCore()
 {
   this->hasLoaded = false;
   this->maxProgress = 0;
+  this->webpagesCount = 0;
 }
 
 SearchCore::~SearchCore()
@@ -179,11 +181,11 @@ void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &
     else
     {
       // create an index and store into the inverted list
-      Index index;
+      Index newIndex;
       QList<int> positions;
       positions.append(pos);
-      index.insert(id, positions);
-      result.insert(word, index);
+      newIndex.insert(id, positions);
+      result.insert(word, newIndex);
     }
   }
 }
@@ -198,7 +200,7 @@ void SearchCore::load(uint from)
   QString idf = this->copyEmbedded(":/libs/cppjieba/dict/idf.utf8");
   QString stopWords = this->copyEmbedded(":/libs/cppjieba/dict/stop_words.utf8");
 
-  this->wordSegmenter.reset(new QJieba(jieba, hmmModel, user, idf, stopWords));
+  this->wordSegmenter = std::make_unique<QJieba>(jieba, hmmModel, user, idf, stopWords);
 
   // open database
   this->db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
@@ -218,7 +220,7 @@ void SearchCore::load(uint from)
   // assign the workload
   const uint TOTAL_WEBPAGES = query.value(0).toUInt();
   uint WEBPAGES_PER_THREAD = static_cast<uint>(
-        float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount());
+        float(TOTAL_WEBPAGES - from + 1) / float(QThread::idealThreadCount()));
 
   this->webpagesCount += TOTAL_WEBPAGES - from + 1;
   this->maxProgress = (TOTAL_WEBPAGES - from + 1) + 1;
@@ -280,7 +282,6 @@ void SearchCore::query(const QString &sentence)
 
   // TODO: evaluate and order the results
   emit this->result(keywords, webpages);
-  return;
 }
 
 

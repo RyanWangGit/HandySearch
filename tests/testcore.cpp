@@ -16,7 +16,7 @@ private slots:
   void initTestCase()
   {
     qRegisterMetaType<QList<Webpage> >("QList<Webpage>");
-    this->core.reset(new SearchCore());
+    this->core = std::make_unique<SearchCore>();
     QFile dbFile(":/tests/test.sqlite");
     if(!dbFile.exists())
       qFatal("Embedded database file doesn\'t exist");
