@@ -200,7 +200,7 @@ void SearchCore::load(uint from)
   QString idf = this->copyEmbedded(":/libs/cppjieba/dict/idf.utf8");
   QString stopWords = this->copyEmbedded(":/libs/cppjieba/dict/stop_words.utf8");
 
-  this->wordSegmenter.reset(new QJieba(jieba, hmmModel, user, idf, stopWords));
+  this->wordSegmenter = std::make_unique<QJieba>(jieba, hmmModel, user, idf, stopWords);
 
   // open database
   this->db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
