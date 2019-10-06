@@ -26,11 +26,11 @@ private:
   QSqlDatabase db;
   unsigned int maxProgress;
   unsigned int webpagesCount;
-  QString copyEmbedded(const QString &path);
+  static QString copyEmbedded(const QString &path);
 public:
-  SearchCore(const QString &database);
+  explicit SearchCore(const QString &database);
   SearchCore();
-  ~SearchCore();
+  ~SearchCore() override;
   std::unique_ptr<QJieba> wordSegmenter;
   void setPath(const QString &database);
   const QString &getDatabasePath() const;
