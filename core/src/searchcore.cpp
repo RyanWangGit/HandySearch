@@ -1,8 +1,8 @@
+#include <memory>
 #include <tuple>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDebug>
 #include <QDir>
 #include <QtConcurrent>
 #include "qjieba.hpp"
