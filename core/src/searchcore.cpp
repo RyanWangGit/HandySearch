@@ -220,7 +220,7 @@ void SearchCore::load(uint from)
   // assign the workload
   const uint TOTAL_WEBPAGES = query.value(0).toUInt();
   uint WEBPAGES_PER_THREAD = static_cast<uint>(
-        float(TOTAL_WEBPAGES - from + 1) / QThread::idealThreadCount());
+        float(TOTAL_WEBPAGES - from + 1) / float(QThread::idealThreadCount()));
 
   this->webpagesCount += TOTAL_WEBPAGES - from + 1;
   this->maxProgress = (TOTAL_WEBPAGES - from + 1) + 1;
