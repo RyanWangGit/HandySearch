@@ -42,10 +42,11 @@ jobs:
         cmake --build .
         ctest -V
     - name: Upload to codecov
+      if: success()
       uses: codecov/codecov-action@master
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-  # TODO: find a better way to merge macOS into the build and test process is identical
+  # TODO: find a better way to merge macOS into the build since the test process is identical
   macos:
     runs-on: macOS-latest
     env:
@@ -70,7 +71,3 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           cmake --build .
           ctest -V
-      - name: Upload to codecov
-        uses: codecov/codecov-action@master
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
