@@ -19,5 +19,11 @@ qt5_wrap_cpp(SearchCore_INCLUDE ${INCLUDE_DIR}/searchcore.h)
 
 add_library(SearchCore SHARED ${SearchCore_INCLUDE} ${SearchCore_SRCS} core.qrc)
 
+if(MSVC)
+    target_compile_options(SearchCore PRIVATE /W4)
+else()
+    target_compile_options(SearchCore PRIVATE -Wall -Wextra -pedantic)
+endif()
+
 target_link_libraries(SearchCore PUBLIC cppjieba Qt5::Core Qt5::Concurrent Qt5::Sql)
 target_include_directories(SearchCore PUBLIC ${INCLUDE_DIR})

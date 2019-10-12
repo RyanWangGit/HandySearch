@@ -15,4 +15,10 @@ set(HandySearch_SRCS
 
 add_executable(HandySearch ${HandySearch_SRCS} ${HandySearch_UIS} app.qrc)
 
+if(MSVC)
+    target_compile_options(SearchCore PRIVATE /W4)
+else()
+    target_compile_options(SearchCore PRIVATE -Wall -Wextra -pedantic)
+endif()
+
 target_link_libraries(HandySearch PUBLIC SearchCore Qt5::Widgets Qt5::Gui)
