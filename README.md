@@ -1,24 +1,9 @@
 # HandySearch 
-[![travis](https://travis-ci.com/yxwangcs/handysearch.svg?branch=master)](https://www.travis-ci.org/yxwangcs/handysearch) [![codecov](https://codecov.io/gh/yxwangcs/handysearch/branch/master/graph/badge.svg)](https://codecov.io/gh/yxwangcs/handysearch)
+[![Github Actions](https://github.com/yxwangcs/handysearch/workflows/build/badge.svg)](https://github.com/yxwangcs/handysearch/actions?workflow=build) [![codecov](https://codecov.io/gh/yxwangcs/handysearch/branch/master/graph/badge.svg)](https://codecov.io/gh/yxwangcs/handysearch)
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project.
 
-Using QMake + QT Designer.
-
-Tested on `QT 5.9.7 LTS / QT 5.11.3 / QT 5.12.3 LTS on linux`, `QT 5.13 on MacOS`. 
-
-## Features
-* Beautiful GUI design. (Thanks to QT)
-* Load directly from HTML files and automatically analyzes them. (in multi-thread)
-* Multi-Thread optimizations make it load faster and process better.
-* Briefs are shown.
-* Hightlights the key-words.
-* Auto-completer supported.
-
-## For Developers
-* UI and process threads are completely separeted in order not to cause mess.
-* Most of the UI Design copies from Baidu and Google.(lol)
-* Release version provides around 400 sample webpages randomly collected by a python script. I collected 7000 webpages in total and filtered them down to around 4000.
+Tested on `QT 5.9.8 LTS / QT 5.12.5 / QT 5.13.1 LTS on Ubuntu 18.04`, `QT 5.13.1 on macOS 10.14`. 
 
 ## Screenshots
 
