@@ -2,7 +2,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-include_directories(${PROJECT_SOURCE_DIR}/core/include ${SOURCE_DIR})
+include_directories(${SOURCE_DIR})
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
