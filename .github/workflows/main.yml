@@ -42,8 +42,9 @@ jobs:
         cmake --build .
         ctest -V
     - name: Upload to codecov
-      if: success()
-      run: bash <(curl -s https://codecov.io/bash)
+      uses: codecov/codecov-action@master
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
   # TODO: find a better way to merge macOS into the build and test process is identical
   macos:
     runs-on: macOS-latest
@@ -70,6 +71,6 @@ jobs:
           cmake --build .
           ctest -V
       - name: Upload to codecov
-        if: success()
-        run: bash <(curl -s https://codecov.io/bash)
-      
+        uses: codecov/codecov-action@master
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
