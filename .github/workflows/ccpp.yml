@@ -41,6 +41,9 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cmake --build .
         ctest -V
+    - name: Upload to codecov
+      if: success()
+      run: bash <(curl -s https://codecov.io/bash)
   # TODO: find a better way to merge macOS into the build and test process is identical
   macos:
     runs-on: macOS-latest
@@ -66,4 +69,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ..
           cmake --build .
           ctest -V
+      - name: Upload to codecov
+        if: success()
+        run: bash <(curl -s https://codecov.io/bash)
       
