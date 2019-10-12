@@ -1,0 +1,69 @@
+name: Build and Test
+
+on: [push]
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        qt: [5.9.8, 5.12.5, 5.13.1]
+        compiler: [g++, clang++]
+    env:
+      CXX: ${{ matrix.compiler }}
+      QT_BASE: ${{ matrix.qt }}
+      Qt5_DIR: /opt/qt/${{ matrix.qt }}/gcc_64
+    
+    steps:
+    - uses: actions/checkout@master
+      with:
+        submodules: true
+    - name: Install QT ${{ matrix.qt }}
+      run: |
+        wget -q http://download.qt.io/official_releases/online_installers/qt-unified-linux-x64-online.run
+        chmod +x ./qt-unified-linux-x64-online.run
+        ./qt-unified-linux-x64-online.run --platform minimal --verbose --script .github/workflows/installer.qs
+    - name: Install OpenGL support for QT
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y libgl1-mesa-dev
+        
+    - name: Debug build and test with ${{ matrix.compiler }}
+      run: |
+        mkdir build && cd build
+        cmake -DCMAKE_BUILD_TYPE=Debug ..
+        cmake --build .
+        ctest -V
+        
+    - name: Release build and test with ${{ matrix.compiler }}
+      run: |
+        rm -rf build && mkdir build && cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build .
+        ctest -V
+  # TODO: find a better way to merge macOS into the build and test process is identical
+  macos:
+    runs-on: macOS-latest
+    env:
+      Qt5_DIR: /usr/local/opt/qt
+    steps:
+      - uses: actions/checkout@master
+        with:
+          submodules: true
+      - name: Install QT latest
+        run: |
+          brew update 
+          brew install qt5
+      - name: Debug build and test with clang
+        run: |
+          mkdir build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug ..
+          cmake --build .
+          ctest -V
+      - name: Release build and test with clang
+        run: |
+          rm -rf build && mkdir build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+          cmake --build .
+          ctest -V
+      
