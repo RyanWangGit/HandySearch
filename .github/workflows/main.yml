@@ -61,13 +61,15 @@ jobs:
       - name: Debug build and test with clang
         run: |
           mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug ..
+          if [[ "$OSTYPE" == "msys" ]]; then export PLATFORM="-DCMAKE_GENERATOR_PLATFORM=x64"; else export PLATFORM=""; fi
+          cmake -DCMAKE_BUILD_TYPE=Debug ${PLATFORM} ..
           cmake --build .
           ctest -V
       - name: Release build and test with clang
         run: |
           rm -rf build && mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
+          if [[ "$OSTYPE" == "msys" ]]; then export PLATFORM="-DCMAKE_GENERATOR_PLATFORM=x64"; else export PLATFORM=""; fi
+          cmake -DCMAKE_BUILD_TYPE=Release ${PLATFORM} ..
           cmake --build .
           ctest -V
       - name: Upload to codecov
