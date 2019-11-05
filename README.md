@@ -3,7 +3,7 @@
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project.
 
-Tested on `QT 5.9.8 LTS / QT 5.12.5 / QT 5.13.1 LTS on Ubuntu 18.04`, `QT 5.13.1 on macOS 10.14`. 
+Tested on `QT 5.9.8 LTS / QT 5.12.5 / QT 5.13.2 LTS on Ubuntu 18.04`, `QT 5.13.2 on macOS 10.14`. 
 
 ## Screenshots
 
