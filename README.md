@@ -1,5 +1,5 @@
 # HandySearch 
-[![Github Actions](https://github.com/yxwangcs/handysearch/workflows/build/badge.svg)](https://github.com/yxwangcs/handysearch/actions?workflow=build) [![codecov](https://codecov.io/gh/yxwangcs/handysearch/branch/master/graph/badge.svg)](https://codecov.io/gh/yxwangcs/handysearch)
+[![Github Actions](https://github.com/yxwangcs/handysearch/workflows/build/badge.svg)](https://github.com/yxwangcs/handysearch/actions?query=branch%3Amaster) [![codecov](https://codecov.io/gh/yxwangcs/handysearch/branch/master/graph/badge.svg)](https://codecov.io/gh/yxwangcs/handysearch)
 
 A Mini Search Engine Based On QT , Created For My Data Structure Course Design Project.
 
