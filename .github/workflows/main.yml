@@ -27,6 +27,7 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with:
         version: ${{ matrix.qt }}
+        modules: "qtsql"
     - name: Install OpenGL support for QT (Ubuntu)
       if: startsWith(matrix.os, 'ubuntu')
       run: |
