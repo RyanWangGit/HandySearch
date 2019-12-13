@@ -20,8 +20,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@master
-      with:
-        submodules: true
+    - name: Checkout submodules
+      shell: bash
+      run: |
+        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+        git submodule sync --recursive
+        git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
     # TODO: remove this when Github Actions has Qt built-in in the future
     - name: Install Qt ${{ matrix.qt }}
       uses: jurplel/install-qt-action@v2
