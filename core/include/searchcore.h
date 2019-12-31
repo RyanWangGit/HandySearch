@@ -19,14 +19,6 @@ class QJieba;
 class SearchCore : public QObject
 {
   Q_OBJECT
-private:
-  bool hasLoaded;
-  QString databasePath;
-  QHash<QString, QHash<int, QList<int> > > invertedList;
-  QSqlDatabase db;
-  unsigned int maxProgress;
-  unsigned int webpagesCount;
-  static QString copyEmbedded(const QString &path);
 public:
   explicit SearchCore(const QString &database);
   SearchCore();
@@ -43,4 +35,12 @@ public:
 signals:
   void progress(uint progress);
   void result(const QStringList &keywords, const QList<Webpage> &webpages);
+private:
+  bool hasLoaded;
+  QString databasePath;
+  QHash<QString, QHash<int, QList<int> > > invertedList;
+  QSqlDatabase db;
+  unsigned int maxProgress;
+  unsigned int webpagesCount;
+  static QString copyEmbedded(const QString &path);
 };
