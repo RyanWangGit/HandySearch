@@ -1,5 +1,6 @@
 #include <memory>
 #include <tuple>
+#include <functional>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -85,16 +86,13 @@ QString SearchCore::copyEmbedded(const QString &path)
   return copyLocation;
 }
 
-/* TODO: need more elegant solution */
-// used by mapper and reducer since they have to be static functions
-static SearchCore *_core = nullptr;
 
 // extract word from webpage and store into <word, id, pos> to be processed in reducer
-QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
+QList<std::tuple<QString, int, int> > mapper(const SearchCore *core, const QPair<int, int> &task)
 {
   // open a thread-specific database connection
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", QUuid::createUuid().toString());
-  db.setDatabaseName(_core->getDatabasePath());
+  db.setDatabaseName(core->getDatabasePath());
   if(!db.open())
     qFatal("Database cannot be opened.");
 
@@ -120,7 +118,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
     // use negative position to indicate that word is in title
     for(const QString &word :
-        _core->wordSegmenter->cut(query.value(1).toString()))
+        core->wordSegmenter->cut(query.value(1).toString()))
     {
 
       pos -= word.size();
@@ -129,7 +127,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
     pos = 0;
     for(const QString &word :
-        _core->wordSegmenter->cut(query.value(2).toString()))
+        core->wordSegmenter->cut(query.value(2).toString()))
     {
       pos += word.size();
       indexList.append(std::make_tuple(word, id, pos));
@@ -137,7 +135,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
     if(count % PROGRESS_FREQUENCY == 0 && count != 0)
     {
-      _core->progress(PROGRESS_FREQUENCY);
+      core->progress(PROGRESS_FREQUENCY);
       reported += PROGRESS_FREQUENCY;
     }
 
@@ -146,7 +144,7 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 
   // report the remaining progress
   if(count - reported != 0)
-    _core->progress(count - reported);
+    core->progress(count - reported);
 
   db.close();
 
@@ -157,9 +155,6 @@ QList<std::tuple<QString, int, int> > mapper(const QPair<int, int> &task)
 // get <word, id, pos> from mapper and store into the inverted list
 void reducer(InvertedList &result, const QList<std::tuple<QString, int, int> > &other)
 {
-  if(result.isEmpty())
-    result.reserve(static_cast<int>(_core->getWebpagesCount()));
-
   for(const std::tuple<QString, int, int> & index : other)
   {
     const QString &word = std::get<0>(index);
@@ -234,12 +229,13 @@ void SearchCore::load(uint from)
       tasks.append(QPair<uint, uint>(i, i + WEBPAGES_PER_THREAD - 1));
   }
 
-  // set static global variable to be used in mapper and reducer
-  _core = &(*this);
+  // wrap the mapper and pass the search core pointer for it to access the database path / progress signal etc.
+  std::function<QList<std::tuple<QString, int, int> >(const QPair<int, int> &task) > wrappedMapper =
+      [this](const QPair<int, int> &task) { return mapper(this, task); };
 
   // mapreduce to process all the webpages
   this->invertedList = QtConcurrent::blockingMappedReduced<InvertedList>(
-        tasks, mapper, reducer, QtConcurrent::UnorderedReduce);
+        tasks, wrappedMapper, reducer, QtConcurrent::UnorderedReduce);
 
   // optional: squeeze all the index hashes in to inverted list
   for(auto iter = this->invertedList.begin(); iter != this->invertedList.end(); ++iter)
@@ -256,7 +252,7 @@ void SearchCore::query(const QString &sentence)
   if(!this->hasLoaded)
     qFatal("Core hasn't loaded anything yet.");
 
-  QStringList keywords = _core->wordSegmenter->cut(sentence);
+  QStringList keywords = this->wordSegmenter->cut(sentence);
   QList<Webpage> webpages;
 
   QSqlQuery query(this->db);

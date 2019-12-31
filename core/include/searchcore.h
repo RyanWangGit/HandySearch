@@ -33,7 +33,7 @@ public:
   void query(const QString &sentence);
   void clear();
 signals:
-  void progress(uint progress);
+  void progress(uint progress) const;
   void result(const QStringList &keywords, const QList<Webpage> &webpages);
 private:
   bool hasLoaded;
