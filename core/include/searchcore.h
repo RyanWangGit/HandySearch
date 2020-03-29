@@ -26,7 +26,7 @@ public:
   std::unique_ptr<QJieba> wordSegmenter;
   void setPath(const QString &database);
   const QString &getDatabasePath() const;
-  unsigned int getMaxProgress() const;
+  unsigned int getMaxProgress() const; // TODO: remove
   unsigned int getWebpagesCount() const;
   QStringList getTitleList() const;
   void load(uint from = 1);
