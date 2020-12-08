@@ -12,11 +12,11 @@ jobs:
         # if [[ "$OSTYPE" == "msys" ]]; then export WINEXTRA="-DCMAKE_GENERATOR_PLATFORM=x64"; else export WINEXTRA=""; fi
         os: [ubuntu-latest, macOS-latest]
         # ubuntu uses g++ / macos uses clang ++
-        qt: [5.9.8, 5.12.5, 5.13.2]
+        qt: [5.12.10, 5.15.2, 6.0.0]
         exclude: 
           # exclude old qt version of macOS
-          - {os: 'macOS-latest', qt: '5.9.8'}
-          - {os: 'macOS-latest', qt: '5.12.5'}
+          - {os: 'macOS-latest', qt: '5.12.10'}
+          - {os: 'macOS-latest', qt: '5.15.2'}
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@master
