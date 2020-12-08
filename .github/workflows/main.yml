@@ -10,7 +10,7 @@ jobs:
         # or Github Actions supports MSVC2017 in windows-latest
         # windows builds also need specifying building 64bit target:
         # if [[ "$OSTYPE" == "msys" ]]; then export WINEXTRA="-DCMAKE_GENERATOR_PLATFORM=x64"; else export WINEXTRA=""; fi
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-20.04, macOS-latest]
         # ubuntu uses g++ / macos uses clang ++
         qt: [5.12.10, 5.15.2, 6.0.0]
         exclude: 
