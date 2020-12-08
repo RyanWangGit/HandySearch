@@ -6,6 +6,7 @@
 from scrapy.exceptions import DropItem
 import opencc
 
+_converter = opencc.OpenCC('s2t.json')
 
 class ValidationPipeline:
     def process_item(self, item, spider):
@@ -34,6 +35,6 @@ class ValidationPipeline:
 
 class ConvertPipeline:
     def process_item(self, item, spider):
-        item['title'] = opencc.convert(item['title'])
-        item['content'] = opencc.convert(item['content'])
+        item['title'] = _converter.convert(item['title'])
+        item['content'] = _converter.convert(item['content'])
         return item
