@@ -1,4 +1,7 @@
-find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
+if (NOT Qt6_FOUND)
+    find_package(Qt5 5.15 COMPONENTS Core Gui Widgets REQUIRED)
+endif()
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
@@ -21,4 +24,4 @@ else()
     target_compile_options(SearchCore PRIVATE -Wall -Wextra -pedantic)
 endif()
 
-target_link_libraries(HandySearch PUBLIC SearchCore Qt5::Widgets Qt5::Gui)
+target_link_libraries(HandySearch PUBLIC SearchCore Qt::Widgets Qt::Gui)
