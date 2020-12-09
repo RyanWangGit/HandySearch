@@ -6,7 +6,7 @@
 from scrapy.exceptions import DropItem
 import opencc
 
-_converter = opencc.OpenCC('s2t.json')
+_converter = opencc.OpenCC('t2s.json')
 
 class ValidationPipeline:
     def process_item(self, item, spider):
