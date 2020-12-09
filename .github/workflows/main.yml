@@ -10,22 +10,16 @@ jobs:
         # or Github Actions supports MSVC2017 in windows-latest
         # windows builds also need specifying building 64bit target:
         # if [[ "$OSTYPE" == "msys" ]]; then export WINEXTRA="-DCMAKE_GENERATOR_PLATFORM=x64"; else export WINEXTRA=""; fi
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-20.04, macOS-latest]
         # ubuntu uses g++ / macos uses clang ++
-        qt: [5.9.8, 5.12.5, 5.13.2]
+        qt: [5.15.2, 6.0.0]
         exclude: 
           # exclude old qt version of macOS
-          - {os: 'macOS-latest', qt: '5.9.8'}
-          - {os: 'macOS-latest', qt: '5.12.5'}
+          - {os: 'macOS-latest', qt: '5.12.10'}
+          - {os: 'macOS-latest', qt: '5.15.2'}
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@master
-    - name: Checkout submodules
-      shell: bash
-      run: |
-        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-        git submodule sync --recursive
-        git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
     # TODO: remove this when Github Actions has Qt built-in in the future
     - name: Install Qt ${{ matrix.qt }}
       uses: jurplel/install-qt-action@v2
