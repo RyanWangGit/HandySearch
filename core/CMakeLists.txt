@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 find_package(Qt6 COMPONENTS Core Sql Concurrent)
 if (NOT Qt6_FOUND)
-    find_package(Qt5 5.15 COMPONENTS CoreCore Sql Concurrent REQUIRED)
+    find_package(Qt5 5.15 COMPONENTS Core Sql Concurrent REQUIRED)
 endif()
 
 add_subdirectory(libs)
